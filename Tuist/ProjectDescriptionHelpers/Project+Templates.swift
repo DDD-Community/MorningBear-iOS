@@ -26,6 +26,7 @@ extension Project {
                              platform: platform,
                              product: .framework,
                              bundleId: "com.dache.\(name)",
+                             deploymentTarget: .iOS(targetVersion: "14.0", devices: .iphone),
                              infoPlist: .default,
                              sources: ["Targets/\(name)/Sources/**"],
                              resources: [],
