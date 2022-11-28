@@ -16,30 +16,37 @@ extension Project {
                        organizationName: "com.dache",
                        targets: targets)
     }
-
+    
     // MARK: - Private
-
+    
     /// Helper function to create a framework target and an associated unit test target
     private static func makeFrameworkTargets(name: String, platform: Platform) -> [Target] {
+        // MARK: - Add new dependecies in here
         let sources = Target(name: name,
-                platform: platform,
-                product: .framework,
-                bundleId: "com.dache.\(name)",
-                infoPlist: .default,
-                sources: ["Targets/\(name)/Sources/**"],
-                resources: [],
-                dependencies: [])
+                             platform: platform,
+                             product: .framework,
+                             bundleId: "com.dache.\(name)",
+                             infoPlist: .default,
+                             sources: ["Targets/\(name)/Sources/**"],
+                             resources: [],
+                             dependencies: [
+                                .external(name: "Moya"),
+                                .external(name: "RxMoya"),
+                                .external(name: "RxSwift")
+                             ])
+        
         let tests = Target(name: "\(name)Tests",
-                platform: platform,
-                product: .unitTests,
-                bundleId: "com.dache.\(name)Tests",
-                infoPlist: .default,
-                sources: ["Targets/\(name)/Tests/**"],
-                resources: [],
-                dependencies: [.target(name: name)])
+                           platform: platform,
+                           product: .unitTests,
+                           bundleId: "com.dache.\(name)Tests",
+                           infoPlist: .default,
+                           sources: ["Targets/\(name)/Tests/**"],
+                           resources: [],
+                           dependencies: [.target(name: name)])
+        
         return [sources, tests]
     }
-
+    
     /// Helper function to create the application target and the unit test target.
     private static func makeAppTargets(name: String,
                                        platform: Platform,
@@ -50,8 +57,8 @@ extension Project {
             "CFBundleVersion": "1",
             "UIMainStoryboardFile": "",
             "UILaunchStoryboardName": "LaunchScreen"
-            ]
-
+        ]
+        
         let mainTarget = Target(
             name: name,
             platform: platform,
@@ -63,7 +70,7 @@ extension Project {
             resources: ["Targets/\(name)/Resources/**"],
             dependencies: dependencies
         )
-
+        
         let testTarget = Target(
             name: "\(name)Tests",
             platform: platform,
@@ -73,7 +80,7 @@ extension Project {
             sources: ["Targets/\(name)/Tests/**"],
             dependencies: [
                 .target(name: "\(name)")
-        ])
+            ])
         return [mainTarget, testTarget]
     }
 }
