@@ -18,7 +18,12 @@ let dependencies = Dependencies(
         .remote(
             url: "https://github.com/ReactiveX/RxSwift.git",
             requirement: .upToNextMajor(from: "6.5.0")
-        )
+        ),
+        .remote(
+            url: "https://github.com/apollographql/apollo-ios.git",
+            requirement: .upToNextMajor(from: "1.0.5")
+        ),
+        .local(path: .relativeToRoot("Local/GraphQL/StarWarsAPI"))
     ],
     platforms: [.iOS]
 )
