@@ -33,7 +33,9 @@ extension Project {
                              dependencies: [
                                 .external(name: "Moya"),
                                 .external(name: "RxMoya"),
-                                .external(name: "RxSwift")
+                                .external(name: "RxSwift"),
+                                .external(name: "Apollo"),
+                                .external(name: "StarWarsAPI")
                              ])
         
         let tests = Target(name: "\(name)Tests",

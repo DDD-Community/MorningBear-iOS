@@ -11,6 +11,8 @@
 import Foundation
 import Moya
 
+import StarWarsAPI
+
 struct FakeData: Codable {
     let name: String
 }
