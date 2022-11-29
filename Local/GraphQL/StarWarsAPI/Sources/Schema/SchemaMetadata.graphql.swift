@@ -30,7 +30,6 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
     case "Species": return StarWarsAPI.Objects.Species
     case "Starship": return StarWarsAPI.Objects.Starship
     case "Vehicle": return StarWarsAPI.Objects.Vehicle
-    case "FilmSpeciesConnection": return StarWarsAPI.Objects.FilmSpeciesConnection
     default: return nil
     }
   }
