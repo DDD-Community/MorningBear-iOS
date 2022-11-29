@@ -12,18 +12,22 @@ import Foundation
 
 extension MBearAPI {
     func handleInternetConnection<T: Any>(error: Error) throws -> Single<T> {
-        guard
-            let urlError = Self.convertToURLError(error),
-            Self.isNotConnected(error: error)
-        else { throw error }
+        guard let urlError = Self.convertToURLError(error),
+              Self.isNotConnected(error: error)
+        else {
+            throw error
+        }
+        
         throw MBearError.internetConnection(urlError)
     }
     
     func handleTimeOut<T: Any>(error: Error) throws -> Single<T> {
-        guard
-            let urlError = Self.convertToURLError(error),
-            urlError.code == .timedOut
-        else { throw error }
+        guard let urlError = Self.convertToURLError(error),
+              urlError.code == .timedOut
+        else {
+            throw error
+        }
+        
         throw MBearError.requestTimeout(urlError)
     }
     

@@ -28,11 +28,11 @@ extension MBearAPI {
         
         print("endpoint: \(endpoint)")
         
-       let mappedRequest = provider.rx.request(endpoint)
-            .filterSuccessfulStatusCodes()
+        let mappedRequest = provider.rx.request(endpoint)
+            .filterSuccessfulStatusCodes() // Throws error if code's not in 200-299
             .catch(self.handleInternetConnection)
             .catch(self.handleTimeOut)
-            .catch(self.handleREST)
+            .catch(self.handleREST) // Handle rest of the errors
             .do(
                 onSuccess: { response in
                     let requestContent = "🛰 SUCCESS: \(requestString) (\(response.statusCode))"
@@ -47,8 +47,8 @@ extension MBearAPI {
                     print(message, file, function, line)
                 }
             )
-                    
-        return mappedRequest
+                
+            return mappedRequest
     }
     
     private func errorHandler(_ error: Error) {
@@ -62,20 +62,22 @@ extension MBearAPI {
                 break
             }
             
-            print("▶️ \(error): \(String(describing: String(data: response.data, encoding: .utf8)))")
+            print("▶️ REST error: \(error) / content: \(String(describing: String(data: response.data, encoding: .utf8)))")
             
             if let jsonObject = try? response.mapJSON(failsOnEmptyData: false) {
                 let errorDictionary = jsonObject as? [String: Any]
+                
                 guard let key = errorDictionary?.first?.key else { return }
+                
                 let message: String
                 if let description = errorDictionary?[key] as? String {
-                    message = "▶️ ERROR: (\(response.statusCode)\n\(key): \(description)"
+                    message = "▶️ ERROR: (\(response.statusCode) \(key): \(description))"
                 } else if let description = (errorDictionary?[key] as? [String]) {
-                    message = "▶️ ERROR: (\(response.statusCode))\n\(key): \(description)"
+                    message = "▶️ ERROR: (\(response.statusCode) \(key): \(description))"
                 } else if let rawString = String(data: response.data, encoding: .utf8) {
-                    message = "▶️ ERROR: (\(response.statusCode))\n\(rawString)"
+                    message = "▶️ ERROR: (\(response.statusCode)) \(rawString))"
                 } else {
-                    message = "▶️ ERROR: (\(response.statusCode)"
+                    message = "▶️ ERROR: Status code (\(response.statusCode))"
                 }
                 print(message)
             }
