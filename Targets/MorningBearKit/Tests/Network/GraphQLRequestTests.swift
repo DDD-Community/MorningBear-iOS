@@ -9,14 +9,13 @@
 import XCTest
 
 import Apollo
+import RxSwift
 import StarWarsAPI
 
-final class GraphQLRequestTests: XCTestCase {
-    class Network {
-      static let shared = Network()
+@testable import MorningBearKit
 
-      private(set) lazy var apollo = ApolloClient(url: URL(string: "https://swapi-graphql.netlify.app/.netlify/functions/index")!)
-    }
+final class GraphQLRequestTests: XCTestCase {
+    let bag = DisposeBag()
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -26,18 +25,33 @@ final class GraphQLRequestTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testExample() throws {
+    func test__apollo_fetch() {
         let expectation = XCTestExpectation(description: "graphQL")
+
         Network.shared.apollo.fetch(query: Query()) { result in
             switch result {
             case .success(let data):
-                print(data)
+                print(data.data?.allFilms?.films as Any)
             case .failure(let error):
                 print(error)
             }
-            
+
             expectation.fulfill()
         }
+    }
+    
+    func test__RxApollo_fetch() throws {
+        let expectation = XCTestExpectation(description: "graphQL")
+        
+        Network.shared.apollo.rx.fetch(query: Query())
+            .subscribe(
+                onSuccess: { data in
+                    print(data.data?.allFilms?.films as Any)
+                    expectation.fulfill()
+                }, onFailure: { error in
+                    XCTFail("Test get failed: \(error)")
+                })
+            .disposed(by: bag)
         
         wait(for: [expectation], timeout: 5)
     }
