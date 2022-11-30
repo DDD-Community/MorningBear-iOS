@@ -10,7 +10,10 @@ import XCTest
 
 import Apollo
 import RxSwift
+
 import StarWarsAPI
+import StarWarsAPITestMocks
+import ApolloTestSupport
 
 @testable import MorningBearKit
 
@@ -54,6 +57,32 @@ final class GraphQLRequestTests: XCTestCase {
             .disposed(by: bag)
         
         wait(for: [expectation], timeout: 5)
+    }
+    
+    func test__Mocking() throws {
+        let mock = Mock(allFilms:
+                            Mock(films: [
+                                Mock(title: "1"),
+                                Mock(title: "2"),
+                                Mock(title: nil),
+                                nil
+                            ]
+                                )
+        )
+        
+        guard
+            let allFilms = Query.Data.from(mock).allFilms,
+            let films = allFilms.films
+        else {
+            XCTFail("Model nil")
+            return
+        }
+        
+        let titles = films
+            .compactMap { $0 }
+            .compactMap { $0.title }
+        
+        print(titles)
     }
 
     func testPerformanceExample() throws {
