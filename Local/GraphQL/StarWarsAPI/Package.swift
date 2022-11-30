@@ -12,6 +12,7 @@ let package = Package(
   ],
   products: [
     .library(name: "StarWarsAPI", targets: ["StarWarsAPI"]),
+    .library(name: "StarWarsAPITestMocks", targets: ["StarWarsAPITestMocks"]),
   ],
   dependencies: [
     .package(url: "https://github.com/apollographql/apollo-ios.git", from: "1.0.0"),
@@ -23,6 +24,14 @@ let package = Package(
         .product(name: "ApolloAPI", package: "apollo-ios"),
       ],
       path: "./Sources"
+    ),
+    .target(
+      name: "StarWarsAPITestMocks",
+      dependencies: [
+        .product(name: "ApolloTestSupport", package: "apollo-ios"),
+        .target(name: "StarWarsAPI"),
+      ],
+      path: "./TestMocks"
     ),
   ]
 )

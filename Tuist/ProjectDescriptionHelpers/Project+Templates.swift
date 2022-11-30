@@ -35,7 +35,8 @@ extension Project {
                                 .external(name: "RxMoya"),
                                 .external(name: "RxSwift"),
                                 .external(name: "Apollo"),
-                                .external(name: "StarWarsAPI")
+                                .external(name: "StarWarsAPI"),
+                                .external(name: "StarWarsAPITestMocks")
                              ])
         
         let tests = Target(name: "\(name)Tests",

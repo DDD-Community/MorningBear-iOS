@@ -10,7 +10,7 @@
   },
   "output" : {
     "testMocks" : {
-      "none" : {
+      "swiftPackage" : {
       }
     },
     "schemaTypes" : {
