@@ -82,14 +82,7 @@ final class GraphQLRequestTests: XCTestCase {
             .compactMap { $0 }
             .compactMap { $0.title }
         
-        print(titles)
+        XCTAssertEqual(titles.count, 2)
+        XCTAssertTrue(titles.contains("1") && titles.contains("2"))
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
 }
