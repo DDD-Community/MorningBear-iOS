@@ -11,7 +11,9 @@ extension Project {
         var targets = makeAppTargets(name: name,
                                      platform: platform,
                                      dependencies: additionalTargets.map { TargetDependency.target(name: $0) })
-        targets += additionalTargets.flatMap({ makeFrameworkTargets(name: $0, platform: platform) })
+        targets += additionalTargets.flatMap({
+            makeFrameworkTargets(name: $0, platform: platform)
+        })
         return Project(name: name,
                        organizationName: "com.dache",
                        targets: targets)
@@ -31,6 +33,7 @@ extension Project {
                              sources: ["Targets/\(name)/Sources/**"],
                              resources: [],
                              dependencies: [
+                                .sdk(name: "c++", type: .library, status: .required),
                                 .external(name: "Moya"),
                                 .external(name: "RxMoya"),
                                 .external(name: "RxSwift"),
@@ -38,7 +41,12 @@ extension Project {
                                 .external(name: "FirebaseStorage"),
                                 .external(name: "StarWarsAPI"),
                                 .external(name: "StarWarsAPITestMocks")
-                             ])
+                             ],
+                             settings: .settings(
+                                base: [
+                                    "OTHER_LDFLAGS": ["$(inherited)", "-ObjC"],
+                                ]
+                             ))
         
         let tests = Target(name: "\(name)Tests",
                            platform: platform,
