@@ -35,6 +35,7 @@ extension Project {
                                 .external(name: "RxMoya"),
                                 .external(name: "RxSwift"),
                                 .external(name: "Apollo"),
+                                .external(name: "FirebaseStorage"),
                                 .external(name: "StarWarsAPI"),
                                 .external(name: "StarWarsAPITestMocks")
                              ])
