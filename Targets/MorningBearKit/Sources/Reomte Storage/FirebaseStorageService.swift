@@ -46,5 +46,4 @@ struct FirebaseStorageService: RemoteStorageService {
     func load() -> Data {
         return Data()
     }
-    
 }
