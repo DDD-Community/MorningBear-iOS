@@ -1,0 +1,90 @@
+"""
+A directive used by the Apollo iOS client to annotate operations or fragments that should be used exclusively for generating local cache mutations instead of as standard operations.
+"""
+directive @apollo_client_ios_localCacheMutation on QUERY | MUTATION | SUBSCRIPTION | FRAGMENT_DEFINITION
+
+type Badge {
+  badgeId: String
+  badgeDesc: String
+  badgeTier: Int
+}
+
+input BadgeInput {
+  badgeId: String
+  badgeDesc: String
+  badgeTier: Int
+}
+
+type Category {
+  categoryId: String
+  categoryDesc: String
+}
+
+input CategoryInput {
+  categoryId: String
+  categoryDesc: String
+}
+
+type LoginBaseInfo {
+  redirectUri: String
+  jsKey: String
+  nativeKey: String
+  state: String
+}
+
+type Mutation {
+  """ 내정보 저장 """
+  saveMyInfo(input: MyProfileInput): MyProfileInfo
+
+  """ 내 카테고리 저장 """
+  saveMyCategory(input: [String]): [Category]
+
+  """ (개발자용) 카테고리 메타정보 저장 """
+  saveCategory(input: [CategoryInput]): [Category]
+
+  """ 내 뱃지 저장 """
+  saveMyBadge(input: [String]): [Badge]
+
+  """ (개발자용) 뱃지 메타정보 저장 """
+  saveBadge(input: [BadgeInput]): [Badge]
+
+  """ 탈퇴하기 """
+  deleteMyInfo: Boolean
+}
+
+type MyProfileInfo {
+  accountId: String
+  nickName: String
+  photoLink: String
+  memo: String
+  wakeUpAt: String
+  badgeList: [Badge]
+  categoryList: [Category]
+}
+
+input MyProfileInput {
+  nickName: String
+  photoLink: String
+  memo: String
+  wakeUpAt: String
+}
+
+type Query {
+  """ 로그인 기본정보 조회 """
+  findLoginInfo: [LoginBaseInfo]
+
+  """ 내정보 조회 """
+  findMyInfo: MyProfileInfo
+
+  """ 전체 카테고리 조회 """
+  findAllCategory: [Category]
+
+  """ 전체 뱃지 조회 """
+  findAllBadge: [Badge]
+
+  """ (개발자용) 내 카테고리 매핑정보 조회 """
+  findMyCategoryMapping: [Category]
+
+  """ (개발자용) 내 뱃지 매핑정보 조회 """
+  findMyBadgeMapping: [Badge]
+}

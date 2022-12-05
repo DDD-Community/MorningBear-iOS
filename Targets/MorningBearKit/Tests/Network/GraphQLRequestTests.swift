@@ -13,6 +13,10 @@ import RxSwift
 
 import StarWarsAPI
 import StarWarsAPITestMocks
+
+import MorningBearAPI
+import MorningBearAPITestMocks
+
 import ApolloTestSupport
 
 @testable import MorningBearKit
@@ -31,16 +35,29 @@ final class GraphQLRequestTests: XCTestCase {
     func test__apollo_fetch() {
         let expectation = XCTestExpectation(description: "graphQL")
 
-        Network.shared.apollo.fetch(query: Query()) { result in
+//        Network.shared.apollo.fetch(query: Query()) { result in
+//            switch result {
+//            case .success(let data):
+//                print(data.data?.allFilms?.films as Any)
+//            case .failure(let error):
+//                print(error)
+//            }
+//
+//            expectation.fulfill()
+//        }
+        
+        Network.shared.apollo.fetch(query: FindAllCategoryQuery()) { result in
             switch result {
             case .success(let data):
-                print(data.data?.allFilms?.films as Any)
+                print(data.data as Any)
             case .failure(let error):
-                print(error)
+                print("TEST: Error", error.localizedDescription)
             }
 
             expectation.fulfill()
         }
+        
+        wait(for: [expectation], timeout: 5)
     }
     
     func test__RxApollo_fetch() throws {
