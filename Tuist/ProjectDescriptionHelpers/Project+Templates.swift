@@ -6,28 +6,63 @@ import ProjectDescription
 /// See https://docs.tuist.io/guides/helpers/
 
 extension Project {
+    static var organizationName: String {
+        return "com.dache"
+    }
+    
     /// Helper function to create the Project for this ExampleApp
-    public static func app(name: String, platform: Platform, additionalTargets: [String]) -> Project {
+    public static func app(name: String, platform: Platform, additionalTargets: (kit: String, UI: String)) -> Project {
         var targets = makeAppTargets(name: name,
                                      platform: platform,
-                                     dependencies: additionalTargets.map { TargetDependency.target(name: $0) })
-        targets += additionalTargets.flatMap({
-            makeFrameworkTargets(name: $0, platform: platform)
-        })
+                                     dependencies: [
+                                        TargetDependency.target(name: additionalTargets.kit),
+                                        TargetDependency.target(name: additionalTargets.UI)
+                                     ])
+        
+        targets += makeToolKitFrameworkTargets(name: additionalTargets.kit, platform: platform)
+        targets += makeUIFrameworkTargets(name: additionalTargets.UI, platform: platform)
+        
         return Project(name: name,
-                       organizationName: "com.dache",
+                       organizationName: organizationName,
                        targets: targets)
     }
     
     // MARK: - Private
     
     /// Helper function to create a framework target and an associated unit test target
-    private static func makeFrameworkTargets(name: String, platform: Platform) -> [Target] {
+    private static func makeUIFrameworkTargets(name: String, platform: Platform) -> [Target] {
         // MARK: - Add new dependecies in here
         let sources = Target(name: name,
                              platform: platform,
                              product: .framework,
-                             bundleId: "com.dache.\(name)",
+                             bundleId: "\(organizationName).\(name)",
+                             deploymentTarget: .iOS(targetVersion: "14.0", devices: .iphone),
+                             infoPlist: .default,
+                             sources: ["Targets/\(name)/Sources/**"],
+                             resources: [],
+                             dependencies: [
+                                .external(name: "RxSwift")
+                             ])
+        
+        let tests = Target(name: "\(name)Tests",
+                           platform: platform,
+                           product: .unitTests,
+                           bundleId: "\(organizationName).\(name)Tests",
+                           infoPlist: .default,
+                           sources: ["Targets/\(name)/Tests/**"],
+                           resources: [],
+                           dependencies: [.target(name: name)])
+        
+        return [sources, tests]
+    }
+    
+    /// Helper function to create a framework target and an associated unit test target
+    private static func makeToolKitFrameworkTargets(name: String, platform: Platform) -> [Target] {
+        // MARK: - Add new dependecies in here
+        let sources = Target(name: name,
+                             platform: platform,
+                             product: .framework,
+                             bundleId: "\(organizationName).\(name)",
                              deploymentTarget: .iOS(targetVersion: "14.0", devices: .iphone),
                              infoPlist: .default,
                              sources: ["Targets/\(name)/Sources/**"],
@@ -51,7 +86,7 @@ extension Project {
         let tests = Target(name: "\(name)Tests",
                            platform: platform,
                            product: .unitTests,
-                           bundleId: "com.dache.\(name)Tests",
+                           bundleId: "\(organizationName).\(name)Tests",
                            infoPlist: .default,
                            sources: ["Targets/\(name)/Tests/**"],
                            resources: [],
@@ -76,7 +111,7 @@ extension Project {
             name: name,
             platform: platform,
             product: .app,
-            bundleId: "com.dache.\(name)",
+            bundleId: "\(organizationName).\(name)",
             deploymentTarget: .iOS(targetVersion: "14.0", devices: .iphone),
             infoPlist: .extendingDefault(with: infoPlist),
             sources: ["Targets/\(name)/Sources/**"],
@@ -88,7 +123,7 @@ extension Project {
             name: "\(name)Tests",
             platform: platform,
             product: .unitTests,
-            bundleId: "com.dache.\(name)Tests",
+            bundleId: "\(organizationName).\(name)Tests",
             infoPlist: .default,
             sources: ["Targets/\(name)/Tests/**"],
             dependencies: [
