@@ -13,7 +13,7 @@ import RxSwift
 public struct RemoteStorageManager<Storage> where Storage: RemoteStorageService {
     private let remoteStorageService: Storage
     
-    func saveImage(_ image: UIImage) -> Single<URL> {
+    public func saveImage(_ image: UIImage) -> Single<URL> {
         guard let data = image.jpegData(compressionQuality: 0.7) else {
             return Single.error(StorageError.invalidImage)
         }
@@ -21,7 +21,7 @@ public struct RemoteStorageManager<Storage> where Storage: RemoteStorageService 
         return remoteStorageService.save(data: data)
     }
     
-    func loadImage(_ url: URL) -> Single<UIImage> {
+    public func loadImage(_ url: URL) -> Single<UIImage> {
         let downloadTask = remoteStorageService.download(with: url)
             .map { data in
                 guard let image = UIImage(data: data) else {
@@ -34,7 +34,7 @@ public struct RemoteStorageManager<Storage> where Storage: RemoteStorageService 
         return downloadTask
     }
     
-    init(_ remoteStorageService: Storage = FirebaseStorageService()) {
+    public init(_ remoteStorageService: Storage = FirebaseStorageService()) {
         self.remoteStorageService = remoteStorageService
     }
 }

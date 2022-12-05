@@ -16,7 +16,9 @@ struct FirebaseStorageService: RemoteStorageService {
     
     func save(data: Data) -> Single<URL> {
         // Create a root reference
-        let storageRef = storage.reference()
+        // MARK: child가 생략되면 crash
+        // 왜 안알려줬어 구글아..
+        let storageRef = storage.reference().child("test.jpg")
         
         // Make a Rx disposable
         let singleTrait = Single<URL>.create { observer in
