@@ -12,36 +12,23 @@ import RxSwift
 
 public struct RemoteStorageManager<Storage> where Storage: RemoteStorageService {
     private let remoteStorageService: Storage
-    private let bag = DisposeBag()
     
-    private let networkQueue = SerialDispatchQueueScheduler.init(qos: .userInitiated)
-    
-    func saveImage(_ image: UIImage) throws {
+    func saveImage(_ image: UIImage) -> Single<URL> {
         guard let data = image.jpegData(compressionQuality: 0.7) else {
-            throw StorageError.invalidImage
+            return Single.error(StorageError.invalidImage)
         }
         
-        remoteStorageService.save(data: data)
-            .subscribe(on: networkQueue)
-            .subscribe(
-                onSuccess: { url in
-                    print(url)
-                },
-                onFailure: { error in
-                    print(error)
-                }
-            )
-            .disposed(by: bag)
+        return remoteStorageService.save(data: data)
     }
     
-    func loadImage() throws -> UIImage {
+    func loadImage() -> Single<UIImage> {
         let data = remoteStorageService.load()
         
         guard let image = UIImage(data: data) else {
-            throw StorageError.invalidData
+            return Single.error(StorageError.invalidData)
         }
         
-        return image
+        return Single.just(image)
     }
     
     init(remoteStorageService: Storage = FirebaseStorageService()) {

@@ -18,9 +18,10 @@ struct FirebaseStorageService: RemoteStorageService {
         // Create a root reference
         let storageRef = storage.reference()
         
+        // Make a Rx disposable
         let singleTrait = Single<URL>.create { observer in
             // Upload the file
-            let uploadTask = storageRef.putData(data, metadata: nil) { (metadata, error) in
+            storageRef.putData(data, metadata: nil) { (metadata, error) in
                 guard metadata != nil else {
                     observer(.failure(StorageError.failToLoadImage))
                     return
