@@ -21,14 +21,17 @@ public struct RemoteStorageManager<Storage> where Storage: RemoteStorageService 
         return remoteStorageService.save(data: data)
     }
     
-    func loadImage() -> Single<UIImage> {
-        let data = remoteStorageService.load()
+    func loadImage(_ url: URL) -> Single<UIImage> {
+        let downloadTask = remoteStorageService.download(with: url)
+            .map { data in
+                guard let image = UIImage(data: data) else {
+                    throw StorageError.invalidData
+                }
+                
+                return image
+            }
         
-        guard let image = UIImage(data: data) else {
-            return Single.error(StorageError.invalidData)
-        }
-        
-        return Single.just(image)
+        return downloadTask
     }
     
     init(remoteStorageService: Storage = FirebaseStorageService()) {

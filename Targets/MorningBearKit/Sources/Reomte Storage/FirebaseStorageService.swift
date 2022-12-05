@@ -44,7 +44,27 @@ struct FirebaseStorageService: RemoteStorageService {
         return singleTrait
     }
     
-    func load() -> Data {
-        return Data()
+    func download(with url: URL) -> Single<Data> {
+        // Create a reference to the file you want to download
+        let storageRef = storage.reference()
+
+        // Make a Rx disposable
+        let singleTrait = Single<Data>.create { observer in
+            
+            // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
+            storageRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
+                if let error = error {
+                    observer(.failure(error))
+                } else if let data = data {
+                    observer(.success(data))
+                } else {
+                    observer(.failure(StorageError.failToLoadImage))
+                }
+            }
+            
+            return Disposables.create()
+        }
+        
+        return singleTrait
     }
 }

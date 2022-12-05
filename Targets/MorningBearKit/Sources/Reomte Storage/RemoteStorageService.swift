@@ -11,5 +11,5 @@ import RxSwift
 
 public protocol RemoteStorageService {
     func save(data: Data) -> Single<URL>
-    func load() -> Data
+    func download(with url: URL) -> Single<Data>
 }
