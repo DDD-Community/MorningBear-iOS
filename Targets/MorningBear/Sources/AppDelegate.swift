@@ -2,6 +2,8 @@ import UIKit
 import MorningBearKit
 import MorningBearUI
 
+import FirebaseCore
+
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -11,14 +13,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
+        // Configure SDKs
+        FirebaseApp.configure()
+        
         window = UIWindow(frame: UIScreen.main.bounds)
         let viewController = UIViewController()
         viewController.view.backgroundColor = .white
+        
         window?.rootViewController = viewController
         window?.makeKeyAndVisible()
-        MorningBearKit.hello()
-        MorningBearUI.hello()
-
+        
+        
         return true
     }
 

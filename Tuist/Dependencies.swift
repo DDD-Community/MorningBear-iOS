@@ -23,6 +23,7 @@ let dependencies = Dependencies(
             url: "https://github.com/apollographql/apollo-ios.git",
             requirement: .upToNextMajor(from: "1.0.5")
         ),
+        .remote(url: "https://github.com/firebase/firebase-ios-sdk", requirement: .upToNextMajor(from: "9.0.0")),
         .local(path: .relativeToRoot("Local/GraphQL/StarWarsAPI"))
     ],
     platforms: [.iOS]
