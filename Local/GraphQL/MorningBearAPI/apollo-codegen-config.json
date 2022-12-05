@@ -14,7 +14,7 @@
       }
     },
     "schemaTypes" : {
-      "path" : "./MorningBearAPI",
+      "path" : "./",
       "moduleType" : {
         "swiftPackageManager" : {
         }

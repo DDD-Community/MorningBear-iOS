@@ -46,10 +46,10 @@ final class GraphQLRequestTests: XCTestCase {
 //            expectation.fulfill()
 //        }
         
-        Network.shared.apollo.fetch(query: FindAllCategoryQuery()) { result in
+        Network.shared.apollo.fetch(query: FindLoginInfoQuery()) { result in
             switch result {
             case .success(let data):
-                print(data.data as Any)
+                print(data.data?.findLoginInfo as Any)
             case .failure(let error):
                 print("TEST: Error", error.localizedDescription)
             }
@@ -63,7 +63,7 @@ final class GraphQLRequestTests: XCTestCase {
     func test__RxApollo_fetch() throws {
         let expectation = XCTestExpectation(description: "graphQL")
         
-        Network.shared.apollo.rx.fetch(query: Query())
+        Network.shared.apolloTest.rx.fetch(query: Query())
             .subscribe(
                 onSuccess: { data in
                     print(data.data?.allFilms?.films as Any)
