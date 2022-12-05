@@ -18,12 +18,13 @@ struct FirebaseStorageService: RemoteStorageService {
         // Create a root reference
         // MARK: child가 생략되면 crash
         // 왜 안알려줬어 구글아..
-        let storageRef = storage.reference().child("test.jpg")
+        let storageRef = storage.reference()
+        let fileRef = storageRef.child(UUID().uuidString)
         
         // Make a Rx disposable
         let singleTrait = Single<URL>.create { observer in
             // Upload the file
-            storageRef.putData(data, metadata: nil) { (metadata, error) in
+            fileRef.putData(data, metadata: nil) { (metadata, error) in
                 if let error = error {
                     observer(.failure(error))
                     return
@@ -35,7 +36,7 @@ struct FirebaseStorageService: RemoteStorageService {
                 }
                 
                 // You can also access to download URL after upload.
-                storageRef.downloadURL { (url, error) in
+                fileRef.downloadURL { (url, error) in
                     if let error = error {
                         observer(.failure(error))
                         return
@@ -56,15 +57,16 @@ struct FirebaseStorageService: RemoteStorageService {
         return singleTrait
     }
     
+    @available(*, deprecated, message: "Use Kingfisher instead")
     func download(with url: URL) -> Single<Data> {
         // Create a reference to the file you want to download
         let storageRef = storage.reference()
+        let fileRef = storageRef.child(url.relativeString)
 
         // Make a Rx disposable
         let singleTrait = Single<Data>.create { observer in
-            
             // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
-            storageRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
+            fileRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
                 if let error = error {
                     observer(.failure(error))
                 } else if let data = data {
