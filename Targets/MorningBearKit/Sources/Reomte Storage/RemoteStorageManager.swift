@@ -34,7 +34,7 @@ public struct RemoteStorageManager<Storage> where Storage: RemoteStorageService 
         return downloadTask
     }
     
-    init(remoteStorageService: Storage = FirebaseStorageService()) {
+    init(_ remoteStorageService: Storage = FirebaseStorageService()) {
         self.remoteStorageService = remoteStorageService
     }
 }
