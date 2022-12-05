@@ -22,6 +22,11 @@ struct FirebaseStorageService: RemoteStorageService {
         let singleTrait = Single<URL>.create { observer in
             // Upload the file
             storageRef.putData(data, metadata: nil) { (metadata, error) in
+                if let error = error {
+                    observer(.failure(error))
+                    return
+                }
+                
                 guard metadata != nil else {
                     observer(.failure(StorageError.failToLoadImage))
                     return
@@ -29,6 +34,11 @@ struct FirebaseStorageService: RemoteStorageService {
                 
                 // You can also access to download URL after upload.
                 storageRef.downloadURL { (url, error) in
+                    if let error = error {
+                        observer(.failure(error))
+                        return
+                    }
+                    
                     guard let downloadURL = url else {
                         observer(.failure(StorageError.failToLoadImage))
                         return
