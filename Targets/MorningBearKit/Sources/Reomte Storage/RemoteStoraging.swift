@@ -9,7 +9,7 @@
 import Foundation
 import RxSwift
 
-public protocol RemoteStorageService {
+public protocol RemoteStoraging {
     func save(data: Data) -> Single<URL>
     func download(with url: URL) -> Single<Data>
 }
