@@ -35,17 +35,6 @@ final class GraphQLRequestTests: XCTestCase {
     func test__apollo_fetch() {
         let expectation = XCTestExpectation(description: "graphQL")
 
-//        Network.shared.apollo.fetch(query: Query()) { result in
-//            switch result {
-//            case .success(let data):
-//                print(data.data?.allFilms?.films as Any)
-//            case .failure(let error):
-//                print(error)
-//            }
-//
-//            expectation.fulfill()
-//        }
-        
         Network.shared.apollo.fetch(query: FindLoginInfoQuery()) { result in
             switch result {
             case .success(let data):
