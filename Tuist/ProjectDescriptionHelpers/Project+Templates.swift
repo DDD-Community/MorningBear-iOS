@@ -31,7 +31,7 @@ extension Project {
     
     /// Helper function to create a framework target and an associated unit test target
     private static func makeUIFrameworkTargets(name: String, platform: Platform) -> [Target] {
-        // MARK: - Add new dependecies in here
+        // MARK: - Add new UI dependecies in here
         let sources = Target(name: name,
                              platform: platform,
                              product: .framework,
@@ -75,7 +75,9 @@ extension Project {
                                 .external(name: "Apollo"),
                                 .external(name: "FirebaseStorage"),
                                 .external(name: "StarWarsAPI"),
-                                .external(name: "StarWarsAPITestMocks")
+                                .external(name: "StarWarsAPITestMocks"),
+                                .external(name: "MorningBearAPI"),
+                                .external(name: "MorningBearAPITestMocks")
                              ],
                              settings: .settings(
                                 base: [

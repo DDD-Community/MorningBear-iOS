@@ -24,7 +24,8 @@ let dependencies = Dependencies(
             requirement: .upToNextMajor(from: "1.0.5")
         ),
         .remote(url: "https://github.com/firebase/firebase-ios-sdk", requirement: .upToNextMajor(from: "9.0.0")),
-        .local(path: .relativeToRoot("Local/GraphQL/StarWarsAPI"))
+        .local(path: .relativeToRoot("Local/GraphQL/StarWarsAPI")),
+        .local(path: .relativeToRoot("Local/GraphQL/MorningBearAPI"))
     ],
     platforms: [.iOS]
 )
