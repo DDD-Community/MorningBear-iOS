@@ -13,8 +13,10 @@ import MorningBearKit
 class AuthViewController: UIViewController {
     
     private let appleLoginManager: AppleLoginManager = AppleLoginManager()
+    private let kakaoLoginManager: KakaoLoginManager = KakaoLoginManager()
     
     override func viewDidLoad() {
-        appleLoginManager.request()
+        // appleLoginManager.request()
+        // kakaoLoginManager.login()
     }
 }
