@@ -4,6 +4,10 @@ import MorningBearUI
 
 import FirebaseCore
 
+import RxKakaoSDKCommon
+import RxKakaoSDKAuth
+import KakaoSDKAuth
+
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -14,9 +18,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Configure SDKs
         FirebaseApp.configure()
         
-        window = UIWindow(frame: UIScreen.main.bounds)
-        let viewController = UIViewController()
-        viewController.view.backgroundColor = .white
+        // 수정 필요!
+        let KAKAO_APP_KEY: String = "338eeb478a5cce01fe713b9100d0f42e"
+        RxKakaoSDK.initSDK(appKey: KAKAO_APP_KEY)
         
         return true
     }
