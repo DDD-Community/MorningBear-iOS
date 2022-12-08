@@ -108,6 +108,12 @@ extension Project {
             "CFBundleVersion": "1",
             "UIMainStoryboardFile": "",
             "UILaunchStoryboardName": "LaunchScreen",
+            "CFBundleURLTypes": [
+                [
+                    "CFBundleTypeRole": "Editor",
+                    "CFBundleURLSchemes": ["kakao338eeb478a5cce01fe713b9100d0f42e"]
+                ]
+            ],
             "UIApplicationSceneManifest": [
                 "UIApplicationSupportsMultipleScenes": false,
                 "UISceneConfigurations": [
@@ -119,7 +125,7 @@ extension Project {
                     ]
                 ]
             ],
-            "LSApplicationQueriesSchemes" : ["kakaokompassauth"]
+            "LSApplicationQueriesSchemes": ["kakaokompassauth"]
         ]
         
         let mainTarget = Target(
