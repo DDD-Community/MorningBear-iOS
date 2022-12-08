@@ -1,0 +1,9 @@
+mutation SaveMyInfo {
+  saveMyInfo {
+    accountId
+    nickName
+    photoLink
+    memo
+    wakeUpAt
+  }
+}
