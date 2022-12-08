@@ -30,6 +30,14 @@ struct RxApollo {
         return observable.asSingle()
     }
     
+    func perform<T>(mutation: T) -> Single<GraphQLResult<T.Data>> where T: GraphQLMutation {
+        let observable = Observable.createFromResultCallback { resultClosure in
+            client.perform(mutation: mutation, resultHandler: resultClosure)
+        }
+        
+        return observable.asSingle()
+    }
+    
     init(_ apolloClient: ApolloClient) {
         self.client = apolloClient
     }
