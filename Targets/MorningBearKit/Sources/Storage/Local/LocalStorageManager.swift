@@ -10,7 +10,7 @@ import UIKit
 
 import RxSwift
 
-public struct LocalStorageManager<Instance, Storager> where Instance: Codable, Storager: StoragerType {
+public struct LocalStorageManager<Instance, Storager> where Instance: Codable, Storager: StorageType {
     private let localStorager: Storager
     private let coderSet: CoderSet
     
@@ -35,7 +35,7 @@ public struct LocalStorageManager<Instance, Storager> where Instance: Codable, S
         return downloadTask
     }
     
-    public init(_ localStorager: Storager = LocalStorager()) {
+    public init(_ localStorager: Storager = LocalStorage()) {
         self.localStorager = localStorager
         self.coderSet = CoderSet()
     }

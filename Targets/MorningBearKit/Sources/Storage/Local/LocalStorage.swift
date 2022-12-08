@@ -10,7 +10,7 @@ import Foundation
 
 import RxSwift
 
-struct LocalStorager: StoragerType {
+struct LocalStorage: StorageType {
     private let storage: FileManager
     
     init(_ storage: FileManager = FileManager.default) {
@@ -54,7 +54,7 @@ struct LocalStorager: StoragerType {
     }
 }
 
-extension LocalStorager {
+extension LocalStorage {
     var documentDirectory: URL? {
         return try? self.storage.url(for: .documentDirectory,
                                      in: .userDomainMask,

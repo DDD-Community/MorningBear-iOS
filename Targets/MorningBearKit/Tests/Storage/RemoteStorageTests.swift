@@ -109,7 +109,7 @@ fileprivate var falseImage: UIImage {
     return UIImage()
 }
 
-fileprivate struct MockRemoteStorager: StoragerType {    
+fileprivate struct MockRemoteStorager: StorageType {    
     func save(data: Data, name: String?) -> RxSwift.Single<URL> {
         return Single.just(URL(string:"www.naver.com")!)
     }
