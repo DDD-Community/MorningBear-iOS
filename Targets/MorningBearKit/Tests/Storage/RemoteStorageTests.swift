@@ -12,13 +12,13 @@ import XCTest
 import RxSwift
 
 final class RemoteStorageTests: XCTestCase {
-    private var storageManager: RemoteStorageManager<MockRemoteStorageService>!
+    private var storageManager: RemoteStorageManager<MockRemoteStorager>!
     private var bag: DisposeBag!
     
     
     override func setUpWithError() throws {
-        let mockService = MockRemoteStorageService()
-        self.storageManager = RemoteStorageManager(mockService)
+        let mockStroager = MockRemoteStorager()
+        self.storageManager = RemoteStorageManager(mockStroager)
         
         self.bag = DisposeBag()
     }
@@ -109,8 +109,8 @@ fileprivate var falseImage: UIImage {
     return UIImage()
 }
 
-fileprivate struct MockRemoteStorageService: StoragerType {
-    func save(data: Data) -> RxSwift.Single<URL> {
+fileprivate struct MockRemoteStorager: StoragerType {    
+    func save(data: Data, name: String?) -> RxSwift.Single<URL> {
         return Single.just(URL(string:"www.naver.com")!)
     }
     

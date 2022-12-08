@@ -10,6 +10,6 @@ import Foundation
 import RxSwift
 
 public protocol StoragerType {
-    func save(data: Data) -> Single<URL>
+    func save(data: Data, name: String?) -> Single<URL>
     func download(with url: URL) -> Single<Data>
 }
