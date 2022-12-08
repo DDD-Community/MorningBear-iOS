@@ -10,7 +10,7 @@ import UIKit
 
 import RxSwift
 
-public struct RemoteStorageManager<Storage> where Storage: RemoteStoraging {
+public struct RemoteStorageManager<Storage> where Storage: StoragerType {
     private let remoteStorageService: Storage
     
     public func saveImage(_ image: UIImage) -> Single<URL> {
@@ -34,7 +34,7 @@ public struct RemoteStorageManager<Storage> where Storage: RemoteStoraging {
         return downloadTask
     }
     
-    public init(_ remoteStorageService: Storage = FirebaseStorageService()) {
+    public init(_ remoteStorageService: Storage = FirebaseStorager()) {
         self.remoteStorageService = remoteStorageService
     }
 }

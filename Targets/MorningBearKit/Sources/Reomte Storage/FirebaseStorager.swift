@@ -11,7 +11,7 @@ import Foundation
 import FirebaseStorage
 import RxSwift
 
-struct FirebaseStorageService: RemoteStoraging {
+struct FirebaseStorager: StoragerType {
     private let storage = Storage.storage()
     
     func save(data: Data) -> Single<URL> {
