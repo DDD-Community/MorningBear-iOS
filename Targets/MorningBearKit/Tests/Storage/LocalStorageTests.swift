@@ -96,7 +96,7 @@ fileprivate var falseInstance: FalseInstance {
     return FalseInstance()
 }
 
-fileprivate struct MockLocalStorager: StoragerType {
+fileprivate struct MockLocalStorager: StorageType {
     func save(data: Data, name: String?) -> RxSwift.Single<URL> {
         return Single.just(vaildURL)
     }
