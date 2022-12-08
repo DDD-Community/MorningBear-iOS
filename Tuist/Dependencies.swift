@@ -31,7 +31,7 @@ let dependencies = Dependencies(
             url: "https://github.com/kakao/kakao-ios-sdk-rx",
             requirement: .branch("master")
         ),
-        .local(path: .relativeToRoot("Local/GraphQL/StarWarsAPI"))
+        .local(path: .relativeToRoot("Local/GraphQL/StarWarsAPI")),
         .local(path: .relativeToRoot("Local/GraphQL/MorningBearAPI"))
     ],
     platforms: [.iOS]

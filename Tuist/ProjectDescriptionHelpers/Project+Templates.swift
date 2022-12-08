@@ -76,9 +76,9 @@ extension Project {
                                 .external(name: "FirebaseStorage"),
                                 .external(name: "StarWarsAPI"),
                                 .external(name: "StarWarsAPITestMocks"),
-                                .external(name: "RxKakaoSDK")
-                                .external(name: "MorningBearAPITestMocks")
-                                .external(name: "MorningBearAPI"),
+                                .external(name: "RxKakaoSDK"),
+                                .external(name: "MorningBearAPITestMocks"),
+                                .external(name: "MorningBearAPI")
                              ],
                              settings: .settings(
                                 base: [
