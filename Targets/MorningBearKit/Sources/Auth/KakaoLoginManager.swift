@@ -14,7 +14,7 @@ import RxSwift
 
 public final class KakaoLoginManager {
     
-    private let disposeBag = DisposeBag()
+    private let bag = DisposeBag()
 
     public func login() {
         // 카카오톡 앱 실행 가능 여부 확인
@@ -26,11 +26,11 @@ public final class KakaoLoginManager {
                     let oauthToken = oauthToken.accessToken
                     print(oauthToken)
                     
-                    self.setUserInfo()
+                    // self.setUserInfo()
                 }, onError: {error in
                     print(error)
                 })
-                .disposed(by: disposeBag)
+                .disposed(by: bag)
         }
         
         else {
@@ -44,7 +44,7 @@ public final class KakaoLoginManager {
                 }, onError: {error in
                     print(error)
                 })
-                .disposed(by: disposeBag)
+                .disposed(by: bag)
         }
     }
     
@@ -94,7 +94,7 @@ public final class KakaoLoginManager {
             }, onError: {error in
                 print(error)
             })
-            .disposed(by: disposeBag)
+            .disposed(by: bag)
     }
     
     public func deleteUser() {
@@ -104,7 +104,7 @@ public final class KakaoLoginManager {
             }, onError: {error in
                 print(error)
             })
-            .disposed(by: disposeBag)
+            .disposed(by: bag)
     }
     
     public init() {}
