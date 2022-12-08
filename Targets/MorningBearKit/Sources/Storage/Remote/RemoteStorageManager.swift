@@ -18,7 +18,7 @@ public struct RemoteStorageManager<Storage> where Storage: StoragerType {
             return Single.error(StorageError.invalidImage)
         }
         
-        return remoteStorageService.save(data: data)
+        return remoteStorageService.save(data: data, name: nil)
     }
     
     public func loadImage(_ url: URL) -> Single<UIImage> {
