@@ -1,5 +1,5 @@
 ## What is this PR? 👀
-Issue 번호와 내용을 적어주세요.
+PR 개요 및 내용을 적어주세요.
 <br><br/>
 
 ## Changes 📃
