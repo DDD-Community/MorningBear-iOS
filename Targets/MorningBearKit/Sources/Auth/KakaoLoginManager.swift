@@ -49,16 +49,16 @@ public final class KakaoLoginManager {
     }
     
     public func setUserInfo() {
-        UserApi.shared.me() {(user, error) in
-            if let error = error {
-                print(error)
-            }
-            else {
+        UserApi.shared.rx.me()
+            .subscribe (onSuccess:{ user in
                 print("me() success.")
+                
                 //do something
                 _ = user
-            }
-        }
+            }, onFailure: {error in
+                print(error)
+            })
+            .disposed(by: bag)
     }
     
     public func verifyToken() {
