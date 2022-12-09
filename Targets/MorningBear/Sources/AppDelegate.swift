@@ -4,10 +4,12 @@ import MorningBearUI
 
 import FirebaseCore
 
+import RxKakaoSDKCommon
+import RxKakaoSDKAuth
+import KakaoSDKAuth
+
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-    var window: UIWindow?
 
     func application(
         _ application: UIApplication,
@@ -16,15 +18,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Configure SDKs
         FirebaseApp.configure()
         
-        window = UIWindow(frame: UIScreen.main.bounds)
-        let viewController = UIViewController()
-        viewController.view.backgroundColor = .white
-        
-        window?.rootViewController = viewController
-        window?.makeKeyAndVisible()
-        
+        // 수정 필요!
+        let KAKAO_APP_KEY: String = "338eeb478a5cce01fe713b9100d0f42e"
+        RxKakaoSDK.initSDK(appKey: KAKAO_APP_KEY)
         
         return true
     }
+    
+    func application(
+        _ application: UIApplication,
+        configurationForConnecting connectingSceneSession: UISceneSession,
+        options: UIScene.ConnectionOptions
+    ) -> UISceneConfiguration {
+        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    }
 
+    func application(
+        _ application: UIApplication,
+        didDiscardSceneSessions sceneSessions: Set<UISceneSession>
+    ) {
+        
+    }
 }

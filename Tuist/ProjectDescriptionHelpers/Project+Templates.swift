@@ -76,8 +76,9 @@ extension Project {
                                 .external(name: "FirebaseStorage"),
                                 .external(name: "StarWarsAPI"),
                                 .external(name: "StarWarsAPITestMocks"),
-                                .external(name: "MorningBearAPI"),
-                                .external(name: "MorningBearAPITestMocks")
+                                .external(name: "RxKakaoSDK"),
+                                .external(name: "MorningBearAPITestMocks"),
+                                .external(name: "MorningBearAPI")
                              ],
                              settings: .settings(
                                 base: [
@@ -106,7 +107,25 @@ extension Project {
             "CFBundleShortVersionString": "1.0",
             "CFBundleVersion": "1",
             "UIMainStoryboardFile": "",
-            "UILaunchStoryboardName": "LaunchScreen"
+            "UILaunchStoryboardName": "LaunchScreen",
+            "CFBundleURLTypes": [
+                [
+                    "CFBundleTypeRole": "Editor",
+                    "CFBundleURLSchemes": ["kakao338eeb478a5cce01fe713b9100d0f42e"]
+                ]
+            ],
+            "UIApplicationSceneManifest": [
+                "UIApplicationSupportsMultipleScenes": false,
+                "UISceneConfigurations": [
+                    "UIWindowSceneSessionRoleApplication": [
+                        [
+                            "UISceneConfigurationName": "Default Configuration",
+                            "UISceneDelegateClassName": "$(PRODUCT_MODULE_NAME).SceneDelegate"
+                        ],
+                    ]
+                ]
+            ],
+            "LSApplicationQueriesSchemes": ["kakaokompassauth"]
         ]
         
         let mainTarget = Target(
