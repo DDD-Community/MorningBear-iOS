@@ -137,6 +137,7 @@ extension Project {
             infoPlist: .extendingDefault(with: infoPlist),
             sources: ["Targets/\(name)/Sources/**"],
             resources: ["Targets/\(name)/Resources/**"],
+            entitlements: "Local/Entitlements/\(name).entitlements",
             dependencies: dependencies
         )
         
