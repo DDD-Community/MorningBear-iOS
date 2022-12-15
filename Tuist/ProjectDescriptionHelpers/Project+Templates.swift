@@ -104,7 +104,18 @@ extension Project {
             "CFBundleShortVersionString": "1.0",
             "CFBundleVersion": "1",
             "UIMainStoryboardFile": "",
-            "UILaunchStoryboardName": "LaunchScreen"
+            "UILaunchStoryboardName": "LaunchScreen",
+            "UIAppFonts": [
+                "Pretendard-Thin.otf",
+                "Pretendard-ExtraLight.otf",
+                "Pretendard-Light.otf",
+                "Pretendard-Regular.otf",
+                "Pretendard-Medium.otf",
+                "Pretendard-SemiBold.otf",
+                "Pretendard-Bold.otf",
+                "Pretendard-ExtraBold.otf",
+                "Pretendard-Black.otf",
+            ]
         ]
         
         let mainTarget = Target(
