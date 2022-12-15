@@ -22,4 +22,3 @@ class OnboardingCell: UICollectionViewCell {
         descriptionLabel.text = onboardingData[indexPath.row].description
     }
 }
-
