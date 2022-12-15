@@ -31,7 +31,7 @@ extension Project {
     
     /// Helper function to create a framework target and an associated unit test target
     private static func makeUIFrameworkTargets(name: String, platform: Platform) -> [Target] {
-        // MARK: - Add new dependecies in here
+        // MARK: - Add new UI dependecies in here
         let sources = Target(name: name,
                              platform: platform,
                              product: .framework,
@@ -75,7 +75,10 @@ extension Project {
                                 .external(name: "Apollo"),
                                 .external(name: "FirebaseStorage"),
                                 .external(name: "StarWarsAPI"),
-                                .external(name: "StarWarsAPITestMocks")
+                                .external(name: "StarWarsAPITestMocks"),
+                                .external(name: "RxKakaoSDK"),
+                                .external(name: "MorningBearAPITestMocks"),
+                                .external(name: "MorningBearAPI")
                              ],
                              settings: .settings(
                                 base: [
@@ -115,7 +118,25 @@ extension Project {
                 "Pretendard-Bold.otf",
                 "Pretendard-ExtraBold.otf",
                 "Pretendard-Black.otf",
-            ]
+            ],
+            "CFBundleURLTypes": [
+                [
+                    "CFBundleTypeRole": "Editor",
+                    "CFBundleURLSchemes": ["kakao338eeb478a5cce01fe713b9100d0f42e"]
+                ]
+            ],
+            "UIApplicationSceneManifest": [
+                "UIApplicationSupportsMultipleScenes": false,
+                "UISceneConfigurations": [
+                    "UIWindowSceneSessionRoleApplication": [
+                        [
+                            "UISceneConfigurationName": "Default Configuration",
+                            "UISceneDelegateClassName": "$(PRODUCT_MODULE_NAME).SceneDelegate"
+                        ],
+                    ]
+                ]
+            ],
+            "LSApplicationQueriesSchemes": ["kakaokompassauth"]
         ]
         
         let mainTarget = Target(
@@ -127,6 +148,7 @@ extension Project {
             infoPlist: .extendingDefault(with: infoPlist),
             sources: ["Targets/\(name)/Sources/**"],
             resources: ["Targets/\(name)/Resources/**"],
+            entitlements: "Local/Entitlements/\(name).entitlements",
             dependencies: dependencies
         )
         

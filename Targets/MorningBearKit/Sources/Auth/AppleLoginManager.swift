@@ -13,7 +13,7 @@ public final class AppleLoginManager: NSObject {
     public weak var viewController: UIViewController?
     public var userIdentifier: String?
     
-    public func request() {
+    public func login() {
         let request = ASAuthorizationAppleIDProvider().createRequest()
         request.requestedScopes = [.email]
         let controller = ASAuthorizationController(authorizationRequests: [request])

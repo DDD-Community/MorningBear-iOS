@@ -1,0 +1,8 @@
+query FindLoginInfo {
+	findLoginInfo {
+		redirectUri
+		jsKey
+		nativeKey
+		state
+	}
+}
