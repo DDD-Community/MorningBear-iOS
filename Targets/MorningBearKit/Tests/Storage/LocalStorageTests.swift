@@ -12,13 +12,13 @@ import XCTest
 import RxSwift
 
 final class LocalStorageTests: XCTestCase {
-    private var storageManager: LocalStorageManager<ValidInstance, MockLocalStorager>!
+    private var storageManager: LocalStorageManager<ValidInstance, MockLocalStorage>!
     private var bag: DisposeBag!
     
     
     override func setUpWithError() throws {
-        let mockStorager = MockLocalStorager()
-        self.storageManager = LocalStorageManager(mockStorager)
+        let mockStorage = MockLocalStorage()
+        self.storageManager = LocalStorageManager(mockStorage)
         
         self.bag = DisposeBag()
     }
@@ -96,7 +96,7 @@ fileprivate var falseInstance: FalseInstance {
     return FalseInstance()
 }
 
-fileprivate struct MockLocalStorager: StorageType {
+fileprivate struct MockLocalStorage: StorageType {
     func save(data: Data, name: String?) -> RxSwift.Single<URL> {
         return Single.just(vaildURL)
     }

@@ -1,5 +1,5 @@
 //
-//  LocalStorager.swift
+//  LocalStorage.swift
 //  MorningBearKit
 //
 //  Created by 이영빈 on 2022/12/08.
