@@ -10,6 +10,10 @@ import UIKit
 
 import RxSwift
 
+/// 로컬 저장소를 관리하는데 사용하는 클래스
+///
+/// 프로토콜 `StorageType`을 따르며 `save`, `load` 메서드를 이용해 로컬 저장소와 상호작용할 수 있음.
+/// 관리의 용이성을 위해 가능한 해당 클래스를 통해 로컬 저장소와 상호작용하는 것을 추천함
 public struct LocalStorageManager<Instance, Storager> where Instance: Codable, Storager: StorageType {
     private let localStorager: Storager
     private let coderSet: CoderSet
@@ -25,6 +29,7 @@ public struct LocalStorageManager<Instance, Storager> where Instance: Codable, S
     public func load(path: URL) -> Single<Instance> {
         let downloadTask = localStorager.download(with: path)
             .map { data in
+                // 디코딩 시도 및 에러 체크
                 guard let instance = try? coderSet.decoder.decode(Instance.self, from: data) else {
                     throw StorageError.invalidData
                 }
