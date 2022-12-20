@@ -14,8 +14,8 @@ class OnboardingCell: UICollectionViewCell {
     @IBOutlet weak var descriptionLabel: UILabel!
     
     func configure(data: OnboardingData) {
-        imageView.image = UIImage(named: onboardingData.image)
-        titleLabel.text = onboardingData.title
-        descriptionLabel.text = onboardingData.description
+        imageView.image = UIImage(named: data.image)
+        titleLabel.text = data.title
+        descriptionLabel.text = data.description
     }
 }
