@@ -20,7 +20,7 @@ struct FirebaseStorage: StorageType {
     
     func save(data: Data, name: String? = nil) -> Single<URL> {
         // Create a root reference
-        // MARK: child가 생략되면 crash
+        // !!!: child가 생략되면 crash
         let storageRef = storage.reference()
         let fileRef = storageRef.child(name ?? UUID().uuidString)
         
