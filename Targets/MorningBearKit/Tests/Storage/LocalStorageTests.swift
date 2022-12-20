@@ -11,14 +11,14 @@ import XCTest
 
 import RxSwift
 
-final class RemoteStorageTests: XCTestCase {
-    private var storageManager: RemoteStorageManager<MockRemoteStorageService>!
+final class LocalStorageTests: XCTestCase {
+    private var storageManager: LocalStorageManager<ValidInstance, MockLocalStorage>!
     private var bag: DisposeBag!
     
     
     override func setUpWithError() throws {
-        let mockService = MockRemoteStorageService()
-        self.storageManager = RemoteStorageManager(mockService)
+        let mockStorage = MockLocalStorage()
+        self.storageManager = LocalStorageManager(mockStorage)
         
         self.bag = DisposeBag()
     }
@@ -27,10 +27,10 @@ final class RemoteStorageTests: XCTestCase {
         self.bag = DisposeBag()
     }
     
-    func test__saveImage_sucess() throws {
+    func test__save() throws {
         let expectation = XCTestExpectation(description: "Test save image success")
         
-        storageManager.saveImage(validImage)
+        storageManager.save(validInstance, name: "test")
             .subscribe (
                 onSuccess: { url in
                     print(url)
@@ -44,28 +44,12 @@ final class RemoteStorageTests: XCTestCase {
         wait(for: [expectation], timeout: 2)
     }
     
-    func test__saveImage_fail() throws {
-        let expectation = XCTestExpectation(description: "Test save image fail")
-        
-        storageManager.saveImage(falseImage)
-            .subscribe (
-                onSuccess: { url in
-                    XCTFail("Test should fail")
-                }, onFailure: { error in
-                    expectation.fulfill()
-                }
-            )
-            .disposed(by: bag)
-                    
-        wait(for: [expectation], timeout: 2)
-    }
-    
-    func test__loadImage_success() throws {
+    func test__load_success() throws {
         let expectation = XCTestExpectation(description: "Test load image success")
         
-        storageManager.loadImage(vaildURL)
+        storageManager.load(path: vaildURL)
             .subscribe (
-                onSuccess: { image in
+                onSuccess: { (data: ValidInstance) in
                     expectation.fulfill()
                 }, onFailure: { error in
                     XCTFail("Error happend: \(error)")
@@ -75,12 +59,13 @@ final class RemoteStorageTests: XCTestCase {
                     
         wait(for: [expectation], timeout: 2)
     }
-    func test__loadImage_fail() throws {
+    
+    func test__load_fail() throws {
         let expectation = XCTestExpectation(description: "Test load image fail")
         
-        storageManager.loadImage(falseURL)
+        storageManager.load(path: falseURL)
             .subscribe (
-                onSuccess: { image in
+                onSuccess: { (data: ValidInstance) in
                     XCTFail("Test should fail")
                 }, onFailure: { error in
                     expectation.fulfill()
@@ -101,27 +86,40 @@ fileprivate var falseURL: URL {
     return URL(string: "www.google.com")!
 }
 
-fileprivate var validImage: UIImage {
-    return UIImage(systemName: "person")!
+fileprivate let validData = try? JSONEncoder().encode(validInstance)
+
+fileprivate var validInstance: ValidInstance {
+    return ValidInstance()
 }
 
-fileprivate var falseImage: UIImage {
-    return UIImage()
+fileprivate var falseInstance: FalseInstance {
+    return FalseInstance()
 }
 
-fileprivate struct MockRemoteStorageService: RemoteStoraging {
-    func save(data: Data) -> RxSwift.Single<URL> {
-        return Single.just(URL(string:"www.naver.com")!)
+fileprivate struct MockLocalStorage: StorageType {
+    func save(data: Data, name: String?) -> RxSwift.Single<URL> {
+        return Single.just(vaildURL)
     }
     
     func download(with url: URL) -> RxSwift.Single<Data> {
         guard url == vaildURL else {
             return Single.error(StorageError.failToLoadImage)
         }
-        guard let data = validImage.jpegData(compressionQuality: 0.7) else {
+        guard let data = validData else {
             return Single.error(StorageError.invalidImage)
         }
         
         return Single.just(data)
     }
 }
+
+fileprivate struct ValidInstance: Codable {
+    var title = "title"
+    var message = "message"
+}
+
+fileprivate struct FalseInstance: Codable {
+    var title = "title"
+    var message = "message"
+}
+

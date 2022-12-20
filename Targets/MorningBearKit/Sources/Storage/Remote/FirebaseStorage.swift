@@ -11,15 +11,18 @@ import Foundation
 import FirebaseStorage
 import RxSwift
 
-struct FirebaseStorageService: RemoteStoraging {
-    private let storage = Storage.storage()
+struct FirebaseStorage: StorageType {
+    private let storage: Storage
     
-    func save(data: Data) -> Single<URL> {
+    init(_ storage: Storage = Storage.storage()) {
+        self.storage = storage
+    }
+    
+    func save(data: Data, name: String? = nil) -> Single<URL> {
         // Create a root reference
-        // MARK: child가 생략되면 crash
-        // 왜 안알려줬어 구글아..
+        // !!!: child가 생략되면 crash
         let storageRef = storage.reference()
-        let fileRef = storageRef.child(UUID().uuidString)
+        let fileRef = storageRef.child(name ?? UUID().uuidString)
         
         // Make a Rx disposable
         let singleTrait = Single<URL>.create { observer in
