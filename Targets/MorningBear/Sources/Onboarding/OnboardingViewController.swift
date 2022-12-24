@@ -10,20 +10,25 @@ import UIKit
 
 class OnboardingViewController: UIViewController {
     
+    // MARK: - IBOutlets
     @IBOutlet weak var onboardingCollectionView: UICollectionView!
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var startButton: UIButton!
     
+    // MARK: Variables
     private let onboardingViewModel: OnboardingViewModel = OnboardingViewModel()
     
+    // MARK: LifeCycles
     override func viewDidLoad() {
         super.viewDidLoad()
         
         initView()
     }
     
+    // MARK: - IBActions
     @IBAction func startButtonTapped(_ sender: Any) { }
     
+    // MARK: - Functions
     private func initView() {
         setDelegate()
         setButtonAppearence()
