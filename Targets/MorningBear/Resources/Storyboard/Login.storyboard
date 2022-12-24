@@ -15,10 +15,10 @@
         </array>
     </customFonts>
     <scenes>
-        <!--View Controller-->
+        <!--Auth View Controller-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController id="Y6W-OH-hqX" sceneMemberID="viewController">
+                <viewController id="Y6W-OH-hqX" customClass="AuthViewController" customModule="MorningBear" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -39,11 +39,17 @@
                                         </constraints>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                        <connections>
+                                            <action selector="kakaoLoginButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="Je7-x5-Qy2"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xYc-TP-q98">
                                         <rect key="frame" x="0.0" y="72" width="350" height="56"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                        <connections>
+                                            <action selector="appleLoginButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="b46-ab-HRz"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <constraints>
@@ -71,6 +77,10 @@
                             <constraint firstItem="crS-TK-3rF" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="y6p-37-wrb"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="appleLoginButton" destination="xYc-TP-q98" id="io4-g9-YIg"/>
+                        <outlet property="kakaoLoginButton" destination="6Z0-8o-sQa" id="K5k-3n-b6d"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
