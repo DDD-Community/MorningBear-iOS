@@ -25,8 +25,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         self.window = window
         
-//        let viewController = UIViewController()
-        let viewController = UIStoryboard(name: "Onboarding", bundle: nil).instantiateViewController(withIdentifier: "OnboardingVC")
+//        let viewController = UIStoryboard(name: "Onboarding", bundle: nil).instantiateViewController(withIdentifier: "OnboardingVC")
+// FIXME:
+        let viewController = UIStoryboard(name: "NewHome", bundle: nil).instantiateViewController(withIdentifier: "NewHome")
         viewController.view.backgroundColor = .white
         
         window.rootViewController = viewController
