@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_0" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="TitleHeaderViewCell" id="gTV-IL-0wX" customClass="HomeSectionHeaderCell" customModule="MorningBear" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="318" height="64"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="318" height="64"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kvJ-rl-oMr">
+                        <rect key="frame" x="0.0" y="21.666666666666671" width="42" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3ri-xQ-EDz">
+                        <rect key="frame" x="243" y="14.666666666666664" width="75" height="35"/>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                    </button>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="3ri-xQ-EDz" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="6J5-0i-M2j"/>
+                <constraint firstItem="kvJ-rl-oMr" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="Luv-31-lhd"/>
+                <constraint firstAttribute="trailing" secondItem="3ri-xQ-EDz" secondAttribute="trailing" id="aZD-d5-wd0"/>
+                <constraint firstItem="kvJ-rl-oMr" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="gtC-yv-qLC"/>
+            </constraints>
+            <size key="customSize" width="318" height="64"/>
+            <connections>
+                <outlet property="descButton" destination="3ri-xQ-EDz" id="tbM-re-OAe"/>
+                <outlet property="titleLabel" destination="kvJ-rl-oMr" id="gAu-Xv-UmN"/>
+            </connections>
+            <point key="canvasLocation" x="341.53846153846155" y="25.592417061611375"/>
+        </collectionViewCell>
+    </objects>
+</document>
