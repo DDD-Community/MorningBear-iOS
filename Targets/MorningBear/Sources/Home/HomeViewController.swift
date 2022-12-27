@@ -61,9 +61,15 @@ extension HomeViewController {
     }
     
     private func registerCells() {
+        // 나의 최근 미라클 모닝
         var cellNib = UINib(nibName: "RecentMorningCell", bundle: nil)
         collectionView.register(cellNib,
                                 forCellWithReuseIdentifier: "RecentMorningCell")
+        
+        // 배지
+        cellNib = UINib(nibName: "BadgeCell", bundle: nil)
+        collectionView.register(cellNib,
+                                forCellWithReuseIdentifier: "BadgeCell")
         
         // 헤더 - 공용
         cellNib = UINib(nibName: "HomeSectionHeaderCell", bundle: nil)
@@ -123,11 +129,11 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
             
         case let .badges(badges):
             let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "RecentMorningCell", for: indexPath
-            ) as! RecentMorningCell
+                withReuseIdentifier: "BadgeCell", for: indexPath
+            ) as! BadgeCell
             
             let item = badges[indexPath.item]
-            cell.prepare(image: item.image, titleText: item.title)
+            cell.prepare(badge: item)
             
             return cell
             
