@@ -39,7 +39,10 @@ extension HomeViewController {
             case .badges:
                 return provider.horizontalScrollLayoutSection(column: 3)
             case .articles:
-                return provider.horizontalScrollLayoutSection(column: 4)
+                let section = provider.horizontalScrollLayoutSection(column: 1)
+                section.orthogonalScrollingBehavior = .groupPaging
+                
+                return section
             }
         }
         
@@ -70,6 +73,11 @@ extension HomeViewController {
         cellNib = UINib(nibName: "BadgeCell", bundle: nil)
         collectionView.register(cellNib,
                                 forCellWithReuseIdentifier: "BadgeCell")
+        
+        // 아티클
+        cellNib = UINib(nibName: "ArticleCell", bundle: nil)
+        collectionView.register(cellNib,
+                                forCellWithReuseIdentifier: "ArticleCell")
         
         // 헤더 - 공용
         cellNib = UINib(nibName: "HomeSectionHeaderCell", bundle: nil)
@@ -137,13 +145,13 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
             
             return cell
             
-        case let .articles(badges):
+        case let .articles(articles):
             let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "RecentMorningCell", for: indexPath
-            ) as! RecentMorningCell
+                withReuseIdentifier: "ArticleCell", for: indexPath
+            ) as! ArticleCell
             
-            let item = badges[indexPath.item]
-            cell.prepare(image: item.image, titleText: item.title)
+            let item = articles[indexPath.item]
+            cell.prepare(article: item)
             
             return cell
         }

@@ -11,5 +11,5 @@ import UIKit
 struct Article {
     let image: UIImage
     let title: String
-    let desc: String
+    let description: String
 }

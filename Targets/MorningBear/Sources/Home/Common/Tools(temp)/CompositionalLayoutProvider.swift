@@ -84,7 +84,7 @@ struct CompositionalLayoutProvider {
 
         // group
         let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1),
+            widthDimension: .fractionalWidth(0.9),
             heightDimension: .absolute(200)
         )
         
