@@ -37,9 +37,9 @@ extension HomeViewController {
             case .recentMornings:
                 return provider.staticGridLayoutSection(column: 2)
             case .badges:
-                return provider.horizontalScrollLayoutSection(cellWidth: 50)
+                return provider.horizontalScrollLayoutSection(column: 4)
             case .articles:
-                return provider.horizontalScrollLayoutSection(cellWidth: 50)
+                return provider.horizontalScrollLayoutSection(column: 4)
             }
         }
         
