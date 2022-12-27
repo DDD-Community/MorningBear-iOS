@@ -1,5 +1,5 @@
 //
-//  FooterViewCell.swift
+//  HomeSectionFooterCell.swift
 //  MorningBear
 //
 //  Created by 이영빈 on 2022/12/26.

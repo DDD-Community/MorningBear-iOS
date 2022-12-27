@@ -33,7 +33,7 @@ extension HomeViewController {
         let layout = UICollectionViewCompositionalLayout { (section, env) -> NSCollectionLayoutSection? in
             switch self.dataSource[section] {
             case .state:
-                return nil
+                return nil // 레이아웃 없음; 1개 셀
             case .recentMornings:
                 return provider.staticGridLayoutSection(column: 2)
             case .badges:
@@ -66,16 +66,16 @@ extension HomeViewController {
                                 forCellWithReuseIdentifier: "RecentMorningCell")
         
         // 헤더 - 공용
-        cellNib = UINib(nibName: "TitleHeaderViewCell", bundle: nil)
+        cellNib = UINib(nibName: "HomeSectionHeaderCell", bundle: nil)
         collectionView.register(cellNib,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                withReuseIdentifier: "TitleHeaderViewCell")
+                                withReuseIdentifier: "HomeSectionHeaderCell")
         
         // 푸터 - 공용
-        cellNib = UINib(nibName: "FooterViewCell", bundle: nil)
+        cellNib = UINib(nibName: "HomeSectionFooterCell", bundle: nil)
         collectionView.register(cellNib,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
-                                withReuseIdentifier: "FooterViewCell")
+                                withReuseIdentifier: "HomeSectionFooterCell")
     }
 }
 
@@ -166,7 +166,7 @@ extension HomeViewController {
     private func properHeaderCell(for indexPath: IndexPath) -> HomeSectionHeaderCell {
         let headerCell = collectionView.dequeueReusableSupplementaryView(
             ofKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: "TitleHeaderViewCell",
+            withReuseIdentifier: "HomeSectionHeaderCell",
             for: indexPath
         ) as! HomeSectionHeaderCell
         
@@ -187,7 +187,7 @@ extension HomeViewController {
     private func properFooterCell(for indexPath: IndexPath) -> HomeSectionFooterCell {
         let footerCell = collectionView.dequeueReusableSupplementaryView(
             ofKind: UICollectionView.elementKindSectionFooter,
-            withReuseIdentifier: "FooterViewCell",
+            withReuseIdentifier: "HomeSectionFooterCell",
             for: indexPath
         ) as! HomeSectionFooterCell
         
