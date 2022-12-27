@@ -144,33 +144,56 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        // 섹션 별로 다른 헤더 & 푸터를 설정
-        // 현재 편의 상 하나로 통일 -> FIXME: 후에 수정
+        // 헤더 & 푸터 설정
         switch kind {
+            // Header case
         case UICollectionView.elementKindSectionHeader:
-            let header = collectionView.dequeueReusableSupplementaryView(
-                ofKind: UICollectionView.elementKindSectionHeader,
-                withReuseIdentifier: "TitleHeaderViewCell",
-                for: indexPath
-            ) as! HomeSectionHeaderCell
-            
-            header.prepare(descText: "더 보기", titleText: "나의 최근 미라클모닝")
-            
-            return header
+            return properHeaderCell(for: indexPath)
             
         case UICollectionView.elementKindSectionFooter:
-            let footer = collectionView.dequeueReusableSupplementaryView(
-                ofKind: UICollectionView.elementKindSectionFooter,
-                withReuseIdentifier: "FooterViewCell",
-                for: indexPath
-            ) as! HomeSectionFooterCell
-            
-            footer.prepare(buttonText: "더 알아보기")
-            
-            return footer
-            
+            return properFooterCell(for: indexPath)
         default:
             return UICollectionReusableView()
         }
     }
+}
+
+// MARK: - Internal tools
+extension HomeViewController {
+    /// 섹션 별로 적절한 헤더 뷰를 제공
+    ///
+    /// 현재로서는 버튼 유무만 조정
+    private func properHeaderCell(for indexPath: IndexPath) -> HomeSectionHeaderCell {
+        let headerCell = collectionView.dequeueReusableSupplementaryView(
+            ofKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: "TitleHeaderViewCell",
+            for: indexPath
+        ) as! HomeSectionHeaderCell
+        
+        // 버튼 유무 조정
+        switch dataSource[indexPath.section] {
+        case .state:
+            headerCell.prepare(descText: nil, titleText: "나의 최근 미라클모닝", needsButton: false)
+        default:
+            headerCell.prepare(descText: "더 보기", titleText: "나의 최근 미라클모닝", needsButton: true)
+        }
+        
+        return headerCell
+    }
+
+    /// 섹션 별로 적절한 푸터 뷰를 제공
+    ///
+    /// 현재로서는 차이가 없음
+    private func properFooterCell(for indexPath: IndexPath) -> HomeSectionFooterCell {
+        let footerCell = collectionView.dequeueReusableSupplementaryView(
+            ofKind: UICollectionView.elementKindSectionFooter,
+            withReuseIdentifier: "FooterViewCell",
+            for: indexPath
+        ) as! HomeSectionFooterCell
+        
+        footerCell.prepare(buttonText: "더 알아보기")
+        
+        return footerCell
+    }
+
 }

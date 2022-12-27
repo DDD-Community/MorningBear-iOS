@@ -39,7 +39,7 @@
             </constraints>
             <size key="customSize" width="318" height="64"/>
             <connections>
-                <outlet property="descButton" destination="3ri-xQ-EDz" id="tbM-re-OAe"/>
+                <outlet property="moreButton" destination="3ri-xQ-EDz" id="tbM-re-OAe"/>
                 <outlet property="titleLabel" destination="kvJ-rl-oMr" id="gAu-Xv-UmN"/>
             </connections>
             <point key="canvasLocation" x="341.53846153846155" y="25.592417061611375"/>
