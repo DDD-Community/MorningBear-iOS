@@ -40,7 +40,7 @@ extension HomeViewController {
                 return provider.horizontalScrollLayoutSection(column: 3)
             case .articles:
                 let section = provider.horizontalScrollLayoutSection(column: 1)
-                section.orthogonalScrollingBehavior = .groupPaging
+                section.orthogonalScrollingBehavior = .groupPagingCentered
                 
                 return section
             }
@@ -92,7 +92,6 @@ extension HomeViewController {
                                 withReuseIdentifier: "HomeSectionFooterCell")
     }
 }
-
 
 // MARK: - Delegate methods
 extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelegate {
@@ -188,6 +187,10 @@ extension HomeViewController {
         switch dataSource[indexPath.section] {
         case .recentMornings:
             headerCell.prepare(descText: nil, titleText: "나의 최근 미라클모닝", needsButton: false)
+        case .badges:
+            headerCell.prepare(descText: "더 보기", titleText: "내가 모은 배지", needsButton: true)
+        case .articles:
+            headerCell.prepare(descText: "더 보기", titleText: "읽을거리", needsButton: true)
         default:
             headerCell.prepare(descText: "더 보기", titleText: "나의 최근 미라클모닝", needsButton: true)
         }
@@ -209,5 +212,4 @@ extension HomeViewController {
         
         return footerCell
     }
-
 }
