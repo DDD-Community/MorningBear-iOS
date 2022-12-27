@@ -8,6 +8,9 @@
 
 import UIKit
 
+/// 테스트 용 목데이터
+///
+/// 나중에 없애버릴 거임
 struct Mock {
     static let dataSource = [
         HomeSection.recentMornings(

@@ -1,5 +1,5 @@
 //
-//  NewHomeViewController.swift
+//  HomeViewController.swift
 //  MorningBear
 //
 //  Created by 이영빈 on 2022/12/26.
@@ -35,7 +35,7 @@ extension HomeViewController {
             case .state:
                 return nil
             case .recentMornings:
-                return provider.getRecentMorningLayoutSection()
+                return provider.getRecentMorningLayoutSection(column: 2)
             case .badges:
                 return provider.getBadgeLayoutSection()
             case .articles:
@@ -65,11 +65,13 @@ extension HomeViewController {
         collectionView.register(cellNib,
                                    forCellWithReuseIdentifier: "RecentMorningCell")
         
+        // 헤더 - 공용
         cellNib = UINib(nibName: "TitleHeaderViewCell", bundle: nil)
         collectionView.register(cellNib,
                                    forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                    withReuseIdentifier: "TitleHeaderViewCell")
         
+        // 푸터 - 공용
         cellNib = UINib(nibName: "FooterViewCell", bundle: nil)
         collectionView.register(cellNib,
                                    forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
@@ -143,6 +145,8 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        // 섹션 별로 다른 헤더 & 푸터를 설정
+        // 현재 편의 상 하나로 통일 -> FIXME: 후에 수정
         switch kind {
         case UICollectionView.elementKindSectionHeader:
             let header = collectionView.dequeueReusableSupplementaryView(
@@ -152,6 +156,7 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
             ) as! HomeSectionHeaderCell
             
             header.prepare(descText: "더 보기", titleText: "나의 최근 미라클모닝")
+            
             return header
             
         case UICollectionView.elementKindSectionFooter:
@@ -162,7 +167,9 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
             ) as! HomeSectionFooterCell
             
             footer.prepare(buttonText: "더 알아보기")
+            
             return footer
+            
         default:
             return UICollectionReusableView()
         }
