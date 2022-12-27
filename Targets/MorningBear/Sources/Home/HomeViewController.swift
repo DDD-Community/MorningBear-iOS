@@ -63,19 +63,19 @@ extension HomeViewController {
     private func registerCells() {
         var cellNib = UINib(nibName: "RecentMorningCell", bundle: nil)
         collectionView.register(cellNib,
-                                   forCellWithReuseIdentifier: "RecentMorningCell")
+                                forCellWithReuseIdentifier: "RecentMorningCell")
         
         // 헤더 - 공용
         cellNib = UINib(nibName: "TitleHeaderViewCell", bundle: nil)
         collectionView.register(cellNib,
-                                   forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                   withReuseIdentifier: "TitleHeaderViewCell")
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                withReuseIdentifier: "TitleHeaderViewCell")
         
         // 푸터 - 공용
         cellNib = UINib(nibName: "FooterViewCell", bundle: nil)
         collectionView.register(cellNib,
-                                   forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
-                                   withReuseIdentifier: "FooterViewCell")
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+                                withReuseIdentifier: "FooterViewCell")
     }
 }
 
@@ -102,14 +102,13 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch self.dataSource[indexPath.section] {
         case let .state(state):
-//            let cell = collectionView.dequeueReusableCell(
-//                withReuseIdentifier: "RecentMorningCell", for: indexPath
-//            ) as! RecentMorningCell
-//
-//            let item = state
-//            cell.prepare(image: item.image, titleText: item.title)
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "StateCell", for: indexPath
+            ) as! StateCell
             
-            // TODO: 귀찮아서 나중에하려고 놔둠
+            let item = state
+            cell.prepare(titleText: item.nickname)
+            
             return UICollectionViewCell()
             
         case let .recentMornings(mornings):
@@ -129,7 +128,7 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
             
             let item = badges[indexPath.item]
             cell.prepare(image: item.image, titleText: item.title)
-
+            
             return cell
             
         case let .articles(badges):
@@ -139,7 +138,7 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
             
             let item = badges[indexPath.item]
             cell.prepare(image: item.image, titleText: item.title)
-
+            
             return cell
         }
     }

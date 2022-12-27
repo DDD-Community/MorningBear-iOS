@@ -9,10 +9,20 @@
 import UIKit
 
 class StateCell: UICollectionViewCell {
-
+    @IBOutlet weak var titleLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
-
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        self.prepare(titleText: nil)
+    }
+    
+    func prepare(titleText: String?) {
+        self.titleLabel.text = titleText
+    }
 }
