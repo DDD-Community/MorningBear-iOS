@@ -90,8 +90,8 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
         switch dataSource[section] {
         case .state:
             return 1
-        case .recentMornings:
-            return 4 // 고정값(최근 미라클 모닝은 상위 4개만 표시)
+        case let .recentMornings(states):
+            return min(4, states.count) // 고정값(최근 미라클 모닝은 상위 4개만 표시)
         case let .badges(badges):
             return badges.count
         case let .articles(articles):
