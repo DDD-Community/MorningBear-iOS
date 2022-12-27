@@ -37,7 +37,7 @@ extension HomeViewController {
             case .recentMornings:
                 return provider.staticGridLayoutSection(column: 2)
             case .badges:
-                return provider.horizontalScrollLayoutSection(column: 4)
+                return provider.horizontalScrollLayoutSection(column: 3)
             case .articles:
                 return provider.horizontalScrollLayoutSection(column: 4)
             }
@@ -178,7 +178,7 @@ extension HomeViewController {
         
         // 버튼 유무 조정
         switch dataSource[indexPath.section] {
-        case .state:
+        case .recentMornings:
             headerCell.prepare(descText: nil, titleText: "나의 최근 미라클모닝", needsButton: false)
         default:
             headerCell.prepare(descText: "더 보기", titleText: "나의 최근 미라클모닝", needsButton: true)

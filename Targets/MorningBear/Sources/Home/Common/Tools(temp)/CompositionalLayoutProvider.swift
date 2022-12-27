@@ -98,7 +98,7 @@ struct CompositionalLayoutProvider {
         let header = NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: headerSize,
             elementKind: UICollectionView.elementKindSectionHeader,
-            alignment: .bottomLeading
+            alignment: .topLeading
         )
         
         // section
