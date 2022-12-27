@@ -35,11 +35,11 @@ extension HomeViewController {
             case .state:
                 return nil
             case .recentMornings:
-                return provider.getRecentMorningLayoutSection(column: 2)
+                return provider.staticGridLayoutSection(column: 2)
             case .badges:
-                return provider.getBadgeLayoutSection()
+                return provider.horizontalScrollLayoutSection(cellWidth: 50)
             case .articles:
-                return provider.getBadgeLayoutSection()
+                return provider.horizontalScrollLayoutSection(cellWidth: 50)
             }
         }
         

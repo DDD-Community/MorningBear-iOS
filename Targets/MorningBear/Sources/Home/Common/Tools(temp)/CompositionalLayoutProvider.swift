@@ -11,8 +11,11 @@ import UIKit
 /// `UICollectionViewCompositionalLayout`의 `NSCollectionLayoutSection`를
 /// 재사용하기 위해 사용하는 함수 모음입니다
 struct CompositionalLayoutProvider {    
-    /// 나의 최근 미라클 모닝 등에서 사용되는 NxN 그리드를 위한 레이아웃 섹션
-    func getRecentMorningLayoutSection(column: Int) -> NSCollectionLayoutSection {
+    /// 나의 최근 미라클 모닝 등에서 사용되는 스크롤 없는 NxN 그리드를 위한 레이아웃 섹션
+    ///
+    /// - Parameters:
+    ///     - column: 한 행에 표시되는 아이템 개수
+    func staticGridLayoutSection(column: Int) -> NSCollectionLayoutSection {
         // (1 / 열 개수) = 한 열 당 셀이 차지하는 가로 크기 비율
         let calculatedWidthFraction = 1.0 / CGFloat(column)
         
@@ -65,26 +68,26 @@ struct CompositionalLayoutProvider {
     }
     
     /// 내가 모은 배지 등에서 사용되는 수평 스크롤 레이아웃 섹션
-    func getBadgeLayoutSection() -> NSCollectionLayoutSection {
+    ///
+    /// - Parameters:
+    ///     - cellWidth: 각 셀의 가로길이. 세로길이는 속한 그룹의 높이랑 일치함.
+    func horizontalScrollLayoutSection(cellWidth: CGFloat) -> NSCollectionLayoutSection {
         // item
         let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
+            widthDimension: .absolute(cellWidth),
             heightDimension: .fractionalHeight(1.0)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 8, bottom: 12, trailing: 8)
-        
+        item.contentInsets = NSDirectionalEdgeInsets(top: 7.5, leading: 7.5, bottom: 7.5, trailing: 7.5)
+
         // group
         let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(0.9),
-            heightDimension: .fractionalHeight(1.0/4.0)
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .absolute(150)
         )
-        let group = NSCollectionLayoutGroup.vertical(
-            layoutSize: groupSize,
-            subitem: item,
-            count: 4
-        )
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
+        // header
         let headerSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
             heightDimension: .absolute(40)
@@ -92,7 +95,7 @@ struct CompositionalLayoutProvider {
         let header = NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: headerSize,
             elementKind: UICollectionView.elementKindSectionHeader,
-            alignment: .top
+            alignment: .bottomLeading
         )
         
         // section
