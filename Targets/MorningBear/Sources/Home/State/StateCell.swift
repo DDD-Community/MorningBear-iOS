@@ -10,6 +10,17 @@ import UIKit
 
 class StateCell: UICollectionViewCell {
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var subTitleLabel: UILabel!
+    
+    @IBOutlet weak var conditionLabel: UILabel!
+    @IBOutlet weak var timeLabel: UILabel!
+    @IBOutlet weak var badgeLabel: UILabel!
+    
+    @IBOutlet weak var conditionStackView: UIStackView! {
+        didSet {
+            conditionStackView.distribution = .equalSpacing
+        }
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -19,10 +30,10 @@ class StateCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        self.prepare(titleText: nil)
+        self.prepare(state: nil)
     }
     
-    func prepare(titleText: String?) {
-        self.titleLabel.text = titleText
+    func prepare(state: State?) {
+        self.titleLabel.text = state?.nickname
     }
 }

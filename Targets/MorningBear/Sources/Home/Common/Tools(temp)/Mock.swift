@@ -13,7 +13,10 @@ import UIKit
 /// 나중에 없애버릴 거임
 struct Mock {
     static let dataSource = [
-        HomeSection.recentMornings(
+        HomeSection.state(
+            .init(nickname: "Mock nickname")
+        ),
+        .recentMornings(
             [
                 .init(image: UIColor.random.image(), title: "concept아이템(title1)", desc: "concept아이템(desc1)"),
                 .init(image: UIColor.random.image(), title: "concept아이템(title2)", desc: "concept아이템(desc2)"),

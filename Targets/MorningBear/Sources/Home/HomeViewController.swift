@@ -33,7 +33,7 @@ extension HomeViewController {
         let layout = UICollectionViewCompositionalLayout { (section, env) -> NSCollectionLayoutSection? in
             switch self.dataSource[section] {
             case .state:
-                return nil // 레이아웃 없음; 1개 셀
+                return provider.plainLayoutSection(height: 200) // 1개 셀
             case .recentMornings:
                 return provider.staticGridLayoutSection(column: 2)
             case .badges:
@@ -68,6 +68,10 @@ extension HomeViewController {
         var cellNib = UINib(nibName: "RecentMorningCell", bundle: nil)
         collectionView.register(cellNib,
                                 forCellWithReuseIdentifier: "RecentMorningCell")
+        
+        cellNib = UINib(nibName: "StateCell", bundle: nil)
+        collectionView.register(cellNib,
+                                forCellWithReuseIdentifier: "StateCell")
         
         // 배지
         cellNib = UINib(nibName: "BadgeCell", bundle: nil)
@@ -120,9 +124,9 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
             ) as! StateCell
             
             let item = state
-            cell.prepare(titleText: item.nickname)
+            cell.prepare(state: item)
             
-            return UICollectionViewCell()
+            return cell
             
         case let .recentMornings(mornings):
             let cell = collectionView.dequeueReusableCell(

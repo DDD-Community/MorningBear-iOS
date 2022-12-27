@@ -15,7 +15,30 @@ struct CompositionalLayoutProvider {
     private func calculatedWidthFraction(_ column: Int) -> CGFloat {
         1.0 / CGFloat(column)
     }
-
+    
+    /// 내 상태같은 1개 셀만을 표기하는 레이아웃 섹션
+    func plainLayoutSection(height: CGFloat) -> NSCollectionLayoutSection {
+        // item
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .fractionalHeight(1)
+        )
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        // group
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .absolute(height)
+        )
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
+        // section
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .none
+        
+        return section
+    }
+    
     /// 나의 최근 미라클 모닝 등에서 사용되는 스크롤 없는 NxN 그리드를 위한 레이아웃 섹션
     ///
     /// - Parameters:
