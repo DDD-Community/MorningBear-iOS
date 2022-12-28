@@ -11,11 +11,6 @@ import UIKit
 /// `UICollectionViewCompositionalLayout`의 `NSCollectionLayoutSection`를
 /// 재사용하기 위해 사용하는 함수 모음입니다
 struct CompositionalLayoutProvider {
-    /// (1 / 열 개수) = 한 열 당 셀이 차지하는 가로 크기 비율
-    private func calculatedWidthFraction(_ column: Int) -> CGFloat {
-        1.0 / CGFloat(column)
-    }
-    
     /// 내 상태같은 1개 셀만을 표기하는 레이아웃 섹션
     func plainLayoutSection(height: CGFloat) -> NSCollectionLayoutSection {
         // item
@@ -35,6 +30,7 @@ struct CompositionalLayoutProvider {
         // section
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .none
+        section.contentInsets = commomSectionInset
         
         return section
     }
@@ -46,12 +42,11 @@ struct CompositionalLayoutProvider {
     func staticGridLayoutSection(column: Int) -> NSCollectionLayoutSection {
         // item
         let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(calculatedWidthFraction(column)),
+            widthDimension: .fractionalWidth(calculatedWidthFraction(column)-0.01),
             heightDimension: .fractionalHeight(1)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top: 7.5, leading: 7.5, bottom: 7.5, trailing: 7.5)
-        
+
         // group
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
@@ -61,18 +56,11 @@ struct CompositionalLayoutProvider {
             layoutSize: groupSize,
             subitems: [item]
         )
-        
+        group.interItemSpacing = .fixed(7.5)
+
         // header
-        let headerSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(40)
-        )
-        let header = NSCollectionLayoutBoundarySupplementaryItem(
-            layoutSize: headerSize,
-            elementKind: UICollectionView.elementKindSectionHeader,
-            alignment: .top
-        )
-        
+        let header = commonHeader
+
         // footer
         let footerSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
@@ -89,6 +77,9 @@ struct CompositionalLayoutProvider {
         section.orthogonalScrollingBehavior = .none
         section.boundarySupplementaryItems = [header, footer]
         
+        section.contentInsets = commomSectionInset
+        section.interGroupSpacing = 7.5
+        
         return section
     }
     
@@ -103,20 +94,46 @@ struct CompositionalLayoutProvider {
             heightDimension: .fractionalHeight(1.0)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top: 7.5, leading: 7.5, bottom: 7.5, trailing: 7.5)
+        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 12)
 
         // group
         let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(0.9),
-            heightDimension: .absolute(200)
+            widthDimension: .fractionalWidth(0.8),
+            heightDimension: .absolute(176)
         )
         
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         // header
+        let header = commonHeader
+        
+        // section
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .continuous
+        section.boundarySupplementaryItems = [header]
+        section.contentInsets = commomSectionInset
+        
+        return section
+    }
+}
+
+// MARK: Internal tools
+extension CompositionalLayoutProvider {
+    /// (1 / 열 개수) = 한 열 당 셀이 차지하는 가로 크기 비율
+    private func calculatedWidthFraction(_ column: Int) -> CGFloat {
+        1.0 / CGFloat(column)
+    }
+    
+    /// 섹션 국룰 좌우 패딩(좌 20, 우 20)
+    private var commomSectionInset: NSDirectionalEdgeInsets {
+        NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+    }
+    
+    /// 공용으로 쓰이는 헤더 래핑한 것
+    private var commonHeader: NSCollectionLayoutBoundarySupplementaryItem {
         let headerSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(40)
+            heightDimension: .estimated(45)
         )
         let header = NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: headerSize,
@@ -124,11 +141,7 @@ struct CompositionalLayoutProvider {
             alignment: .topLeading
         )
         
-        // section
-        let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .continuous
-        section.boundarySupplementaryItems = [header]
-        
-        return section
+        header.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: nil, trailing: nil, bottom: .fixed(20))
+        return header
     }
 }

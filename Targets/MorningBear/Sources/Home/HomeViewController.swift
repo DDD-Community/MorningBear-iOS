@@ -37,7 +37,7 @@ extension HomeViewController {
             case .recentMornings:
                 return provider.staticGridLayoutSection(column: 2)
             case .badges:
-                return provider.horizontalScrollLayoutSection(column: 3)
+                return provider.horizontalScrollLayoutSection(column: 2)
             case .articles:
                 let section = provider.horizontalScrollLayoutSection(column: 1)
                 section.orthogonalScrollingBehavior = .groupPagingCentered
@@ -46,6 +46,10 @@ extension HomeViewController {
             }
         }
         
+        let config = UICollectionViewCompositionalLayoutConfiguration()
+        config.interSectionSpacing = 32
+        
+        layout.configuration = config
         collectionView.collectionViewLayout = layout
     }
     
@@ -98,7 +102,15 @@ extension HomeViewController {
 }
 
 // MARK: - Delegate methods
-extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension HomeViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        800
+    }
+}
+
+extension HomeViewController: UICollectionViewDelegate {}
+
+extension HomeViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         self.dataSource.count
     }
