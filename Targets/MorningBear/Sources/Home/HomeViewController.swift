@@ -9,7 +9,7 @@
 import UIKit
 
 class HomeViewController: UIViewController {
-    private var dataSource = Mock.dataSource
+    private let viewModel = HomeViewModel()
     
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
@@ -33,7 +33,7 @@ extension HomeViewController {
         let provider = CompositionalLayoutProvider()
         
         let layout = UICollectionViewCompositionalLayout { (section, env) -> NSCollectionLayoutSection? in
-            switch self.dataSource[section] {
+            switch HomeSection.getSection(index: section) {
             case .state:
                 return provider.plainLayoutSection(height: 200) // 1개 셀
             case .recentMornings:
@@ -45,6 +45,8 @@ extension HomeViewController {
                 section.orthogonalScrollingBehavior = .groupPagingCentered
                 
                 return section
+            case .none:
+                return nil
             }
         }
         
@@ -104,73 +106,72 @@ extension HomeViewController {
 }
 
 // MARK: - Delegate methods
-extension HomeViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        800
-    }
-}
-
 extension HomeViewController: UICollectionViewDelegate {}
 
 extension HomeViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        self.dataSource.count
+        HomeSection.allCases.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch dataSource[section] {
+        switch HomeSection.getSection(index: section) {
         case .state:
             return 1
-        case let .recentMornings(states):
-            return min(4, states.count) // 고정값(최근 미라클 모닝은 상위 4개만 표시)
-        case let .badges(badges):
-            return badges.count
-        case let .articles(articles):
-            return articles.count
+        case .recentMornings:
+            return min(4, viewModel.recentMorningList.count) // 최근 미라클 모닝은 상위 4개만 표시
+        case .badges:
+            return viewModel.badgeList.count
+        case .articles:
+            return viewModel.articleList.count
+        case .none:
+            return 0
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch self.dataSource[indexPath.section] {
-        case let .state(state):
+        switch HomeSection.getSection(index: indexPath.section) {
+        case .state:
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: "StateCell", for: indexPath
             ) as! StateCell
             
-            let item = state
+            let item = viewModel.state
             cell.prepare(state: item)
             
             return cell
             
-        case let .recentMornings(mornings):
+        case .recentMornings:
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: "RecentMorningCell", for: indexPath
             ) as! RecentMorningCell
             
-            let item = mornings.prefix(4)[indexPath.item] // 최근 미라클 모닝은 상위 4개만 표시; MARK: 정렬 필수
+            let item = viewModel.recentMorningList.prefix(4)[indexPath.item] // 최근 미라클 모닝은 상위 4개만 표시; MARK: 정렬 필수
             cell.prepare(item)
             
             return cell
             
-        case let .badges(badges):
+        case .badges:
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: "BadgeCell", for: indexPath
             ) as! BadgeCell
             
-            let item = badges[indexPath.item]
+            let item = viewModel.badgeList[indexPath.item]
             cell.prepare(badge: item)
             
             return cell
             
-        case let .articles(articles):
+        case .articles:
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: "ArticleCell", for: indexPath
             ) as! ArticleCell
             
-            let item = articles[indexPath.item]
+            let item = viewModel.articleList[indexPath.item]
             cell.prepare(article: item)
             
             return cell
+        
+        case .none:
+            return UICollectionViewCell()
         }
     }
     
@@ -202,7 +203,7 @@ extension HomeViewController {
         ) as! HomeSectionHeaderCell
         
         // 버튼 유무 조정
-        switch dataSource[indexPath.section] {
+        switch HomeSection.getSection(index: indexPath.section) {
         case .recentMornings:
             headerCell.prepare(descText: nil, titleText: "나의 최근 미라클모닝", needsButton: false)
         case .badges:

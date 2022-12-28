@@ -9,13 +9,32 @@
 import UIKit
 
 /// 홈 뷰에서 사용되는 섹션
-enum HomeSection {
+enum HomeSection: Int, CaseIterable {
     /// 현재 상태(누적 시간 등)
-    case state(State)
+    case state
     /// 나의 최근 미라클 모닝
-    case recentMornings([RecentMorning])
+    case recentMornings
     /// 나의 배지
-    case badges([Badge])
+    case badges
     /// 읽을만한 글
-    case articles([Article])
+    case articles
+}
+
+extension HomeSection {
+    static func getSection(index: Int) -> HomeSection? {
+        return HomeSection(rawValue: index)
+    }
+    
+    var reuseIdentifier: String {
+        switch self {
+        case .state:
+            return "StateCell"
+        case .recentMornings:
+            return "RecentMorningCell"
+        case .badges:
+            return "BadgeCell"
+        case .articles:
+            return "ArticleCell"
+        }
+    }
 }
