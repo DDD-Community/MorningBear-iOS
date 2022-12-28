@@ -9,18 +9,54 @@
 import UIKit
 
 class StateCell: UICollectionViewCell {
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var subTitleLabel: UILabel!
-    
-    @IBOutlet weak var conditionLabel: UILabel!
-    @IBOutlet weak var timeLabel: UILabel!
-    @IBOutlet weak var badgeLabel: UILabel!
-    
-    @IBOutlet weak var conditionStackView: UIStackView! {
+    @IBOutlet weak var titleLabel: UILabel! {
         didSet {
-            conditionStackView.distribution = .equalSpacing
+            titleLabel.font = MorningBearFontFamily.Pretendard.bold.font(size: 24)
         }
     }
+    @IBOutlet weak var subTitleLabel: UILabel! {
+        didSet {
+            subTitleLabel.font = MorningBearFontFamily.Pretendard.regular.font(size: 16)
+            subTitleLabel.textColor = MorningBearAsset.Colors.secondaryText.color
+        }
+    }
+    
+    @IBOutlet weak var countTitleLabel: UILabel! {
+        didSet {
+            countTitleLabel.font = MorningBearFontFamily.Pretendard.regular.font(size: 12)
+            countTitleLabel.textColor = MorningBearAsset.Colors.disabledText.color
+        }
+    }
+    @IBOutlet weak var timeTitleLabel: UILabel! {
+        didSet {
+            timeTitleLabel.font = MorningBearFontFamily.Pretendard.regular.font(size: 12)
+            timeTitleLabel.textColor = MorningBearAsset.Colors.disabledText.color
+        }
+    }
+    @IBOutlet weak var badgeTitleLabel: UILabel! {
+        didSet {
+            badgeTitleLabel.font = MorningBearFontFamily.Pretendard.regular.font(size: 12)
+            badgeTitleLabel.textColor = MorningBearAsset.Colors.disabledText.color
+        }
+    }
+    
+    
+    @IBOutlet weak var countLabel: UILabel! {
+        didSet {
+            countLabel.font = MorningBearFontFamily.Pretendard.bold.font(size: 16)
+        }
+    }
+    @IBOutlet weak var timeLabel: UILabel! {
+        didSet {
+            timeLabel.font = MorningBearFontFamily.Pretendard.bold.font(size: 16)
+        }
+    }
+    @IBOutlet weak var badgeLabel: UILabel! {
+        didSet {
+            badgeLabel.font = MorningBearFontFamily.Pretendard.bold.font(size: 16)
+        }
+    }
+    
     
     override func awakeFromNib() {
         super.awakeFromNib()
