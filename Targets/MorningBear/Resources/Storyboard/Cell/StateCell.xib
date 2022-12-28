@@ -116,6 +116,7 @@
                             </stackView>
                         </subviews>
                         <constraints>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="136" id="0r9-A2-Fkp"/>
                             <constraint firstItem="J7x-WU-MTZ" firstAttribute="centerY" secondItem="H7a-YS-jcc" secondAttribute="centerY" id="Ayv-Pi-gUm"/>
                             <constraint firstItem="J7x-WU-MTZ" firstAttribute="centerX" secondItem="H7a-YS-jcc" secondAttribute="centerX" id="ZX7-6i-iwf"/>
                         </constraints>
@@ -137,6 +138,7 @@
                 <outlet property="badgeTitleLabel" destination="fCT-Gx-7vx" id="Aj3-8R-bj8"/>
                 <outlet property="countLabel" destination="lMh-0V-xCJ" id="IgE-EB-p3m"/>
                 <outlet property="countTitleLabel" destination="hca-Bk-HPg" id="q1o-Fx-B0x"/>
+                <outlet property="stateWrapperView" destination="H7a-YS-jcc" id="MiH-Yb-LyB"/>
                 <outlet property="subTitleLabel" destination="4cC-uH-GyM" id="wz3-x8-z0t"/>
                 <outlet property="timeLabel" destination="aXr-l1-VqY" id="ZXN-Th-tqI"/>
                 <outlet property="timeTitleLabel" destination="1Yu-aL-Cet" id="Z9S-AR-cYf"/>

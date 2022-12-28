@@ -16,14 +16,14 @@ struct CompositionalLayoutProvider {
         // item
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
-            heightDimension: .fractionalHeight(1)
+            heightDimension: .estimated(1)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         // group
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
-            heightDimension: .absolute(height)
+            heightDimension: .estimated(height)
         )
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         

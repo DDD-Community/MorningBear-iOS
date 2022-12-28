@@ -9,6 +9,12 @@
 import UIKit
 
 class StateCell: UICollectionViewCell {
+    @IBOutlet weak var stateWrapperView: UIView! {
+        didSet {
+            stateWrapperView.backgroundColor = .white
+            stateWrapperView.layer.cornerRadius = 12
+        }
+    }
     @IBOutlet weak var titleLabel: UILabel! {
         didSet {
             titleLabel.font = MorningBearFontFamily.Pretendard.bold.font(size: 24)
