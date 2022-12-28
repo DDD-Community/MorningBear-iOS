@@ -139,7 +139,7 @@
                 <outlet property="countLabel" destination="lMh-0V-xCJ" id="IgE-EB-p3m"/>
                 <outlet property="countTitleLabel" destination="hca-Bk-HPg" id="q1o-Fx-B0x"/>
                 <outlet property="stateWrapperView" destination="H7a-YS-jcc" id="MiH-Yb-LyB"/>
-                <outlet property="subTitleLabel" destination="4cC-uH-GyM" id="wz3-x8-z0t"/>
+                <outlet property="subTitleLabel" destination="4cC-uH-GyM" id="ReB-dP-u1h"/>
                 <outlet property="timeLabel" destination="aXr-l1-VqY" id="ZXN-Th-tqI"/>
                 <outlet property="timeTitleLabel" destination="1Yu-aL-Cet" id="Z9S-AR-cYf"/>
                 <outlet property="titleLabel" destination="Sbb-EJ-H2K" id="PrW-t2-eiW"/>

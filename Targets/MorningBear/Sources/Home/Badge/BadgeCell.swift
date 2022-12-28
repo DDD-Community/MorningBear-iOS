@@ -26,6 +26,10 @@ class BadgeCell: UICollectionViewCell {
     }
     
     func prepare(badge: Badge?) {
-        self.imageView.image = badge?.image
+        guard let data = badge else {
+            return
+        }
+        
+        self.imageView.image = data.image
     }
 }

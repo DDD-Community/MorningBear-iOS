@@ -148,7 +148,7 @@ extension HomeViewController: UICollectionViewDataSource {
             ) as! RecentMorningCell
             
             let item = mornings.prefix(4)[indexPath.item] // 최근 미라클 모닝은 상위 4개만 표시; MARK: 정렬 필수
-            cell.prepare(image: item.image, titleText: item.title)
+            cell.prepare(item)
             
             return cell
             

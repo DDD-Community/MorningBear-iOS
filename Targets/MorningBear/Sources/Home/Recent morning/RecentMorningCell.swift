@@ -23,11 +23,15 @@ final class RecentMorningCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        self.prepare(image: nil, titleText: nil)
+        self.prepare(nil)
     }
     
-    func prepare(image: UIImage?, titleText: String?) {
-        self.imageView.image = image
-        self.titleLabel.text = titleText
+    func prepare(_ data: RecentMorning?) {
+        guard let data = data else {
+            return
+        }
+        
+        self.imageView.image = data.image
+        self.titleLabel.text = data.title
     }
 }
