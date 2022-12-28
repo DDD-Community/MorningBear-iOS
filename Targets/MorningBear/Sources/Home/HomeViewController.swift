@@ -224,7 +224,7 @@ extension HomeViewController {
             for: indexPath
         ) as! HomeSectionFooterCell
         
-        footerCell.prepare(buttonText: "더 알아보기")
+        footerCell.prepare(buttonText: "더 보러가기")
         
         return footerCell
     }

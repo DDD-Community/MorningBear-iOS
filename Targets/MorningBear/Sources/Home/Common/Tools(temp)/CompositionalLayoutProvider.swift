@@ -64,13 +64,14 @@ struct CompositionalLayoutProvider {
         // footer
         let footerSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(56)
+            heightDimension: .absolute(76)
         )
         let footer = NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: footerSize,
             elementKind: UICollectionView.elementKindSectionFooter,
             alignment: .bottom
         )
+//        footer.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0)
         
         // section
         let section = NSCollectionLayoutSection(group: group)
