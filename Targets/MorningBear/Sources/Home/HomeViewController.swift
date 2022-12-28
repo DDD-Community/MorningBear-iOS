@@ -22,6 +22,8 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // FIXME: 색깔 이거 아닌 것 같음
+        self.view.backgroundColor = MorningBearAsset.Colors.gray100.color
     }
 }
 

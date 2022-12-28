@@ -28,7 +28,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //        let viewController = UIStoryboard(name: "Onboarding", bundle: nil).instantiateViewController(withIdentifier: "OnboardingVC")
 // FIXME:
         let viewController = UIStoryboard(name: "NewHome", bundle: nil).instantiateViewController(withIdentifier: "NewHome")
-        viewController.view.backgroundColor = .white
         
         window.rootViewController = viewController
         window.makeKeyAndVisible()
