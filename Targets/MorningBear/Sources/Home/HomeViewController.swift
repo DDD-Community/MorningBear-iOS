@@ -204,11 +204,11 @@ extension HomeViewController {
         case .recentMornings:
             headerCell.prepare(descText: nil, titleText: "나의 최근 미라클모닝", needsButton: false)
         case .badges:
-            headerCell.prepare(descText: "더 보기", titleText: "내가 모은 배지", needsButton: true)
+            headerCell.prepare(descText: "모두 보기>", titleText: "내가 모은 배지", needsButton: true)
         case .articles:
-            headerCell.prepare(descText: "더 보기", titleText: "읽을거리", needsButton: true)
+            headerCell.prepare(descText: "모두 보기>", titleText: "읽을거리", needsButton: true)
         default:
-            headerCell.prepare(descText: "더 보기", titleText: "나의 최근 미라클모닝", needsButton: true)
+            headerCell.prepare(descText: "모두 보기>", titleText: "나의 최근 미라클모닝", needsButton: true)
         }
         
         return headerCell

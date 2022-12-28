@@ -5,44 +5,55 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Pretendard-Bold.otf">
+            <string>Pretendard-Bold</string>
+        </array>
+    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="HomeSectionHeaderCell" id="gTV-IL-0wX" customClass="HomeSectionHeaderCell" customModule="MorningBear" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="318" height="64"/>
+            <rect key="frame" x="0.0" y="0.0" width="119" height="82"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="318" height="64"/>
+                <rect key="frame" x="0.0" y="0.0" width="119" height="82"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kvJ-rl-oMr">
-                        <rect key="frame" x="0.0" y="21.666666666666671" width="42" height="21"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3ri-xQ-EDz">
-                        <rect key="frame" x="243" y="14.666666666666664" width="75" height="35"/>
-                        <state key="normal" title="Button"/>
-                        <buttonConfiguration key="configuration" style="plain" title="Button"/>
-                    </button>
+                    <stackView opaque="NO" contentMode="scaleToFill" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="u9H-YT-sNm">
+                        <rect key="frame" x="0.0" y="0.0" width="119" height="30"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="749" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kvJ-rl-oMr">
+                                <rect key="frame" x="0.0" y="0.0" width="65" height="30"/>
+                                <fontDescription key="fontDescription" name="Pretendard-Bold" family="Pretendard" pointSize="16"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3ri-xQ-EDz">
+                                <rect key="frame" x="73" y="0.0" width="46" height="30"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Button"/>
+                            </button>
+                        </subviews>
+                    </stackView>
                 </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <constraints>
-                <constraint firstItem="3ri-xQ-EDz" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="6J5-0i-M2j"/>
-                <constraint firstItem="kvJ-rl-oMr" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="Luv-31-lhd"/>
-                <constraint firstAttribute="trailing" secondItem="3ri-xQ-EDz" secondAttribute="trailing" id="aZD-d5-wd0"/>
-                <constraint firstItem="kvJ-rl-oMr" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="gtC-yv-qLC"/>
+                <constraint firstItem="u9H-YT-sNm" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="CjO-eM-9bA"/>
+                <constraint firstAttribute="trailing" secondItem="u9H-YT-sNm" secondAttribute="trailing" id="Ybd-6g-Dl0"/>
+                <constraint firstItem="u9H-YT-sNm" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="mp0-Za-yGs"/>
             </constraints>
-            <size key="customSize" width="318" height="64"/>
+            <size key="customSize" width="119" height="82"/>
             <connections>
                 <outlet property="moreButton" destination="3ri-xQ-EDz" id="tbM-re-OAe"/>
+                <outlet property="stackView" destination="u9H-YT-sNm" id="ZtM-Vs-tCc"/>
                 <outlet property="titleLabel" destination="kvJ-rl-oMr" id="gAu-Xv-UmN"/>
             </connections>
-            <point key="canvasLocation" x="341.53846153846155" y="25.592417061611375"/>
+            <point key="canvasLocation" x="185.38461538461539" y="28.436018957345969"/>
         </collectionViewCell>
     </objects>
 </document>

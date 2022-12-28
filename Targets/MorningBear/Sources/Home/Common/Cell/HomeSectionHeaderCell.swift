@@ -7,11 +7,25 @@
 //
 
 import UIKit
+import MorningBearKit
 
 class HomeSectionHeaderCell: UICollectionViewCell {
-    @IBOutlet weak var moreButton: UIButton!
-    @IBOutlet weak var titleLabel: UILabel!
-    
+    @IBOutlet weak var stackView: UIStackView! {
+        didSet {
+            stackView.distribution = .equalSpacing
+        }
+    }
+    @IBOutlet weak var titleLabel: UILabel! {
+        didSet {
+            titleLabel.font = MorningBearFontFamily.Pretendard.bold.font(size: 16)
+        }
+    }
+    @IBOutlet weak var moreButton: UIButton! {
+        didSet {
+            moreButton.setTitleColor(MorningBearAsset.Colors.captionText.color, for: .normal)
+            moreButton.titleLabel?.font = MorningBearFontFamily.Pretendard.regular.font(size: 12)
+        }
+    }
     private var needsButton = false {
         didSet {
             // 버튼이 필요하면 숨기지 말 것
@@ -31,7 +45,8 @@ class HomeSectionHeaderCell: UICollectionViewCell {
     
     func prepare(descText: String?, titleText: String?, needsButton: Bool = true) {
         self.needsButton = needsButton
-        self.moreButton.setTitle(descText, for: .normal)
+
         self.titleLabel.text = titleText
+        self.moreButton.setTitle(descText, for: .normal)
     }
 }

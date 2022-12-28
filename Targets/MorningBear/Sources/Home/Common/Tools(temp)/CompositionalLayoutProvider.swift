@@ -141,7 +141,7 @@ extension CompositionalLayoutProvider {
             alignment: .topLeading
         )
         
-        header.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: nil, trailing: nil, bottom: .fixed(20))
+//        header.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: nil, trailing: nil, bottom: .fixed(20))
         return header
     }
 }
