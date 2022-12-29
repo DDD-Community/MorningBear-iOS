@@ -16,7 +16,7 @@ class HomeViewController: UIViewController {
         didSet {
             layoutCollectionView()
             configureCollectionView()
-            connectCollectionView()
+            connectCollectionViewWithDelegates()
             registerCells()
         }
     }
@@ -43,7 +43,7 @@ extension HomeViewController {
                 return provider.horizontalScrollLayoutSection(column: 2)
             case .articles:
                 let section = provider.horizontalScrollLayoutSection(column: 1)
-                section.orthogonalScrollingBehavior = .groupPagingCentered
+                section.orthogonalScrollingBehavior = .groupPagingCentered // 페이징 추가함. 변경 가능
                 
                 return section
             case .none:
@@ -67,20 +67,21 @@ extension HomeViewController {
         collectionView.clipsToBounds = true
     }
     
-    private func connectCollectionView() {
+    private func connectCollectionViewWithDelegates() {
         collectionView.delegate = self
         collectionView.dataSource = self
     }
     
     private func registerCells() {
-        // 나의 최근 미라클 모닝
-        var cellNib = UINib(nibName: "RecentMorningCell", bundle: nil)
-        collectionView.register(cellNib,
-                                forCellWithReuseIdentifier: "RecentMorningCell")
-        
-        cellNib = UINib(nibName: "StateCell", bundle: nil)
+        // 나의 상태. 횟수, 총 시간 등등 맨위에 들어가는 그거
+        var cellNib = UINib(nibName: "StateCell", bundle: nil)
         collectionView.register(cellNib,
                                 forCellWithReuseIdentifier: "StateCell")
+        
+        // 나의 최근 미라클 모닝
+        cellNib = UINib(nibName: "RecentMorningCell", bundle: nil)
+        collectionView.register(cellNib,
+                                forCellWithReuseIdentifier: "RecentMorningCell")
         
         // 배지
         cellNib = UINib(nibName: "BadgeCell", bundle: nil)
@@ -117,7 +118,7 @@ extension HomeViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch HomeSection.getSection(index: section) {
         case .state:
-            return 1
+            return 1 // 내 상태는 단일 셀 섹션임
         case .recentMornings:
             return min(4, viewModel.recentMorningList.count) // 최근 미라클 모닝은 상위 4개만 표시
         case .badges:
@@ -179,7 +180,6 @@ extension HomeViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         // 헤더 & 푸터 설정
         switch kind {
-            // Header case
         case UICollectionView.elementKindSectionHeader:
             return properHeaderCell(for: indexPath)
             
@@ -220,7 +220,10 @@ extension HomeViewController {
 
     /// 섹션 별로 적절한 푸터 뷰를 제공
     ///
-    /// 현재로서는 차이가 없음
+    /// 현재로서는 차이가 없음.
+    ///
+    /// - warning: `CompositionalLayoutProvider`에서 `footer` 존재유무가 이미 정해져서 전달되므로
+    /// 보여줄지 말지에 대한 분기처리가 따로 필요 없음
     private func properFooterCell(for indexPath: IndexPath) -> HomeSectionFooterCell {
         let footerCell = collectionView.dequeueReusableSupplementaryView(
             ofKind: UICollectionView.elementKindSectionFooter,

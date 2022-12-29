@@ -12,6 +12,10 @@ import UIKit
 /// 재사용하기 위해 사용하는 함수 모음입니다
 public struct CompositionalLayoutProvider {
     /// 내 상태같은 1개 셀만을 표기하는 레이아웃 섹션
+    ///
+    /// - Parameters:
+    ///     - height: 해당 섹션 높이.
+    ///     `estimated`라 셀 내부 컴포넌트 크기에 따라 동적으로 결정되며 따라서 정확히 해당 높이로 설정되지 않을 수 있음
     public func plainLayoutSection(height: CGFloat) -> NSCollectionLayoutSection {
         // item
         let itemSize = NSCollectionLayoutSize(
@@ -71,7 +75,6 @@ public struct CompositionalLayoutProvider {
             elementKind: UICollectionView.elementKindSectionFooter,
             alignment: .bottom
         )
-//        footer.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0)
         
         // section
         let section = NSCollectionLayoutSection(group: group)
@@ -87,7 +90,7 @@ public struct CompositionalLayoutProvider {
     /// 내가 모은 배지 등에서 사용되는 수평 스크롤 레이아웃 섹션
     ///
     /// - Parameters:
-    ///     - cellWidth: 각 셀의 가로길이. 세로길이는 속한 그룹의 높이랑 일치함.
+    ///     - column: 한 행에 표시되는 아이템 개수
     public func horizontalScrollLayoutSection(column: Int) -> NSCollectionLayoutSection {
         // item
         let itemSize = NSCollectionLayoutSize(
@@ -144,7 +147,6 @@ extension CompositionalLayoutProvider {
             alignment: .topLeading
         )
         
-//        header.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: nil, trailing: nil, bottom: .fixed(20))
         return header
     }
 }
