@@ -1,0 +1,18 @@
+query FindPhotoByOrderType($order:OrderInput) {
+  findPhotoByOrderType(orderInput: $order) {
+    photoId
+    photoLink
+    photoDesc
+    accountId
+    categoryId
+    startAt
+    endAt
+    updatedBadge {
+      badgeId
+      badgeTitle
+      badgeDesc
+    }
+    updatedAt
+    createdAt
+  }
+}
