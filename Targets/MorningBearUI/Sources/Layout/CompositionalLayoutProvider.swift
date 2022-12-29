@@ -10,9 +10,9 @@ import UIKit
 
 /// `UICollectionViewCompositionalLayout`의 `NSCollectionLayoutSection`를
 /// 재사용하기 위해 사용하는 함수 모음입니다
-struct CompositionalLayoutProvider {
+public struct CompositionalLayoutProvider {
     /// 내 상태같은 1개 셀만을 표기하는 레이아웃 섹션
-    func plainLayoutSection(height: CGFloat) -> NSCollectionLayoutSection {
+    public func plainLayoutSection(height: CGFloat) -> NSCollectionLayoutSection {
         // item
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
@@ -39,7 +39,7 @@ struct CompositionalLayoutProvider {
     ///
     /// - Parameters:
     ///     - column: 한 행에 표시되는 아이템 개수
-    func staticGridLayoutSection(column: Int) -> NSCollectionLayoutSection {
+    public func staticGridLayoutSection(column: Int) -> NSCollectionLayoutSection {
         // item
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(calculatedWidthFraction(column)-0.01),
@@ -88,7 +88,7 @@ struct CompositionalLayoutProvider {
     ///
     /// - Parameters:
     ///     - cellWidth: 각 셀의 가로길이. 세로길이는 속한 그룹의 높이랑 일치함.
-    func horizontalScrollLayoutSection(column: Int) -> NSCollectionLayoutSection {
+    public func horizontalScrollLayoutSection(column: Int) -> NSCollectionLayoutSection {
         // item
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(calculatedWidthFraction(column)),
@@ -116,6 +116,8 @@ struct CompositionalLayoutProvider {
         
         return section
     }
+    
+    public init() {}
 }
 
 // MARK: Internal tools

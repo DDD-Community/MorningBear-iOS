@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MorningBearUI
 
 class HomeViewController: UIViewController {
     private let viewModel = HomeViewModel()
