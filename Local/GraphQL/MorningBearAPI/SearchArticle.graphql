@@ -1,0 +1,10 @@
+query SearchArticle($size:Int) {
+  searchArticle(sizeInput: $size) {
+    title
+    link
+    description
+    bloggername
+    bloggerlink
+    postdate
+  }
+}
