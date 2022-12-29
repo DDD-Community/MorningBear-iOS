@@ -4,8 +4,8 @@
 import ApolloAPI
 
 public extension Objects {
-  static let LoginBaseInfo = Object(
-    typename: "LoginBaseInfo",
+  static let Login = Object(
+    typename: "Login",
     implementedInterfaces: []
   )
 }

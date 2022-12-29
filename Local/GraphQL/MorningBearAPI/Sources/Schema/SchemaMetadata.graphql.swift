@@ -23,9 +23,10 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
   public static func objectType(forTypename typename: String) -> Object? {
     switch typename {
     case "Query": return MorningBearAPI.Objects.Query
-    case "LoginBaseInfo": return MorningBearAPI.Objects.LoginBaseInfo
+    case "Badge": return MorningBearAPI.Objects.Badge
+    case "Login": return MorningBearAPI.Objects.Login
     case "Mutation": return MorningBearAPI.Objects.Mutation
-    case "MyProfileInfo": return MorningBearAPI.Objects.MyProfileInfo
+    case "User": return MorningBearAPI.Objects.User
     default: return nil
     }
   }

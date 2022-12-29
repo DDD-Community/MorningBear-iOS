@@ -4,10 +4,10 @@
 import ApolloTestSupport
 import MorningBearAPI
 
-public class MyProfileInfo: MockObject {
-  public static let objectType: Object = MorningBearAPI.Objects.MyProfileInfo
+public class User: MockObject {
+  public static let objectType: Object = MorningBearAPI.Objects.User
   public static let _mockFields = MockFields()
-  public typealias MockValueCollectionType = Array<Mock<MyProfileInfo>>
+  public typealias MockValueCollectionType = Array<Mock<User>>
 
   public struct MockFields {
     @Field<String>("accountId") public var accountId
@@ -18,7 +18,7 @@ public class MyProfileInfo: MockObject {
   }
 }
 
-public extension Mock where O == MyProfileInfo {
+public extension Mock where O == User {
   convenience init(
     accountId: String? = nil,
     memo: String? = nil,

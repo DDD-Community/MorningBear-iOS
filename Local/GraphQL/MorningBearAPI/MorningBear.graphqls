@@ -3,29 +3,136 @@ A directive used by the Apollo iOS client to annotate operations or fragments th
 """
 directive @apollo_client_ios_localCacheMutation on QUERY | MUTATION | SUBSCRIPTION | FRAGMENT_DEFINITION
 
+""" 아티클 정보 """
+type Article {
+  """ 제목 """
+  title: String
+
+  """ 게시글 링크 """
+  link: String
+
+  """ 설명 """
+  description: String
+
+  """ 블로그명 """
+  bloggername: String
+
+  """ 블로그 링크 """
+  bloggerlink: String
+
+  """ 포스팅 날짜 """
+  postdate: String
+}
+
+""" 뱃지 정보 """
 type Badge {
+  """ 뱃지 ID """
   badgeId: String
+
+  """ 뱃지 타이틀 """
+  badgeTitle: String
+
+  """ 뱃지 설명 """
   badgeDesc: String
-  badgeTier: Int
 }
 
+""" 사용자 뱃지 상세정보 """
+type BadgeDetail {
+  """ 뱃지 ID """
+  badgeId: String
+
+  """ 뱃지 타이틀 """
+  badgeTitle: String
+
+  """ 뱃지 설명 """
+  badgeDesc: String
+
+  """ 뱃지 획득여부 """
+  isAcquired: Boolean
+
+  """ 뱃지 획득까지 남은 비율 """
+  acquirePercent: Int
+}
+
+""" 뱃지 메타정보 저장을 위한 입력데이터 """
 input BadgeInput {
+  """ 뱃지 ID """
   badgeId: String
+
+  """ 뱃지 타이틀 """
+  badgeTitle: String
+
+  """ 뱃지 설명 """
   badgeDesc: String
-  badgeTier: Int
 }
 
+""" 사용자 차단정보 """
+type Block {
+  """ 사용자ID """
+  accountId: String
+
+  """ 신고&차단하기 대상 사용자ID """
+  blockAccountId: String
+}
+
+""" 카테고리 정보 """
 type Category {
+  """ 카테고리 ID """
   categoryId: String
+
+  """ 카테고리 명칭 """
   categoryDesc: String
 }
 
+""" 카테고리 메타정보 저장을 위한 입력데이터 """
 input CategoryInput {
+  """ 카테고리 ID """
   categoryId: String
+
+  """ 카테고리 명칭 """
   categoryDesc: String
 }
 
-type LoginBaseInfo {
+""" 카테고리별 누적시간 리포트 """
+type CategoryReport {
+  """ 카테고리 ID """
+  categoryId: String
+
+  """ 카테고리 명칭 """
+  categoryDesc: String
+
+  """ 누적시간(분 단위) """
+  totalTime: Int
+}
+
+""" 응원하기 정보 """
+type Like {
+  """ 응원하기 코드 """
+  likeCode: String
+
+  """ 응원하기 받은 사용자ID """
+  takenAccountId: String
+
+  """ 응원하기 대상 사용자ID """
+  givenAccountId: String
+
+  """ 생성 일자 """
+  createdAt: String
+
+  """ 신규 획득 뱃지 """
+  updatedBadge: [Badge]
+}
+
+""" 응원하기를 위한 입력데이터 """
+input LikeInput {
+  """ 응원하기 코드 """
+  likeCode: String
+
+  """ 응원하기 대상 사용자ID """
+  takenAccountId: String
+}
+
+type Login {
   redirectUri: String
   jsKey: String
   nativeKey: String
@@ -33,48 +140,133 @@ type LoginBaseInfo {
 }
 
 type Mutation {
-  """ 내정보 저장 """
-  saveMyInfo(input: MyProfileInput): MyProfileInfo
+  """ 내정보 저장 (회원가입, 정보수정) """
+  saveMyInfo(userInput: UserInput): User
 
-  """ 내 카테고리 저장 """
-  saveMyCategory(input: [String]): [Category]
-
-  """ (개발자용) 카테고리 메타정보 저장 """
-  saveCategory(input: [CategoryInput]): [Category]
-
-  """ 내 뱃지 저장 """
-  saveMyBadge(input: [String]): [Badge]
-
-  """ (개발자용) 뱃지 메타정보 저장 """
-  saveBadge(input: [BadgeInput]): [Badge]
+  """ 주로하는 카테고리 저장 """
+  saveMyCategory(categoryIdList: [String]): [Category]
 
   """ 탈퇴하기 """
   deleteMyInfo: Boolean
+
+  """ 사용자 차단하기 """
+  saveBlock(blockAccountId: String): [Block]
+
+  """ 응원하기 (뱃지이벤트 발생) """
+  saveLike(likeInput: LikeInput): Like
+
+  """ 응원 취소하기 """
+  deleteLike(likeInput: LikeInput): Boolean
+
+  """ 내 사진 저장 (뱃지이벤트 발생) """
+  saveMyPhoto(photoInput: PhotoInput): Photo
+
+  """ 내 사진 삭제 """
+  deleteMyPhoto(photoId: String): Photo
+
+  """ (개발자용) 뱃지 메타정보 저장 """
+  saveBadge(badgeInputList: [BadgeInput]): [Badge]
+
+  """ (개발자용) 카테고리 메타정보 저장 """
+  saveCategory(categoryInputList: [CategoryInput]): [Category]
 }
 
-type MyProfileInfo {
+""" 순서별 사진조회를 위한 입력데이터 """
+input OrderInput {
+  """ 조회할 사진 갯수 """
+  size: Int
+
+  """ 순서타입 (1:생성일자asc, 2:생성일자:desc, 3:응원하기asc, 4:응원하기desc) """
+  orderType: String
+}
+
+""" 사진정보 """
+type Photo {
+  """ 사진ID """
+  photoId: String
+
+  """ 사진 링크 """
+  photoLink: String
+
+  """ 사진 설명 """
+  photoDesc: String
+
+  """ 사용자ID """
   accountId: String
-  nickName: String
-  photoLink: String
-  memo: String
-  wakeUpAt: String
-  badgeList: [Badge]
-  categoryList: [Category]
+
+  """ 카테고리ID """
+  categoryId: String
+
+  """ 시작시간(format: HHmm) """
+  startAt: String
+
+  """ 종료시간(format: HHmm) """
+  endAt: String
+
+  """ 신규 획득 뱃지 """
+  updatedBadge: [Badge]
+
+  """ 업데이트 일자 """
+  updatedAt: String
+
+  """ 생성 일자 """
+  createdAt: String
 }
 
-input MyProfileInput {
-  nickName: String
+""" 카테고리별 사진정보 """
+type PhotoByCategory {
+  """ 카테고리ID """
+  categoryId: String
+
+  """ 카테고리 명칭 """
+  categoryDesc: String
+
+  """ 사진정보 """
+  photoInfo: [Photo]
+}
+
+""" 사진 저장을 위한 입력데이터 """
+input PhotoInput {
+  """ 사진ID """
+  photoId: String
+
+  """ 사진 링크 """
   photoLink: String
-  memo: String
-  wakeUpAt: String
+
+  """ 사진 설명 """
+  photoDesc: String
+
+  """ 카테고리ID """
+  categoryId: String
+
+  """ 시작시간(format: HHmm) """
+  startAt: String
+
+  """ 종료시간(format: HHmm) """
+  endAt: String
+}
+
+""" 사진리스트 갯수를 위한 입력데이터 """
+input PhotoSizeInput {
+  """ 전체 사진 갯수(기본값: 5) """
+  totalSize: Int
+
+  """ 카테고리별 사진 갯수(기본값: 5) """
+  categorySize: Int
 }
 
 type Query {
-  """ 로그인 기본정보 조회 """
-  findLoginInfo: [LoginBaseInfo]
+  """ 토큰정보 인코딩 """
+  encode(state: String, token: String): String
 
-  """ 내정보 조회 """
-  findMyInfo: MyProfileInfo
+  """ 로그인 기본정보 조회 """
+  findLoginInfo: [Login]
+
+  """ 내정보 조회 (뱃지이벤트 발생) """
+  findMyInfo(sizeInput: PhotoSizeInput): User
+
+  """ 사용자정보 조회 (뱃지이벤트 발생) """
+  findUserInfo(accountId: String, sizeInput: PhotoSizeInput): User
 
   """ 전체 카테고리 조회 """
   findAllCategory: [Category]
@@ -82,9 +274,126 @@ type Query {
   """ 전체 뱃지 조회 """
   findAllBadge: [Badge]
 
-  """ (개발자용) 내 카테고리 매핑정보 조회 """
-  findMyCategoryMapping: [Category]
+  """ 사용자 검색하기 """
+  searchUserInfo(keyword: String): [SearchUser]
 
-  """ (개발자용) 내 뱃지 매핑정보 조회 """
-  findMyBadgeMapping: [Badge]
+  """ 아티클 조회하기 """
+  searchArticle(sizeInput: Int): [Article]
+
+  """ 가장 인기있는 사용자리스트 조회 """
+  findPopularUserInfo(sizeInput: Int): [User]
+
+  """ 순서별 사진 조회 """
+  findPhotoByOrderType(orderInput: OrderInput): [Photo]
+
+  """ (개발자용) 내가 차단한 사용자목록 조회 """
+  findBlock: [Block]
+
+  """ (개발자용) 토큰정보 디코딩 """
+  decode(token: String): String
+}
+
+""" 리포트정보 """
+type Report {
+  """ 전체 누적시간(분 단위) """
+  totalTime: Int
+
+  """ 카테고리별 누적시간(분 단위) """
+  totalTimeByCategory: [CategoryReport]
+
+  """ 평균 시작시간(format: HHmm) """
+  avgStartDt: String
+
+  """ 성공횟수 """
+  countSucc: Int
+}
+
+""" 사용자 검색정보 """
+type SearchUser {
+  """ 사용자ID """
+  accountId: String
+
+  """ 닉네임 """
+  nickName: String
+
+  """ 프로필사진 링크 """
+  photoLink: String
+
+  """ 자기소개글 """
+  memo: String
+
+  """ 기상시간(format: HHmm) """
+  wakeUpAt: String
+
+  """ 목표 """
+  goal: String
+}
+
+""" 사용자 정보 """
+type User {
+  """ 사용자ID """
+  accountId: String
+
+  """ 닉네임 """
+  nickName: String
+
+  """ 프로필사진 링크 """
+  photoLink: String
+
+  """ 자기소개글 """
+  memo: String
+
+  """ 기상시간(format: HHmm) """
+  wakeUpAt: String
+
+  """ 목표 """
+  goal: String
+
+  """ 획득 뱃지 리스트 """
+  badgeList: [BadgeDetail]
+
+  """ 설정한 카테고리 리스트 """
+  categoryList: [Category]
+
+  """ 받은 응원하기 리스트 """
+  takenLike: [Like]
+
+  """ 받은 응원하기 리스트 Count """
+  takenLikeCnt: Int
+
+  """ 응원한 리스트 """
+  givenLike: [Like]
+
+  """ 응원한 리스트 Count """
+  givenLikeCnt: Int
+
+  """ 사진 리스트 """
+  photoInfo: [Photo]
+
+  """  사진 리스트 (카테고리별) """
+  photoInfoByCategory: [PhotoByCategory]
+
+  """ 리포트정보 """
+  reportInfo: Report
+
+  """ 신규 획득 뱃지 """
+  updatedBadge: [Badge]
+}
+
+""" 내정보 저장을 위한 입력데이터 """
+input UserInput {
+  """ 닉네임 """
+  nickName: String
+
+  """ 프로필사진 링크 """
+  photoLink: String
+
+  """ 자기소개글 """
+  memo: String
+
+  """ 기상시간(format: HHmm) """
+  wakeUpAt: String
+
+  """ 목표 """
+  goal: String
 }

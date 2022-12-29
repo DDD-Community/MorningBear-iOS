@@ -4,8 +4,9 @@
 import ApolloAPI
 
 public extension Objects {
-  static let MyProfileInfo = Object(
-    typename: "MyProfileInfo",
+  ///  뱃지 정보 
+  static let Badge = Object(
+    typename: "Badge",
     implementedInterfaces: []
   )
 }
