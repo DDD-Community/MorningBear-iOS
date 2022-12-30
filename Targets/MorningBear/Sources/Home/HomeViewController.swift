@@ -24,7 +24,7 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // FIXME: 색깔 이거 아닌 것 같음
-        self.view.backgroundColor = MorningBearAsset.Colors.gray100.color
+        self.view.backgroundColor = MorningBearUIAsset.Colors.gray100.color
     }
 }
 
@@ -73,34 +73,36 @@ extension HomeViewController {
     }
     
     private func registerCells() {
+        let bundle =  MorningBearUIResources.bundle
+        
         // 나의 상태. 횟수, 총 시간 등등 맨위에 들어가는 그거
-        var cellNib = UINib(nibName: "StateCell", bundle: nil)
+        var cellNib = UINib(nibName: "StateCell", bundle: bundle)
         collectionView.register(cellNib,
                                 forCellWithReuseIdentifier: "StateCell")
         
         // 나의 최근 미라클 모닝
-        cellNib = UINib(nibName: "RecentMorningCell", bundle: nil)
+        cellNib = UINib(nibName: "RecentMorningCell", bundle: bundle)
         collectionView.register(cellNib,
                                 forCellWithReuseIdentifier: "RecentMorningCell")
         
         // 배지
-        cellNib = UINib(nibName: "BadgeCell", bundle: nil)
+        cellNib = UINib(nibName: "BadgeCell", bundle: bundle)
         collectionView.register(cellNib,
                                 forCellWithReuseIdentifier: "BadgeCell")
         
         // 아티클
-        cellNib = UINib(nibName: "ArticleCell", bundle: nil)
+        cellNib = UINib(nibName: "ArticleCell", bundle: bundle)
         collectionView.register(cellNib,
                                 forCellWithReuseIdentifier: "ArticleCell")
         
         // 헤더 - 공용
-        cellNib = UINib(nibName: "HomeSectionHeaderCell", bundle: nil)
+        cellNib = UINib(nibName: "HomeSectionHeaderCell", bundle: bundle)
         collectionView.register(cellNib,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: "HomeSectionHeaderCell")
         
         // 푸터 - 공용
-        cellNib = UINib(nibName: "HomeSectionFooterCell", bundle: nil)
+        cellNib = UINib(nibName: "HomeSectionFooterCell", bundle: bundle)
         collectionView.register(cellNib,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
                                 withReuseIdentifier: "HomeSectionFooterCell")

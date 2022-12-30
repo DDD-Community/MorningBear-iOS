@@ -11,16 +11,23 @@ extension Project {
     }
     
     /// Helper function to create the Project for this ExampleApp
-    public static func app(name: String, platform: Platform, additionalTargets: (kit: String, UI: String)) -> Project {
+    public static func app(name: String,
+                           platform: Platform,
+                           additionalTargets: (kit: String, UI: String, Network: String, Storage: String)) -> Project {
         var targets = makeAppTargets(name: name,
                                      platform: platform,
                                      dependencies: [
                                         TargetDependency.target(name: additionalTargets.kit),
-                                        TargetDependency.target(name: additionalTargets.UI)
+                                        TargetDependency.target(name: additionalTargets.UI),
+                                        TargetDependency.target(name: additionalTargets.Network),
+                                        TargetDependency.target(name: additionalTargets.Storage)
                                      ])
         
         targets += makeToolKitFrameworkTargets(name: additionalTargets.kit, platform: platform)
         targets += makeUIFrameworkTargets(name: additionalTargets.UI, platform: platform)
+        targets += makeNetworkFrameworkTargets(name: additionalTargets.Network, platform: platform)
+        targets += makeStorageFrameworkTargets(name: additionalTargets.Storage, platform: platform)
+
         
         return Project(name: name,
                        organizationName: organizationName,
@@ -39,7 +46,7 @@ extension Project {
                              deploymentTarget: .iOS(targetVersion: "14.0", devices: .iphone),
                              infoPlist: .default,
                              sources: ["Targets/\(name)/Sources/**"],
-                             resources: [],
+                             resources: ["Targets/\(name)/Resources/**"],
                              dependencies: [
                                 .external(name: "RxSwift")
                              ])
@@ -68,17 +75,72 @@ extension Project {
                              sources: ["Targets/\(name)/Sources/**"],
                              resources: [],
                              dependencies: [
-                                .sdk(name: "c++", type: .library, status: .required),
+                                .external(name: "RxSwift"),
+                                .external(name: "RxKakaoSDK"),
+                                .external(name: "Alamofire")
+                             ])
+        
+        let tests = Target(name: "\(name)Tests",
+                           platform: platform,
+                           product: .unitTests,
+                           bundleId: "\(organizationName).\(name)Tests",
+                           infoPlist: .default,
+                           sources: ["Targets/\(name)/Tests/**"],
+                           resources: [],
+                           dependencies: [.target(name: name)])
+        
+        return [sources, tests]
+    }
+    
+    /// Helper function to create a framework target and an associated unit test target
+    private static func makeNetworkFrameworkTargets(name: String, platform: Platform) -> [Target] {
+        // MARK: - Add new UI dependecies in here
+        let sources = Target(name: name,
+                             platform: platform,
+                             product: .framework,
+                             bundleId: "\(organizationName).\(name)",
+                             deploymentTarget: .iOS(targetVersion: "14.0", devices: .iphone),
+                             infoPlist: .default,
+                             sources: ["Targets/\(name)/Sources/**"],
+                             resources: [],
+                             dependencies: [
                                 .external(name: "Moya"),
                                 .external(name: "RxMoya"),
-                                .external(name: "RxSwift"),
                                 .external(name: "Apollo"),
-                                .external(name: "FirebaseStorage"),
                                 .external(name: "StarWarsAPI"),
                                 .external(name: "StarWarsAPITestMocks"),
-                                .external(name: "RxKakaoSDK"),
                                 .external(name: "MorningBearAPITestMocks"),
-                                .external(name: "MorningBearAPI")
+                                .external(name: "MorningBearAPI"),
+                                .external(name: "Alamofire")
+                             ])
+        
+        let tests = Target(name: "\(name)Tests",
+                           platform: platform,
+                           product: .unitTests,
+                           bundleId: "\(organizationName).\(name)Tests",
+                           infoPlist: .default,
+                           sources: ["Targets/\(name)/Tests/**"],
+                           resources: [],
+                           dependencies: [.target(name: name)])
+        
+        return [sources, tests]
+    }
+    
+    /// Helper function to create a framework target and an associated unit test target
+    private static func makeStorageFrameworkTargets(name: String, platform: Platform) -> [Target] {
+        // MARK: - Add new UI dependecies in here
+        let sources = Target(name: name,
+                             platform: platform,
+                             product: .framework,
+                             bundleId: "\(organizationName).\(name)",
+                             deploymentTarget: .iOS(targetVersion: "14.0", devices: .iphone),
+                             infoPlist: .default,
+                             sources: ["Targets/\(name)/Sources/**"],
+                             resources: [],
+                             dependencies: [
+                                .sdk(name: "c++", type: .library, status: .required),
+                                .external(name: "FirebaseStorage"),
+                                .external(name: "RxSwift"),
                              ],
                              settings: .settings(
                                 base: [
