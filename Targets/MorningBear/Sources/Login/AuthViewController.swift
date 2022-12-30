@@ -12,11 +12,25 @@ import MorningBearKit
 
 class AuthViewController: UIViewController {
     
-    private let appleLoginManager: AppleLoginManager = AppleLoginManager()
-    private let kakaoLoginManager: KakaoLoginManager = KakaoLoginManager()
+    // MARK: - IBOutlets
+    @IBOutlet weak var kakaoLoginButton: UIButton!
+    @IBOutlet weak var appleLoginButton: UIButton!
     
+    // MARK: - Variables
+    private let kakaoLoginManager: KakaoLoginManager = KakaoLoginManager()
+    private let appleLoginManager: AppleLoginManager = AppleLoginManager()
+    
+    // MARK: - LifeCycles
     override func viewDidLoad() {
-        // appleLoginManager.request()
-        // kakaoLoginManager.login()
+        
+    }
+    
+    // MARK: - IBACtions
+    @IBAction func kakaoLoginButtonTapped(_ sender: Any) {
+         appleLoginManager.login()
+    }
+    
+    @IBAction func appleLoginButtonTapped(_ sender: Any) {
+         kakaoLoginManager.login()
     }
 }
