@@ -27,17 +27,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = window
         
 //        let viewController = UIStoryboard(name: "Onboarding", bundle: nil).instantiateViewController(withIdentifier: "OnboardingVC")
-// FIXME:
-        let viewController = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "Home")
+        // FIXME:
+        let mainViewController = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "Home")
+        let navigationController = UINavigationController(rootViewController: mainViewController)
         
-        window.rootViewController = viewController
+        // Design navigation controller
+        navigationController.navigationBar.backgroundColor = MorningBearUIAsset.Colors.gray100.color
+        navigationController.navigationBar.isTranslucent = true
+        navigationController.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
+        
+        // Set root view
+        window.rootViewController = navigationController // 루트 뷰컨트롤러 생성
         window.makeKeyAndVisible()
     }
     
-    func scene(
-        _ scene: UIScene,
-        openURLContexts URLContexts: Set<UIOpenURLContext>
-    ) {
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         if let url = URLContexts.first?.url {
             if (AuthApi.isKakaoTalkLoginUrl(url)) {
                 _ = AuthController.rx.handleOpenUrl(url: url)
