@@ -9,6 +9,8 @@
 import UIKit
 
 public class HomeSectionHeaderCell: UICollectionViewCell {
+    public typealias Action = () -> Void
+    
     @IBOutlet weak var stackView: UIStackView! {
         didSet {
             stackView.distribution = .equalSpacing
@@ -31,6 +33,7 @@ public class HomeSectionHeaderCell: UICollectionViewCell {
             moreButton.isHidden = !needsButton
         }
     }
+    private var buttonAction: Action = {}
     
     public override func awakeFromNib() {
         super.awakeFromNib()
@@ -39,11 +42,18 @@ public class HomeSectionHeaderCell: UICollectionViewCell {
     
     public override func prepareForReuse() {
         super.prepareForReuse()
-        self.prepare(descText: nil, titleText: nil, needsButton: self.needsButton)
+        self.prepare(descText: nil, titleText: nil, buttonAction: nil)
     }
     
-    public func prepare(descText: String?, titleText: String?, needsButton: Bool = true) {
-        self.needsButton = needsButton
+    public func prepare(descText: String?, titleText: String?, buttonAction: Action? = nil) {
+        if let buttonAction {
+            self.needsButton = true
+            self.buttonAction = buttonAction
+        } else {
+            self.needsButton = false
+            self.buttonAction = {}
+        }
+        
 
         self.titleLabel.text = titleText
         self.moreButton.setTitle(descText, for: .normal)
