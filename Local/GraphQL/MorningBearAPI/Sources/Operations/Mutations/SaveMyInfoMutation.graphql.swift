@@ -32,17 +32,17 @@ public class SaveMyInfoMutation: GraphQLMutation {
       .field("saveMyInfo", SaveMyInfo?.self),
     ] }
 
-    ///  내정보 저장 
+    ///  내정보 저장 (회원가입, 정보수정) 
     public var saveMyInfo: SaveMyInfo? { __data["saveMyInfo"] }
 
     /// SaveMyInfo
     ///
-    /// Parent Type: `MyProfileInfo`
+    /// Parent Type: `User`
     public struct SaveMyInfo: MorningBearAPI.SelectionSet {
       public let __data: DataDict
       public init(data: DataDict) { __data = data }
 
-      public static var __parentType: ParentType { MorningBearAPI.Objects.MyProfileInfo }
+      public static var __parentType: ParentType { MorningBearAPI.Objects.User }
       public static var __selections: [Selection] { [
         .field("accountId", String?.self),
         .field("nickName", String?.self),
@@ -51,10 +51,15 @@ public class SaveMyInfoMutation: GraphQLMutation {
         .field("wakeUpAt", String?.self),
       ] }
 
+      ///  사용자ID 
       public var accountId: String? { __data["accountId"] }
+      ///  닉네임 
       public var nickName: String? { __data["nickName"] }
+      ///  프로필사진 링크 
       public var photoLink: String? { __data["photoLink"] }
+      ///  자기소개글 
       public var memo: String? { __data["memo"] }
+      ///  기상시간(format: HHmm) 
       public var wakeUpAt: String? { __data["wakeUpAt"] }
     }
   }

@@ -10,15 +10,18 @@ public class Query: MockObject {
   public typealias MockValueCollectionType = Array<Mock<Query>>
 
   public struct MockFields {
-    @Field<[LoginBaseInfo?]>("findLoginInfo") public var findLoginInfo
+    @Field<String>("encode") public var encode
+    @Field<[Login?]>("findLoginInfo") public var findLoginInfo
   }
 }
 
 public extension Mock where O == Query {
   convenience init(
-    findLoginInfo: [Mock<LoginBaseInfo>?]? = nil
+    encode: String? = nil,
+    findLoginInfo: [Mock<Login>?]? = nil
   ) {
     self.init()
+    self.encode = encode
     self.findLoginInfo = findLoginInfo
   }
 }
