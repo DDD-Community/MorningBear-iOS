@@ -31,6 +31,10 @@ let dependencies = Dependencies(
             url: "https://github.com/kakao/kakao-ios-sdk-rx",
             requirement: .branch("master")
         ),
+        .remote(
+            url: "https://github.com/Alamofire/Alamofire",
+            requirement: .upToNextMajor(from: "5.6.0")
+        ),
         .local(path: .relativeToRoot("Local/GraphQL/StarWarsAPI")),
         .local(path: .relativeToRoot("Local/GraphQL/MorningBearAPI"))
     ],

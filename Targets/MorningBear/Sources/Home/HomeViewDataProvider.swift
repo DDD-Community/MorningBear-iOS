@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MorningBearUI
 
 /// 해당 섹션에 대한 데이터 리스트를 받아오는 메소드들
 ///

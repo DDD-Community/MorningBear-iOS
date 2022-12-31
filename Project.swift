@@ -26,4 +26,7 @@ let localHelper = LocalHelper(name: "MyPlugin")
 // Creates our project using a helper function defined in ProjectDescriptionHelpers
 let project = Project.app(name: "MorningBear",
                           platform: .iOS,
-                          additionalTargets: ("MorningBearKit", "MorningBearUI"))
+                          additionalTargets: ("MorningBearKit",
+                                              "MorningBearUI",
+                                              "MorningBearNetwork",
+                                              "MorningBearStorage"))

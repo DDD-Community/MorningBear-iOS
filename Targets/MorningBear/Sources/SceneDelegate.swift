@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MorningBearUI
 
 import RxKakaoSDKAuth
 import KakaoSDKAuth
