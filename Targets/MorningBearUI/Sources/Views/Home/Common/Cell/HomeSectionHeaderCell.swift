@@ -50,14 +50,37 @@ public class HomeSectionHeaderCell: UICollectionViewCell {
     // Methods
     public override func awakeFromNib() {
         super.awakeFromNib()
+        self.prepareCell(title: nil, buttonText: nil, buttonAction: nil)
     }
     
     public override func prepareForReuse() {
         super.prepareForReuse()
-        self.prepare(descText: nil, titleText: nil, buttonAction: nil)
+        self.prepareCell(title: nil, buttonText: nil, buttonAction: nil)
+    }
+}
+
+// MARK: Public tools
+extension HomeSectionHeaderCell {
+    /// 버튼이 사용가능한지 표시
+    public var isButtonDisabled: Bool {
+        return needsButton == false
     }
     
-    public func prepare(descText: String?, titleText: String?, buttonAction: Action? = nil) {
+    public func prepare(title: String) {
+        prepareCell(title: title, buttonText: nil, buttonAction: nil)
+    }
+    
+    public func prepare(title: String, buttonText: String, buttonAction: @escaping Action) {
+        prepareCell(title: title, buttonText: buttonText, buttonAction: buttonAction)
+    }
+}
+
+// MARK: Interanal tools
+extension HomeSectionHeaderCell {
+    /// 초기화도 가능한 내부용 `prepare`
+    ///
+    /// `prepare`로 작명하지 않은 이유는 퍼블릭 메소드와 이름이 같아서 무한히 순환참조하는 에러가 발생해서임
+    private func prepareCell(title: String?, buttonText: String?, buttonAction: Action? = nil) {
         // 액션이 없으면 버튼은 표시되지 않음
         if let buttonAction {
             self.needsButton = true
@@ -67,15 +90,12 @@ public class HomeSectionHeaderCell: UICollectionViewCell {
             self.buttonAction = {}
         }
         
-        self.titleLabel.text = titleText
-        self.moreButton.setTitle(descText, for: .normal)
+        self.titleLabel.text = title
+        self.moreButton.setTitle(buttonText, for: .normal)
         
         bindButton()
     }
-}
-
-// MARK: Interanal tools
-extension HomeSectionHeaderCell {
+    
     private func bindButton() {
         self.moreButton.rx.tap.bind { [weak self] in
             guard let self = self else {

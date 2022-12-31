@@ -208,13 +208,13 @@ extension HomeViewController {
         // 버튼 유무 조정
         switch HomeSection.getSection(index: indexPath.section) {
         case .recentMornings:
-            headerCell.prepare(descText: nil, titleText: "나의 최근 미라클모닝")
+            headerCell.prepare(title: "나의 최근 미라클모닝")
         case .badges:
-            headerCell.prepare(descText: "모두 보기>", titleText: "내가 모은 배지") {
+            headerCell.prepare(title: "내가 모은 배지", buttonText: "모두 보기>") {
                 print("내가 모은 배지")
             }
         case .articles:
-            headerCell.prepare(descText: "모두 보기>", titleText: "읽을거리") {
+            headerCell.prepare(title: "읽을거리", buttonText: "모두 보기>") {
                 print("읽을거리")
             }
         default:
