@@ -54,7 +54,7 @@ final class HomeSectionHeaderCellTests: XCTestCase {
         }
         
         XCTAssertNotEqual(header.titleLabel.text, titleText)
-        XCTAssertNotEqual(header.moreButton.titleLabel?.text, buttonText)
+        XCTAssertNotEqual(header.moreButton.title(for: .normal), buttonText)
         XCTAssertTrue(header.isButtonDisabled)
         
         header.prepare(title: titleText, buttonText: buttonText, buttonAction: buttonAction)
