@@ -29,7 +29,7 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
         
         designNavigationBar()
-        
+
         // FIXME: 색깔 이거 아닌 것 같음
         self.view.backgroundColor = MorningBearUIAsset.Colors.gray100.color
     }
@@ -61,11 +61,7 @@ extension HomeViewController {
         .disposed(by: bag)
         
     }
-    
-    @objc private func sample() {
-        print("SSSS")
-    }
-    
+
     private func layoutCollectionView() {
         let provider = CompositionalLayoutProvider()
         
@@ -246,8 +242,15 @@ extension HomeViewController {
         case .recentMornings:
             headerCell.prepare(title: "나의 최근 미라클모닝")
         case .badges:
-            headerCell.prepare(title: "내가 모은 배지", buttonText: "모두 보기>") {
-                print("내가 모은 배지")
+            headerCell.prepare(title: "내가 모은 배지", buttonText: "모두 보기>") { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                
+                let myBadgeViewController = UIStoryboard(name: "MyBadges", bundle: nil)
+                    .instantiateViewController(withIdentifier: "MyBadges")
+                
+                self.navigationController?.pushViewController(myBadgeViewController, animated: true)
             }
         case .articles:
             headerCell.prepare(title: "읽을거리", buttonText: "모두 보기>") {
