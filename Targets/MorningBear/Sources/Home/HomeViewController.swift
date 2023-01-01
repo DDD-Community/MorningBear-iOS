@@ -18,10 +18,8 @@ class HomeViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
-            layoutCollectionView()
-            configureCollectionView()
-            connectCollectionViewWithDelegates()
-            registerCells()
+            // CollectionViewCompositionable 제공함수. 관련 내용 소스파일 or 주석 참조.
+            configureCompositionalCollectionView()
         }
     }
     
@@ -61,8 +59,10 @@ extension HomeViewController {
         .disposed(by: bag)
         
     }
+}
 
-    private func layoutCollectionView() {
+extension HomeViewController: CollectionViewCompositionable {
+    func layoutCollectionView() {
         let provider = CompositionalLayoutProvider()
         
         let layout = UICollectionViewCompositionalLayout { (section, env) -> NSCollectionLayoutSection? in
@@ -90,7 +90,7 @@ extension HomeViewController {
         collectionView.collectionViewLayout = layout
     }
     
-    private func configureCollectionView() {
+    func designCollectionView() {
         collectionView.isScrollEnabled = true
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.showsVerticalScrollIndicator = true
@@ -99,12 +99,12 @@ extension HomeViewController {
         collectionView.clipsToBounds = true
     }
     
-    private func connectCollectionViewWithDelegates() {
+    func connectCollectionViewWithDelegates() {
         collectionView.delegate = self
         collectionView.dataSource = self
     }
     
-    private func registerCells() {
+    func registerCells() {
         let bundle =  MorningBearUIResources.bundle
         
         // 나의 상태. 횟수, 총 시간 등등 맨위에 들어가는 그거
@@ -247,6 +247,7 @@ extension HomeViewController {
                     return
                 }
                 
+                // 내가 모은 배지 목록으로 이동(네비게이션)
                 let myBadgeViewController = UIStoryboard(name: "MyBadges", bundle: nil)
                     .instantiateViewController(withIdentifier: "MyBadges")
                 
