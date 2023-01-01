@@ -26,6 +26,8 @@ public class HomeSectionFooterCell: UICollectionViewCell {
     private let bag = DisposeBag()
     private var buttonAction: Action = {}
     
+    /// 버튼이 바인드 되었는지 확인하는 플래그 변수(중복 바인드 방지)
+    private var isButtonBound = false
     
     // Methods
     public override func awakeFromNib() {
@@ -33,6 +35,7 @@ public class HomeSectionFooterCell: UICollectionViewCell {
         self.layer.masksToBounds = false
         
         prepareCell(buttonText: nil, buttonAction: nil)
+        bindButton()
     }
     
     public override func prepareForReuse() {
@@ -57,20 +60,24 @@ extension HomeSectionFooterCell {
     private func prepareCell(buttonText: String?, buttonAction: Action? = nil) {
         self.button.setTitle(buttonText, for: .normal)
         self.buttonAction = buttonAction ?? {}
-        
-        bindButton()
     }
     
     /// 버튼에 탭 액션 설정
     private func bindButton() {
+        guard isButtonBound == false else {
+            return
+        }
+        
         self.button.rx.tap.bind { [weak self] in
             guard let self = self else {
                 return
             }
             
             self.buttonAction()
+            self.isButtonBound = true
         }
         .disposed(by: bag)
+        
     }
     
     /// 기타 모양, 디자인요소 설정
