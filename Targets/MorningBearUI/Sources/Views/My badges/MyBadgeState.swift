@@ -9,4 +9,9 @@
 public struct MyBadgeState {
     let nickname: String
     let badgeCount: Int
+    
+    public init(nickname: String, badgeCount: Int) {
+        self.nickname = nickname
+        self.badgeCount = badgeCount
+    }
 }
