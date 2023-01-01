@@ -8,8 +8,8 @@
 
 import UIKit
 
-struct MorningBearBarButtonItem {
-    static let titleButton =  UIBarButtonItem(title: "모닝베어~")
-    static let searchButton = UIBarButtonItem(systemItem: .search)
-    static let notificationButton = UIBarButtonItem(systemItem: .rewind)
+public struct MorningBearBarButtonItem {
+    public static let titleButton =  UIBarButtonItem(title: "모닝베어~")
+    public static let searchButton = UIBarButtonItem(systemItem: .search)
+    public static let notificationButton = UIBarButtonItem(systemItem: .rewind)
 }
