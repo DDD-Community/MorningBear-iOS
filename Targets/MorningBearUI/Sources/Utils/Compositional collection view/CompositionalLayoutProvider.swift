@@ -13,10 +13,20 @@ import UIKit
 public struct CompositionalLayoutProvider {
     /// 내 상태같은 1개 셀만을 표기하는 레이아웃 섹션
     ///
+    /// 통용 인셋(좌우 20)을 위해 사용
+    public func plainLayoutSection(height: CGFloat) -> NSCollectionLayoutSection {
+        let section = plainLayoutSection(height: height, inset: commomSectionInset)
+        return section
+    }
+    
+    /// 내 상태같은 1개 셀만을 표기하는 레이아웃 섹션
+    ///
+    /// 디바이더가 있을 경우를 위해 인셋 커스텀 가능
+    ///
     /// - Parameters:
     ///     - height: 해당 섹션 높이.
     ///     `estimated`라 셀 내부 컴포넌트 크기에 따라 동적으로 결정되며 따라서 정확히 해당 높이로 설정되지 않을 수 있음
-    public func plainLayoutSection(height: CGFloat) -> NSCollectionLayoutSection {
+    public func plainLayoutSection(height: CGFloat, inset: NSDirectionalEdgeInsets) -> NSCollectionLayoutSection {
         // item
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
@@ -34,7 +44,7 @@ public struct CompositionalLayoutProvider {
         // section
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .none
-        section.contentInsets = commomSectionInset
+        section.contentInsets = inset
         
         return section
     }
@@ -112,20 +122,20 @@ public struct CompositionalLayoutProvider {
             subitems: [item]
         )
         
-        // column group
-        let columnGroupSize = NSCollectionLayoutSize(
+        // stacking group(stacking row groups)
+        let stackingGroupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
-            heightDimension: .fractionalHeight(1/4) // 한 번에 4줄씩 표시
+            heightDimension: .fractionalHeight(1)
         )
-        let columnGroup = NSCollectionLayoutGroup.horizontal(
-            layoutSize: columnGroupSize,
+        let stackingGroup = NSCollectionLayoutGroup.vertical(
+            layoutSize: stackingGroupSize,
             subitems: [rowGroup]
         )
-        columnGroup.interItemSpacing = .fixed(7.5)
+        stackingGroup.interItemSpacing = .fixed(40)
         
 
         // section
-        let section = NSCollectionLayoutSection(group: columnGroup)
+        let section = NSCollectionLayoutSection(group: stackingGroup)
         section.orthogonalScrollingBehavior = .none
         
         section.contentInsets = narrowSectionInset

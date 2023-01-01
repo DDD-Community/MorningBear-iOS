@@ -24,8 +24,22 @@ class MyBadgesViewController: UIViewController {
 extension MyBadgesViewController: CollectionViewCompositionable {
     func layoutCollectionView() {
         let provider = CompositionalLayoutProvider()
-        let layout = UICollectionViewCompositionalLayout(section: provider.dynamicGridLayoutSection(column: 3))
 
+        let layout = UICollectionViewCompositionalLayout { (section, env) -> NSCollectionLayoutSection? in
+            switch MyBadgeSection(rawValue: section) {
+            case .state:
+                return provider.plainLayoutSection(height: 160, inset: .zero) // 1개 셀
+            case .badges:
+                return provider.dynamicGridLayoutSection(column: 3)
+            case .none:
+                return nil
+            }
+        }
+
+        let config = UICollectionViewCompositionalLayoutConfiguration()
+        config.interSectionSpacing = 6
+        
+        layout.configuration = config
         collectionView.collectionViewLayout = layout
     }
     
@@ -44,9 +58,14 @@ extension MyBadgesViewController: CollectionViewCompositionable {
     }
     
     func registerCells() {
-        // 배지
         let bundle = MorningBearUIResources.bundle
-        let cellNib = UINib(nibName: "BadgeCell", bundle: bundle)
+        // 상태(헤더)
+        var cellNib = UINib(nibName: "MyBadgeStateCell", bundle: bundle)
+        collectionView.register(cellNib,
+                                forCellWithReuseIdentifier: "MyBadgeStateCell")
+        
+        // 배지
+        cellNib = UINib(nibName: "BadgeCell", bundle: bundle)
         collectionView.register(cellNib,
                                 forCellWithReuseIdentifier: "BadgeCell")
     }
@@ -56,21 +75,42 @@ extension MyBadgesViewController: UICollectionViewDelegate {}
 
 extension MyBadgesViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
+        return MyBadgeSection.allCases.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 14
+        switch MyBadgeSection(rawValue: section) {
+        case .state:
+            return 1 // 헤더기 때문에 하나만 존재
+        case .badges:
+            return 14
+        default:
+            return 0
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "BadgeCell", for: indexPath
-        ) as! BadgeCell
-        
-        
-        cell.prepare(badge: Badge(image: UIImage(systemName: "person")!, title: "ss", desc: "Ss"))
-        
-        return cell
+        switch MyBadgeSection(rawValue: indexPath.section) {
+        case .state:
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "MyBadgeStateCell", for: indexPath
+            ) as! MyBadgeStateCell
+            
+            
+            cell.prepare(MyBadgeState(nickname: "크크크", badgeCount: 12))
+            return cell
+            
+        case .badges:
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "BadgeCell", for: indexPath
+            ) as! BadgeCell
+            
+            
+            cell.prepare(badge: Badge(image: UIImage(systemName: "person")!, title: "ss", desc: "Ss"))
+            return cell
+            
+        default:
+            return UICollectionViewCell()
+        }
     }
 }
