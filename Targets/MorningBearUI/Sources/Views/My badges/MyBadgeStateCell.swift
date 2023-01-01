@@ -29,6 +29,11 @@ public class MyBadgeStateCell: UICollectionViewCell {
         prepareCell(state)
     }
     
+    public override func prepareForReuse() {
+        super.prepareForReuse()
+        prepareCell(nil)
+    }
+    
     public override func awakeFromNib() {
         super.awakeFromNib()
     }
@@ -47,7 +52,13 @@ extension MyBadgeStateCell {
         }
     }
     
-    private func prepareCell(_ state: MyBadgeState) {
+    private func prepareCell(_ state: MyBadgeState?) {
+        guard let state else {
+            titleLabel.text = nil
+            subtitleLabel.text = nil
+            return 
+        }
+        
         titleLabel.text = titleLabelParser(nickname: state.nickname,
                                            badgeCount: state.badgeCount)
         subtitleLabel.text = subtitleLabelParser(nickname: state.nickname,
