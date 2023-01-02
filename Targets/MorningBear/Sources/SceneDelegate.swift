@@ -46,6 +46,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         navigationController.navigationBar.standardAppearance = appearance
         navigationController.navigationBar.topItem?.backButtonTitle = ""
+//        navigationController.hidesBarsOnSwipe = true
 
         // Set root view
         window.rootViewController = navigationController // 루트 뷰컨트롤러 생성
