@@ -46,11 +46,16 @@ public class HomeSectionHeaderCell: UICollectionViewCell {
     /// 버튼 액션; 기본값으로 아무것도 하지 않음
     private var buttonAction: Action = {}
     
+    /// 버튼이 바인드 되었는지 확인하는 플래그 변수(중복 바인드 방지)
+    private var isButtonBound = false
+    
     
     // Methods
     public override func awakeFromNib() {
         super.awakeFromNib()
         self.prepareCell(title: nil, buttonText: nil, buttonAction: nil)
+        
+        bindButton()
     }
     
     public override func prepareForReuse() {
@@ -92,17 +97,20 @@ extension HomeSectionHeaderCell {
         
         self.titleLabel.text = title
         self.moreButton.setTitle(buttonText, for: .normal)
-        
-        bindButton()
     }
     
     private func bindButton() {
+        guard isButtonBound == false else {
+            return
+        }
+        
         self.moreButton.rx.tap.bind { [weak self] in
             guard let self = self else {
                 return
             }
             
             self.buttonAction()
+            self.isButtonBound = true
         }
         .disposed(by: bag)
     }

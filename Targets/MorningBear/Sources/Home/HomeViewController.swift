@@ -9,7 +9,11 @@
 import UIKit
 import MorningBearUI
 
+import RxSwift
+import RxCocoa
+
 class HomeViewController: UIViewController {
+    private let bag = DisposeBag()
     private let viewModel = HomeViewModel()
     
     @IBOutlet weak var collectionView: UICollectionView! {
@@ -23,6 +27,9 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        designNavigationBar()
+        
         // FIXME: 색깔 이거 아닌 것 같음
         self.view.backgroundColor = MorningBearUIAsset.Colors.gray100.color
     }
@@ -30,6 +37,35 @@ class HomeViewController: UIViewController {
 
 // MARK: - Collection view setting tools
 extension HomeViewController {
+    private func designNavigationBar() {
+        // Bar hiding option
+        self.navigationController?.hidesBarsOnSwipe = true
+        
+        // Configure bar items
+        self.navigationItem.leftBarButtonItem = MorningBearBarButtonItem.titleButton
+        self.navigationItem.leftBarButtonItem?.tintColor = .black
+        
+        let searchButton = MorningBearBarButtonItem.searchButton
+        let alarmButton = MorningBearBarButtonItem.notificationButton
+        self.navigationItem.rightBarButtonItems = [searchButton, alarmButton]
+        
+        // Bind buttons
+        searchButton.rx.tap.bind { _ in
+            print("tapped")
+        }
+        .disposed(by: bag)
+        
+        alarmButton.rx.tap.bind { _ in
+            print("tapped")
+        }
+        .disposed(by: bag)
+        
+    }
+    
+    @objc private func sample() {
+        print("SSSS")
+    }
+    
     private func layoutCollectionView() {
         let provider = CompositionalLayoutProvider()
         
