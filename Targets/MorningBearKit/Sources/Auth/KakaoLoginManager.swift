@@ -12,6 +12,9 @@ import RxKakaoSDKAuth
 import KakaoSDKAuth
 import RxSwift
 
+import MorningBearNetwork
+import MorningBearAPI
+
 public final class KakaoLoginManager {
     
     private let bag = DisposeBag()
@@ -23,10 +26,9 @@ public final class KakaoLoginManager {
                 .subscribe(onNext:{ (oauthToken) in
                     print("loginWithKakaoTalk() success.")
                     
-                    let oauthToken = oauthToken.accessToken
-                    print(oauthToken)
+                    let accessToken = oauthToken.accessToken
+                    TokenManager.encodeToken(state: .kakao, token: accessToken)
                     
-                    // self.setUserInfo()
                 }, onError: {error in
                     print(error)
                 })
@@ -39,8 +41,9 @@ public final class KakaoLoginManager {
                 .subscribe(onNext:{ (oauthToken) in
                     print("loginWithKakaoAccount() success.")
                     
-                    //do something
-                    _ = oauthToken
+                    let accessToken = oauthToken.accessToken
+                    TokenManager.encodeToken(state: .kakao, token: accessToken)
+                    
                 }, onError: {error in
                     print(error)
                 })
