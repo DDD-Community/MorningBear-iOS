@@ -18,20 +18,22 @@ public final class RecentMorningCell: UICollectionViewCell {
     
     public override func awakeFromNib() {
         super.awakeFromNib()
+        self.prepareCell(nil)
     }
     
     public override func prepareForReuse() {
         super.prepareForReuse()
-        
-        self.prepare(nil)
+        self.prepareCell(nil)
     }
     
-    public func prepare(_ data: RecentMorning?) {
-        guard let data = data else {
-            return
-        }
-        
-        self.imageView.image = data.image
-        self.titleLabel.text = data.title
+    public func prepare(_ data: RecentMorning) {
+        prepareCell(data)
+    }
+}
+
+extension RecentMorningCell {
+    private func prepareCell(_ data: RecentMorning?) {
+        self.imageView.image = data?.image
+        self.titleLabel.text = data?.title
     }
 }
