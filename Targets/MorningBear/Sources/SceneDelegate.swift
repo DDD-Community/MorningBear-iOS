@@ -27,16 +27,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = window
         
 //        let viewController = UIStoryboard(name: "Onboarding", bundle: nil).instantiateViewController(withIdentifier: "OnboardingVC")
-        // FIXME:
+        // FIXME: .
         let mainViewController = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "Home")
         let navigationController = UINavigationController(rootViewController: mainViewController)
         let viewController = UIStoryboard(name: "Login", bundle: nil).instantiateViewController(withIdentifier: "Login")
         
         // Design navigation controller
-        navigationController.navigationBar.backgroundColor = MorningBearUIAsset.Colors.gray100.color
-        navigationController.navigationBar.isTranslucent = true
-        navigationController.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = MorningBearUIAsset.Colors.gray100.color
         
+        appearance.titleTextAttributes = [
+            .font: MorningBearUIFontFamily.Pretendard.bold.font(size: 20)
+        ]
+        
+        let backButton = MorningBearUIAsset.Asset.backArrow.image.withTintColor(.black, renderingMode: .alwaysOriginal)
+        appearance.setBackIndicatorImage(backButton, transitionMaskImage: backButton)
+
+        navigationController.navigationBar.standardAppearance = appearance
+        navigationController.navigationBar.topItem?.backButtonTitle = ""
+
         // Set root view
         window.rootViewController = navigationController // 루트 뷰컨트롤러 생성
         window.makeKeyAndVisible()

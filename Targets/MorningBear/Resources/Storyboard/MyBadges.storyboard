@@ -17,29 +17,26 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" id="yG0-xA-Ihc">
-                                <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ayb-72-nBV">
-                                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                        <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="N0n-A4-2Oa">
-                                            <size key="itemSize" width="128" height="128"/>
-                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                        </collectionViewFlowLayout>
-                                        <cells/>
-                                    </collectionView>
-                                </subviews>
-                                <viewLayoutGuide key="contentLayoutGuide" id="5IA-vs-TOR"/>
-                                <viewLayoutGuide key="frameLayoutGuide" id="z4w-Kn-PwB"/>
-                            </scrollView>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ayb-72-nBV">
+                                <rect key="frame" x="0.0" y="47" width="390" height="797"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="N0n-A4-2Oa">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells/>
+                            </collectionView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="ayb-72-nBV" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="1x0-4N-xol"/>
+                            <constraint firstAttribute="bottom" secondItem="ayb-72-nBV" secondAttribute="bottom" id="2Ij-Tv-C4C"/>
+                            <constraint firstItem="ayb-72-nBV" firstAttribute="trailing" secondItem="vDu-zF-Fre" secondAttribute="trailing" id="Az5-23-9TQ"/>
+                            <constraint firstItem="ayb-72-nBV" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="J3e-tr-fHH"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="ayb-72-nBV" id="McW-Dk-lAL"/>
@@ -47,7 +44,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-432.30769230769232" y="3.5545023696682461"/>
+            <point key="canvasLocation" x="-508" y="-231"/>
         </scene>
     </scenes>
     <resources>

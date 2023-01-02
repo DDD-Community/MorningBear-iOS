@@ -35,13 +35,11 @@ class HomeViewController: UIViewController {
 
 // MARK: - Collection view setting tools
 extension HomeViewController {
-    private func designNavigationBar() {
-        // Bar hiding option
-        self.navigationController?.hidesBarsOnSwipe = true
-        
+    private func designNavigationBar() {        
         // Configure bar items
         self.navigationItem.leftBarButtonItem = MorningBearBarButtonItem.titleButton
         self.navigationItem.leftBarButtonItem?.tintColor = .black
+        self.navigationItem.hidesSearchBarWhenScrolling = true
         
         let searchButton = MorningBearBarButtonItem.searchButton
         let alarmButton = MorningBearBarButtonItem.notificationButton
