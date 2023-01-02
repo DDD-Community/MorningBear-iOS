@@ -28,7 +28,7 @@ class MyMorningsViewController: UIViewController {
 extension MyMorningsViewController: CollectionViewCompositionable {
     func layoutCollectionView() {
         let provider = CompositionalLayoutProvider()
-        let section = provider.dynamicGridLayoutSection(column: 2)
+        let section = provider.squareCellDynamicGridLayoutSection(column: 2)
         let layout = UICollectionViewCompositionalLayout(section: section)
         
         collectionView.collectionViewLayout = layout
@@ -76,8 +76,7 @@ extension MyMorningsViewController: UICollectionViewDataSource {
             withReuseIdentifier: "RecentMorningCell", for: indexPath
         ) as! RecentMorningCell
         
-        
-        cell.prepare(RecentMorning(image: UIImage(systemName: "person")!, title: "kkk", desc: "kkk"))
+        cell.prepare(RecentMorning(image: UIColor.random.image(), title: "kkk", desc: "kkk"))
         return cell
     }
     

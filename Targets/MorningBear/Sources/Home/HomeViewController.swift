@@ -276,7 +276,11 @@ extension HomeViewController {
         ) as! HomeSectionFooterCell
         
         footerCell.prepare(buttonText: "더 보러가기") {
-            print("Footer")
+            // 나의 미라클모닝 목록으로 이동(네비게이션)
+            let myRecentMorningController = UIStoryboard(name: "MyMornings", bundle: nil)
+                .instantiateViewController(withIdentifier: "MyMornings")
+            
+            self.navigationController?.pushViewController(myRecentMorningController, animated: true)
         }
         
         return footerCell
