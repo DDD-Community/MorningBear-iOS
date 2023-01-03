@@ -17,6 +17,7 @@ import MorningBearAPI
 
 public final class KakaoLoginManager {
     
+    private let tokenManager: TokenManager
     private let bag = DisposeBag()
 
     public func login() {
@@ -27,7 +28,7 @@ public final class KakaoLoginManager {
                     print("loginWithKakaoTalk() success.")
                     
                     let accessToken = oauthToken.accessToken
-                    TokenManager.encodeToken(state: .kakao, token: accessToken)
+                    self.tokenManager.encodeToken(state: .kakao, token: accessToken)
                     
                 }, onError: {error in
                     print(error)
@@ -42,7 +43,7 @@ public final class KakaoLoginManager {
                     print("loginWithKakaoAccount() success.")
                     
                     let accessToken = oauthToken.accessToken
-                    TokenManager.encodeToken(state: .kakao, token: accessToken)
+                    self.tokenManager.encodeToken(state: .kakao, token: accessToken)
                     
                 }, onError: {error in
                     print(error)
@@ -110,5 +111,7 @@ public final class KakaoLoginManager {
             .disposed(by: bag)
     }
     
-    public init() {}
+    public init() {
+        self.tokenManager = TokenManager()
+    }
 }
