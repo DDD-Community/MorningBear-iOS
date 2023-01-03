@@ -26,11 +26,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         self.window = window
         
-//        let viewController = UIStoryboard(name: "Onboarding", bundle: nil).instantiateViewController(withIdentifier: "OnboardingVC")
-//        let viewController = UIStoryboard(name: "Login", bundle: nil).instantiateViewController(withIdentifier: "Login")
-        let mainViewController = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "Home")
+        let tabBarController = MorningBearTabBarController()
         let navigationController = UINavigationController(
-            rootViewController: mainViewController
+            rootViewController: tabBarController
         ).configureMorningBearDefaultNavigationController()
         
         // Set root view
@@ -47,7 +45,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 }
 
-private extension UINavigationController {
+fileprivate extension UINavigationController {
     func configureMorningBearDefaultNavigationController() -> UINavigationController {
         // Design navigation controller
         let appearance = UINavigationBarAppearance()
