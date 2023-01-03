@@ -36,12 +36,12 @@ public class FindLoginInfoQuery: GraphQLQuery {
 
     /// FindLoginInfo
     ///
-    /// Parent Type: `LoginBaseInfo`
+    /// Parent Type: `Login`
     public struct FindLoginInfo: MorningBearAPI.SelectionSet {
       public let __data: DataDict
       public init(data: DataDict) { __data = data }
 
-      public static var __parentType: ParentType { MorningBearAPI.Objects.LoginBaseInfo }
+      public static var __parentType: ParentType { MorningBearAPI.Objects.Login }
       public static var __selections: [Selection] { [
         .field("redirectUri", String?.self),
         .field("jsKey", String?.self),

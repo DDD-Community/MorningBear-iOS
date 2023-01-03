@@ -10,13 +10,13 @@ public class Mutation: MockObject {
   public typealias MockValueCollectionType = Array<Mock<Mutation>>
 
   public struct MockFields {
-    @Field<MyProfileInfo>("saveMyInfo") public var saveMyInfo
+    @Field<User>("saveMyInfo") public var saveMyInfo
   }
 }
 
 public extension Mock where O == Mutation {
   convenience init(
-    saveMyInfo: Mock<MyProfileInfo>? = nil
+    saveMyInfo: Mock<User>? = nil
   ) {
     self.init()
     self.saveMyInfo = saveMyInfo

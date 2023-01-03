@@ -13,8 +13,16 @@ import MorningBearKit
 class AuthViewController: UIViewController {
     
     // MARK: - IBOutlets
-    @IBOutlet weak var kakaoLoginButton: UIButton!
-    @IBOutlet weak var appleLoginButton: UIButton!
+    @IBOutlet weak var kakaoLoginButton: UIButton! {
+        didSet {
+            kakaoLoginButton.setTitle("kakao", for: .normal)
+        }
+    }
+    @IBOutlet weak var appleLoginButton: UIButton! {
+        didSet {
+            appleLoginButton.setTitle("apple", for: .normal)
+        }
+    }
     
     // MARK: - Variables
     private let kakaoLoginManager: KakaoLoginManager = KakaoLoginManager()
@@ -27,10 +35,10 @@ class AuthViewController: UIViewController {
     
     // MARK: - IBACtions
     @IBAction func kakaoLoginButtonTapped(_ sender: Any) {
-         appleLoginManager.login()
+        kakaoLoginManager.login()
     }
     
     @IBAction func appleLoginButtonTapped(_ sender: Any) {
-         kakaoLoginManager.login()
+        appleLoginManager.login()
     }
 }

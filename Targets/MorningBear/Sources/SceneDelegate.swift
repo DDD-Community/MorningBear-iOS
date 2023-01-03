@@ -30,6 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // FIXME:
         let mainViewController = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "Home")
         let navigationController = UINavigationController(rootViewController: mainViewController)
+        let viewController = UIStoryboard(name: "Login", bundle: nil).instantiateViewController(withIdentifier: "Login")
         
         // Design navigation controller
         navigationController.navigationBar.backgroundColor = MorningBearUIAsset.Colors.gray100.color

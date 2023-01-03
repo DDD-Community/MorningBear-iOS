@@ -1,0 +1,3 @@
+query Encode($state: String, $token: String) {
+  encode(state: $state, token: $token) 
+}

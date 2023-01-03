@@ -9,11 +9,11 @@
 import Foundation
 import Apollo
 
-class Network {
-    static let shared = Network()
+public class Network {
+    public static let shared = Network()
     
-    private(set) lazy var apolloTest = ApolloClient(url: URL(string: "https://swapi-graphql.netlify.app/.netlify/functions/index")!)
+    public private(set) lazy var apolloTest = ApolloClient(url: URL(string: "https://swapi-graphql.netlify.app/.netlify/functions/index")!)
     
-    private(set) lazy var apollo = ApolloClient(url: URL(string: "http://138.2.126.76:8080/graphql")!)
+    public private(set) lazy var apollo = ApolloClient(url: URL(string: "http://138.2.126.76:8080/graphql")!)
 }
 
