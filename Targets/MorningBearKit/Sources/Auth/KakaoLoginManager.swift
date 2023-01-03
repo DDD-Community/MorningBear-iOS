@@ -24,11 +24,11 @@ public final class KakaoLoginManager {
         // 카카오톡 앱 실행 가능 여부 확인
         if (UserApi.isKakaoTalkLoginAvailable()) {
             UserApi.shared.rx.loginWithKakaoTalk()
-                .subscribe(onNext:{ (oauthToken) in
+                .subscribe(onNext:{ [weak self] oauthToken in
                     print("loginWithKakaoTalk() success.")
                     
                     let accessToken = oauthToken.accessToken
-                    self.tokenManager.encodeToken(state: .kakao, token: accessToken)
+                    self?.tokenManager.encodeToken(state: .kakao, token: accessToken)
                     
                 }, onError: {error in
                     print(error)
@@ -39,11 +39,11 @@ public final class KakaoLoginManager {
         else {
             print("--->[KakaoLoginManager] 카카오톡 설치 확인 실패, 카카오계정으로 로그인")
             UserApi.shared.rx.loginWithKakaoAccount()
-                .subscribe(onNext:{ (oauthToken) in
+                .subscribe(onNext:{ [weak self] oauthToken in
                     print("loginWithKakaoAccount() success.")
                     
                     let accessToken = oauthToken.accessToken
-                    self.tokenManager.encodeToken(state: .kakao, token: accessToken)
+                    self?.tokenManager.encodeToken(state: .kakao, token: accessToken)
                     
                 }, onError: {error in
                     print(error)
