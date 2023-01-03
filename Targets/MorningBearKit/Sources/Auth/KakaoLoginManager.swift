@@ -19,16 +19,17 @@ public final class KakaoLoginManager {
     
     private let tokenManager: TokenManager
     private let bag = DisposeBag()
-
+    
     public func login() {
         // 카카오톡 앱 실행 가능 여부 확인
         if (UserApi.isKakaoTalkLoginAvailable()) {
             UserApi.shared.rx.loginWithKakaoTalk()
                 .subscribe(onNext:{ [weak self] oauthToken in
-                    print("loginWithKakaoTalk() success.")
+                    guard let self = self else { return }
                     
+                    print("loginWithKakaoTalk() success.")
                     let accessToken = oauthToken.accessToken
-                    self?.tokenManager.encodeToken(state: .kakao, token: accessToken)
+                    self.tokenManager.encodeToken(state: .kakao, token: accessToken)
                     
                 }, onError: {error in
                     print(error)
@@ -40,10 +41,11 @@ public final class KakaoLoginManager {
             print("--->[KakaoLoginManager] 카카오톡 설치 확인 실패, 카카오계정으로 로그인")
             UserApi.shared.rx.loginWithKakaoAccount()
                 .subscribe(onNext:{ [weak self] oauthToken in
-                    print("loginWithKakaoAccount() success.")
+                    guard let self = self else { return }
                     
+                    print("loginWithKakaoAccount() success.")
                     let accessToken = oauthToken.accessToken
-                    self?.tokenManager.encodeToken(state: .kakao, token: accessToken)
+                    self.tokenManager.encodeToken(state: .kakao, token: accessToken)
                     
                 }, onError: {error in
                     print(error)
