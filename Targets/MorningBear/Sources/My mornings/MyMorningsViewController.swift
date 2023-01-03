@@ -37,7 +37,7 @@ extension MyMorningsViewController: CollectionViewCompositionable {
     func designCollectionView() {
         collectionView.isScrollEnabled = true
         collectionView.showsVerticalScrollIndicator = true
-        collectionView.contentInset = .zero
+        collectionView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 0, right: 0)
         collectionView.backgroundColor = .clear
     }
     
