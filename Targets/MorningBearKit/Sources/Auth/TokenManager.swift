@@ -16,7 +16,7 @@ public final class TokenManager {
         case apple = "apple"
     }
     
-    public static func encodeToken(state: AuthState, token: String) {
+    public func encodeToken(state: AuthState, token: String) {
         Network.shared.apollo
             .fetch(query: EncodeQuery(state: GraphQLNullable(stringLiteral: state.rawValue), token: GraphQLNullable(stringLiteral: token))) { result in
             switch result {

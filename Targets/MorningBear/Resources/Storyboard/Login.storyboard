@@ -39,17 +39,11 @@
                                         </constraints>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Button"/>
-                                        <connections>
-                                            <action selector="kakaoLoginButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="Je7-x5-Qy2"/>
-                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xYc-TP-q98">
                                         <rect key="frame" x="0.0" y="72" width="350" height="56"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Button"/>
-                                        <connections>
-                                            <action selector="appleLoginButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="b46-ab-HRz"/>
-                                        </connections>
                                     </button>
                                 </subviews>
                                 <constraints>

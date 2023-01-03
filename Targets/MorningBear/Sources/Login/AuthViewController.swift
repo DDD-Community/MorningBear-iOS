@@ -10,6 +10,9 @@ import UIKit
 import AuthenticationServices
 import MorningBearKit
 
+import RxSwift
+import RxCocoa
+
 class AuthViewController: UIViewController {
     
     // MARK: - IBOutlets
@@ -28,17 +31,25 @@ class AuthViewController: UIViewController {
     private let kakaoLoginManager: KakaoLoginManager = KakaoLoginManager()
     private let appleLoginManager: AppleLoginManager = AppleLoginManager()
     
+    private let bag = DisposeBag()
+    
     // MARK: - LifeCycles
     override func viewDidLoad() {
+        bindButtons()
+    }
+    
+    // MARK: - Functions
+    private func bindButtons() {
+        kakaoLoginButton.rx.tap.bind { [weak self] _ in
+            guard let self = self else { return }
+            self.kakaoLoginManager.login()
+        }
+        .disposed(by: bag)
         
-    }
-    
-    // MARK: - IBACtions
-    @IBAction func kakaoLoginButtonTapped(_ sender: Any) {
-        kakaoLoginManager.login()
-    }
-    
-    @IBAction func appleLoginButtonTapped(_ sender: Any) {
-        appleLoginManager.login()
+        appleLoginButton.rx.tap.bind { [weak self] _ in
+            guard let self = self else { return }
+            self.appleLoginManager.login()
+        }
+        .disposed(by: bag)
     }
 }
