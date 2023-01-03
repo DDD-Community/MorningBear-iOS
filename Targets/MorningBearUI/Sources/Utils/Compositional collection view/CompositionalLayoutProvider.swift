@@ -183,6 +183,7 @@ public struct CompositionalLayoutProvider {
         
         // Add header
         let header = commonHeader
+        header.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10) // FIXME: 아닌 것 같음
         section.boundarySupplementaryItems = [header]
         
         section.contentInsets = narrowSectionInset

@@ -49,9 +49,10 @@ extension MyMorningsViewController: CollectionViewCompositionable {
     func registerCells() {
         let bundle = MorningBearUIResources.bundle
         // 상태(헤더)
-        var cellNib = UINib(nibName: "MyBadgeStateCell", bundle: bundle)
-//        collectionView.register(cellNib,
-//                                forCellWithReuseIdentifier: "MyBadgeStateCell")
+        var cellNib = UINib(nibName: "HomeSectionHeaderCell", bundle: bundle)
+        collectionView.register(cellNib,
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                withReuseIdentifier: "HomeSectionHeaderCell")
         
         // 나의 모닝
         cellNib = UINib(nibName: "RecentMorningCell", bundle: bundle)
@@ -80,4 +81,39 @@ extension MyMorningsViewController: UICollectionViewDataSource {
         return cell
     }
     
+    // 헤더 설정
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            return properHeaderCell(for: indexPath)
+        default:
+            return UICollectionReusableView()
+        }
+    }
+}
+
+// MARK: - Internal tools
+extension MyMorningsViewController {
+    /// 섹션 별로 적절한 헤더 뷰를 제공
+    ///
+    /// 현재로서는 버튼 유무만 조정
+    private func properHeaderCell(for indexPath: IndexPath) -> HomeSectionHeaderCell {
+        let headerCell = collectionView.dequeueReusableSupplementaryView(
+            ofKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: "HomeSectionHeaderCell",
+            for: indexPath
+        ) as! HomeSectionHeaderCell
+        
+        
+        headerCell.prepare(title: "나의 최근 미라클 모닝", buttonText: "정렬 방식") { [weak self] in
+            guard let self = self else {
+                return
+            }
+            
+            // do something
+            print("정렬")
+        }
+        
+        return headerCell
+    }
 }
