@@ -18,6 +18,9 @@ class MyBadgesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        navigationController?.navigationBar.topItem?.backButtonTitle = ""
+        navigationItem.title = "내가 획득한 배지"
     }
 }
 
@@ -49,7 +52,6 @@ extension MyBadgesViewController: CollectionViewCompositionable {
         collectionView.showsVerticalScrollIndicator = true
         collectionView.contentInset = .zero
         collectionView.backgroundColor = .clear
-        collectionView.clipsToBounds = true
     }
     
     func connectCollectionViewWithDelegates() {
