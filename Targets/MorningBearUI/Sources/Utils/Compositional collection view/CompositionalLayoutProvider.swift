@@ -112,38 +112,6 @@ public struct CompositionalLayoutProvider {
         return section
     }
     
-    /// 나의 미라클 모닝 상세 뷰에서 사용되는 정사각형 셀 그리드를 위한 레이아웃 섹션
-    ///
-    /// 스크롤 가능, 헤더 있음
-    public func squareCellDynamicGridLayoutSection(column: Int) -> NSCollectionLayoutSection {
-        // item
-        let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(calculatedWidthFraction(column)),
-            heightDimension: .fractionalHeight(1)
-        )
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        let itemInset = 7.5
-        item.contentInsets = NSDirectionalEdgeInsets(top: itemInset, leading: itemInset, bottom: itemInset, trailing: itemInset)
-
-        // row group
-        let rowGroupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1),
-            heightDimension: itemSize.widthDimension
-        )
-        let rowGroup = NSCollectionLayoutGroup.horizontal(
-            layoutSize: rowGroupSize,
-            subitems: [item]
-        )
-
-        // section
-        let section = NSCollectionLayoutSection(group: rowGroup)
-        section.orthogonalScrollingBehavior = .none
-        section.interGroupSpacing = 0
-        
-        section.contentInsets = narrowSectionInset
-        return section
-    }
-    
     public func dynamicGridLayoutSection(column: Int, height: CGFloat, inset: NSDirectionalEdgeInsets) -> NSCollectionLayoutSection {
         // item
         let itemSize = NSCollectionLayoutSize(
@@ -182,6 +150,42 @@ public struct CompositionalLayoutProvider {
         section.contentInsets = narrowSectionInset
         section.interGroupSpacing = 7.5
         
+        return section
+    }
+    
+    /// 나의 미라클 모닝 상세 뷰에서 사용되는 정사각형 셀 그리드를 위한 레이아웃 섹션
+    ///
+    /// 스크롤 가능, 헤더 있음
+    public func squareCellDynamicGridLayoutSection(column: Int) -> NSCollectionLayoutSection {
+        // item
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(calculatedWidthFraction(column)),
+            heightDimension: .fractionalHeight(1)
+        )
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let itemInset = 7.5
+        item.contentInsets = NSDirectionalEdgeInsets(top: itemInset, leading: itemInset, bottom: itemInset, trailing: itemInset)
+
+        // row group
+        let rowGroupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: itemSize.widthDimension
+        )
+        let rowGroup = NSCollectionLayoutGroup.horizontal(
+            layoutSize: rowGroupSize,
+            subitems: [item]
+        )
+
+        // section
+        let section = NSCollectionLayoutSection(group: rowGroup)
+        section.orthogonalScrollingBehavior = .none
+        section.interGroupSpacing = 0
+        
+        // Add header
+        let header = commonHeader
+        section.boundarySupplementaryItems = [header]
+        
+        section.contentInsets = narrowSectionInset
         return section
     }
     
