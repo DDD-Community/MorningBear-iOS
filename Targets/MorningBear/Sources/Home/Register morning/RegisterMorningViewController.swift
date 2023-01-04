@@ -34,8 +34,16 @@ class RegisterMorningViewController: UIViewController {
     }
     
     
-    @IBOutlet weak var categoryHelpButton: UIButton!
-    @IBOutlet weak var commentWriteButton: UIButton!
+    @IBOutlet weak var categoryHelpButton: MorningBearUIIconButton! {
+        didSet {
+            categoryHelpButton.shape(icon: .questionMark)
+        }
+    }
+    @IBOutlet weak var commentWriteButton: MorningBearUIIconButton! {
+        didSet {
+            commentWriteButton.shape(icon: .pencil)
+        }
+    }
     @IBOutlet weak var registerButton: LargeButton!
     
     override func viewDidLoad() {
