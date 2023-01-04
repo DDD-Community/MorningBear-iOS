@@ -200,7 +200,7 @@ extension Project {
                 ]
             ],
             "LSApplicationQueriesSchemes": ["kakaokompassauth"],
-            "UIUserInterfaceStyle": "Light"
+            "UIUserInterfaceStyle": "Dark"
         ]
         
         let mainTarget = Target(
