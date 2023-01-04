@@ -22,6 +22,11 @@ class HomeViewController: UIViewController {
             configureCompositionalCollectionView()
         }
     }
+    @IBOutlet weak var registerButton: LargeButton! {
+        didSet {
+            registerButton.setTitle("미라클 모닝 하기", for: .normal)
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
