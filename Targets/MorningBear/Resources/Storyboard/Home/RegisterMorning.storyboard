@@ -91,7 +91,7 @@
                                                                     </label>
                                                                 </subviews>
                                                             </stackView>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tSx-WD-dzJ">
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tSx-WD-dzJ" customClass="MorningBearUITextField" customModule="MorningBearUI">
                                                                 <rect key="frame" x="0.0" y="32.333333333333371" width="350" height="48"/>
                                                                 <color key="backgroundColor" white="0.79000000000000004" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <constraints>
@@ -114,7 +114,7 @@
                                                                     </label>
                                                                 </subviews>
                                                             </stackView>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pi9-Jk-9gO">
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pi9-Jk-9gO" customClass="MorningBearUITextField" customModule="MorningBearUI">
                                                                 <rect key="frame" x="0.0" y="32.333333333333371" width="350" height="48"/>
                                                                 <color key="backgroundColor" white="0.79000000000000004" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <constraints>
@@ -142,7 +142,7 @@
                                                                     </button>
                                                                 </subviews>
                                                             </stackView>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e28-q8-lQx">
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e28-q8-lQx" customClass="MorningBearUITextView" customModule="MorningBearUI">
                                                                 <rect key="frame" x="0.0" y="46.333333333333371" width="350" height="141"/>
                                                                 <color key="backgroundColor" white="0.79000000000000004" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <constraints>
@@ -207,9 +207,11 @@
                         <outlet property="commentLabel" destination="bdZ-Vo-2s8" id="2J9-8w-p7e"/>
                         <outlet property="commentWriteButton" destination="jLg-cx-dgC" id="v6K-x4-s3Y"/>
                         <outlet property="endMorningLabel" destination="A59-Db-X4W" id="OHK-fd-xUY"/>
+                        <outlet property="endTimeTextField" destination="Pi9-Jk-9gO" id="Mk9-4r-Ers"/>
                         <outlet property="morningImageView" destination="ct6-6V-07J" id="YEj-cC-ZfS"/>
                         <outlet property="registerButton" destination="WTS-Uz-mFH" id="pw9-Rp-Bx5"/>
                         <outlet property="startMorningLabel" destination="vGC-Co-gFz" id="vhR-95-qtT"/>
+                        <outlet property="startTimeTextField" destination="tSx-WD-dzJ" id="ExH-pF-2Vi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
