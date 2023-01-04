@@ -159,7 +159,7 @@
                                                     <constraint firstAttribute="height" constant="56" id="AgI-kZ-7xU"/>
                                                 </constraints>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="인증하기"/>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -201,6 +201,16 @@
                             <constraint firstItem="5na-9g-oEH" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="o1R-c6-9UG"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="categoryHelpButton" destination="vzC-d9-FQM" id="YgU-Fc-cFZ"/>
+                        <outlet property="categoryLabel" destination="XVT-yT-O7Y" id="ID3-y8-1X6"/>
+                        <outlet property="commentLabel" destination="bdZ-Vo-2s8" id="2J9-8w-p7e"/>
+                        <outlet property="commentWriteButton" destination="jLg-cx-dgC" id="v6K-x4-s3Y"/>
+                        <outlet property="endMorningLabel" destination="A59-Db-X4W" id="OHK-fd-xUY"/>
+                        <outlet property="morningImageView" destination="ct6-6V-07J" id="YEj-cC-ZfS"/>
+                        <outlet property="registerButton" destination="WTS-Uz-mFH" id="pw9-Rp-Bx5"/>
+                        <outlet property="startMorningLabel" destination="vGC-Co-gFz" id="vhR-95-qtT"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
