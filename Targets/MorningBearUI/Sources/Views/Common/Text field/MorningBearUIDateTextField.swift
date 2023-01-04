@@ -37,8 +37,11 @@ private extension MorningBearUIDateTextField {
         datePicker.preferredDatePickerStyle = .wheels
     }
     
+    /// text field랑 date picker랑 연결함
     func combineDatePickerWithTextField() {
         self.inputView = datePicker
+        // Selector로 래핑하기 싫어서 rx 썼음
+        // bag을 외부에서 갖고 오려고 parameter로 넘겨줌
         self.inputAccessoryView = UIToolbar().addDoneButton(with: bag) { [weak self] in
             guard let self else { return }
             
@@ -55,6 +58,10 @@ fileprivate extension UIToolbar {
     typealias Action = () -> Void
     
     /// 데이트피커 같은 데에 `done` 버튼 달고싶을 때 사용함
+    ///
+    /// - Parameters:
+    ///     - bag: dispose bag은 밖에서 관리해야함.
+    ///     - action: 실행할 실제 코드들. 클로저로 전달
     func addDoneButton(with bag: DisposeBag, action: Action?) -> UIToolbar {
         let toolBar = self
         
