@@ -114,7 +114,7 @@
                                                                     </label>
                                                                 </subviews>
                                                             </stackView>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pi9-Jk-9gO" customClass="MorningBearUITextField" customModule="MorningBearUI">
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pi9-Jk-9gO" customClass="MorningBearUIDateTextField" customModule="MorningBearUI">
                                                                 <rect key="frame" x="0.0" y="32.333333333333371" width="350" height="48"/>
                                                                 <color key="backgroundColor" white="0.79000000000000004" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <constraints>

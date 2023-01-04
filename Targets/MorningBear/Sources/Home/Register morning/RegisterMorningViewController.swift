@@ -41,10 +41,9 @@ class RegisterMorningViewController: UIViewController {
             startTimeTextField.placeholder = "오전 8시 30분"
         }
     }
-    @IBOutlet weak var endTimeTextField: MorningBearUITextField!{
+    @IBOutlet weak var endTimeTextField: MorningBearUIDateTextField!{
         didSet {
             endTimeTextField.placeholder = "오전 8시 30분"
-            endTimeTextField.isEnabled = false
         }
     }
     
