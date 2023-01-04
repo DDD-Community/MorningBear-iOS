@@ -10,8 +10,10 @@ import UIKit
 import MorningBearUI
 
 class RegisterMorningViewController: UIViewController {
+    // MARK: Image view
     @IBOutlet weak var morningImageView: UIImageView!
     
+    // MARK: Lables
     @IBOutlet weak var categoryLabel: UILabel! {
         didSet {
             categoryLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 16)
@@ -33,7 +35,21 @@ class RegisterMorningViewController: UIViewController {
         }
     }
     
+    // MARK: Text field
+    @IBOutlet weak var startTimeTextField: MorningBearUITextField! {
+        didSet {
+            startTimeTextField.placeholder = "오전 8시 30분"
+            startTimeTextField.isEnabled = false
+        }
+    }
+    @IBOutlet weak var endTimeTextField: MorningBearUITextField!{
+        didSet {
+            endTimeTextField.placeholder = "오전 8시 30분"
+            endTimeTextField.isEnabled = false
+        }
+    }
     
+    // MARK: Buttons
     @IBOutlet weak var categoryHelpButton: MorningBearUIIconButton! {
         didSet {
             categoryHelpButton.shape(icon: .questionMark)
@@ -46,6 +62,7 @@ class RegisterMorningViewController: UIViewController {
     }
     @IBOutlet weak var registerButton: LargeButton!
     
+    // MARK: View controller methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
