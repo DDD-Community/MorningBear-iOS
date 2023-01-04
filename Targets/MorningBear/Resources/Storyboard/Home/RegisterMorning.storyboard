@@ -205,6 +205,7 @@
                         <outlet property="categoryHelpButton" destination="vzC-d9-FQM" id="YgU-Fc-cFZ"/>
                         <outlet property="categoryLabel" destination="XVT-yT-O7Y" id="ID3-y8-1X6"/>
                         <outlet property="commentLabel" destination="bdZ-Vo-2s8" id="2J9-8w-p7e"/>
+                        <outlet property="commentTextView" destination="e28-q8-lQx" id="mK2-N4-eek"/>
                         <outlet property="commentWriteButton" destination="jLg-cx-dgC" id="v6K-x4-s3Y"/>
                         <outlet property="endMorningLabel" destination="A59-Db-X4W" id="OHK-fd-xUY"/>
                         <outlet property="endTimeTextField" destination="Pi9-Jk-9gO" id="Mk9-4r-Ers"/>
