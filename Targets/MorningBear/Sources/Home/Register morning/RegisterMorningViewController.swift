@@ -36,10 +36,9 @@ class RegisterMorningViewController: UIViewController {
     }
     
     // MARK: Text field
-    @IBOutlet weak var startTimeTextField: MorningBearUITextField! {
+    @IBOutlet weak var startTimeTextField: MorningBearUIDateTextField! {
         didSet {
             startTimeTextField.placeholder = "오전 8시 30분"
-            startTimeTextField.isEnabled = false
         }
     }
     @IBOutlet weak var endTimeTextField: MorningBearUITextField!{
