@@ -28,10 +28,7 @@ public class MorningBearUIDateTextField: MorningBearUITextField {
         
         configureDatePicker()
         combineDatePickerWithTextField()
-        
-        dateFormatter.dateFormat = "a hh시 mm분"
     }
-
 }
 
 private extension MorningBearUIDateTextField {
