@@ -16,7 +16,7 @@ import RxCocoa
 ///
 /// `MorningBearUITextField`를 상속해서 사용. 디자인 요소는 이미 `MorningBearUITextField`에서 다 끝냈으므로
 /// 데이트 피커만 잘 더해서 사용하면 된다.
-public class MorningBearUIDateTextField: MorningBearUITextField {
+public class MorningBearUIDateTextField: MorningBearUITextField {    
     private let datePicker = UIDatePicker()
     private let dateFormatter = DateFormatter()
     private let bag = DisposeBag()
@@ -29,6 +29,7 @@ public class MorningBearUIDateTextField: MorningBearUITextField {
         
         dateFormatter.dateFormat = "a hh시 mm분"
     }
+
 }
 
 private extension MorningBearUIDateTextField {
@@ -40,15 +41,24 @@ private extension MorningBearUIDateTextField {
     /// text field랑 date picker랑 연결함
     func combineDatePickerWithTextField() {
         self.inputView = datePicker
+        
         // Selector로 래핑하기 싫어서 rx 썼음
         // bag을 외부에서 갖고 오려고 parameter로 넘겨줌
+        let action = super.submitAction
         self.inputAccessoryView = UIToolbar().addDoneButton(with: bag) { [weak self] in
             guard let self else { return }
             
+            // 텍스트 필드에 내용 바꾸기
             let date = self.datePicker.date
             let dateString = self.dateFormatter.string(from: date)
-
             self.text = dateString
+            
+            // submit 액션 등록된 것 있으면 실행
+            if let action {
+                action()
+            }
+            
+            // 피커 숨기기
             self.resignFirstResponder()
         }
     }

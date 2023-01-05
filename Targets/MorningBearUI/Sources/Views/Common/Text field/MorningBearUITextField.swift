@@ -13,6 +13,10 @@ import UIKit
 /// `UITextField`를 상속해서 사용. 디자인 요소 외에`UITextField`와 모두 동일하므로
 /// 같은 방식으로 설정해서 사용하면 된다.
 public class MorningBearUITextField: UITextField {
+    public typealias Action = () -> Void
+
+    var submitAction: Action?
+
     public override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -20,6 +24,26 @@ public class MorningBearUITextField: UITextField {
     }
 }
 
+// MARK: - Set delegates
+extension MorningBearUITextField: UITextFieldDelegate {
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if let submitAction {
+            submitAction()
+        }
+        
+        textField.resignFirstResponder()
+        return true
+    }
+}
+
+// MARK: - Methods for public use
+public extension MorningBearUITextField {
+    func onSubmit(action: @escaping Action) {
+        self.submitAction = action
+    }
+}
+
+// MARK: - Internal tools
 private extension MorningBearUITextField {
     func designTextField() {
         // Set border
