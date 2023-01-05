@@ -12,13 +12,15 @@ import UIKit
 import RxSwift
 import RxCocoa
 
+import MorningBearKit
+
 /// 앱 전반에 걸쳐 사용되는 데이트 피커 텍스트 필드
 ///
 /// `MorningBearUITextField`를 상속해서 사용. 디자인 요소는 이미 `MorningBearUITextField`에서 다 끝냈으므로
 /// 데이트 피커만 잘 더해서 사용하면 된다.
 public class MorningBearUIDateTextField: MorningBearUITextField {    
     private let datePicker = UIDatePicker()
-    private let dateFormatter = DateFormatter()
+    private let dateFormatter = MorningBearDateFormatter.timeFormatter
     private let bag = DisposeBag()
     
     public override func awakeFromNib() {
