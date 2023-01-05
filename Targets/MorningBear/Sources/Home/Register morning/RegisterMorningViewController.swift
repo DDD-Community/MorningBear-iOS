@@ -46,7 +46,11 @@ class RegisterMorningViewController: UIViewController {
             endTimeTextField.placeholder = "오전 8시 30분"
         }
     }
-    @IBOutlet weak var commentTextView: MorningBearUITextView!
+    @IBOutlet weak var commentTextView: MorningBearUITextView! {
+        didSet {
+            commentTextView.textContainer.maximumNumberOfLines = 6
+        }
+    }
     
     // MARK: Buttons
     @IBOutlet weak var categoryHelpButton: MorningBearUIIconButton! {
