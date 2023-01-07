@@ -23,6 +23,7 @@ class RegisterMorningViewController: UIViewController {
     // MARK: - View components
     // MARK: Image view
     @IBOutlet weak var morningImageView: UIImageView!
+    private var morningImage: UIImage!
     
     // MARK: Lables
     @IBOutlet weak var categoryLabel: UILabel! {
@@ -79,17 +80,24 @@ class RegisterMorningViewController: UIViewController {
     }
     @IBOutlet weak var registerButton: LargeButton!
     
-    // MARK: View controller methods
+    // MARK: - View controller methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
         designNavigationBar()
         
+        self.morningImageView.image = morningImage
+        
         bindButtons()
     }
 }
 
-// MARK: Related to view
+extension RegisterMorningViewController {
+    func prepare(_ image: UIImage) {
+        self.morningImage = image
+    }
+}
+
 private extension RegisterMorningViewController {
     func designNavigationBar() {
         navigationItem.title = "오늘의 미라클모닝"

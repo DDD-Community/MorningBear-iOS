@@ -70,6 +70,7 @@ private extension HomeViewController {
     func bindButtons() {
         registerButton.rx.tap.bind { [weak self] in
             guard let self else { return }
+            
             self.cameraViewController.sourceType = .camera
             self.cameraViewController.allowsEditing = true
             self.cameraViewController.delegate = self
@@ -77,13 +78,6 @@ private extension HomeViewController {
             self.show(self.cameraViewController, sender: self)
         }
         .disposed(by: bag)
-    }
-}
-
-// MARK: - Set camera delegate
-extension HomeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        cameraViewController.dismiss(animated: true)
     }
 }
 
@@ -165,6 +159,27 @@ extension HomeViewController: CollectionViewCompositionable {
         collectionView.register(cellNib,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
                                 withReuseIdentifier: "HomeSectionFooterCell")
+    }
+}
+
+
+// MARK: - Set camera delegate
+extension HomeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let takenPhoto = info[.editedImage] as? UIImage {
+            // imageViewPic.contentMode = .scaleToFill
+            guard let registerMorningViewController = UIStoryboard(name: "RegisterMorning", bundle: nil)
+                .instantiateViewController(withIdentifier: "RegisterMorning") as? RegisterMorningViewController else {
+                
+                fatalError("뷰 컨트롤러를 불러올 수 없음")
+            }
+            
+            registerMorningViewController.prepare(takenPhoto)
+            self.navigationController?.pushViewController(registerMorningViewController, animated: true)
+        }
+        
+        
+        cameraViewController.dismiss(animated: true)
     }
 }
 
