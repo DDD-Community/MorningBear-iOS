@@ -21,7 +21,7 @@ public class MyBadgeStateCell: UICollectionViewCell {
     }
     @IBOutlet weak var divider: UIView! {
         didSet {
-            divider.backgroundColor = MorningBearUIAsset.Colors.thirdBackground.color
+            divider.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
         }
     }
     
