@@ -100,50 +100,28 @@ private extension RegisterMorningViewController {
             guard let self else { return }
             
             do {
-                let info = try self.convertViewInformation()
+                guard let startTimeText = self.startTimeTextField.text,
+                      let endTimeText = self.endTimeTextField.text
+                else {
+                    throw RegisterMorningViewModel.DataError.emptyData
+                }
+                
+                guard let image = self.morningImageView.image else {
+                    throw RegisterMorningViewModel.DataError.emptyData
+                }
+                
+                let commentText = self.commentTextView.text ?? ""
+                
+                let info = try self.viewModel.convertViewContentToInformation(image,
+                                                                              startTimeText,
+                                                                              endTimeText,
+                                                                              commentText)
+                
                 self.viewModel.registerMorningInformation(info: info)
             } catch let error {
                 self.showAlert(error)
             }
         }
         .disposed(by: bag)
-    }
-}
-
-// MARK: Internal tools
-private extension RegisterMorningViewController {
-    func convertViewInformation() throws -> MorningRegistrationInfo  {
-        let formatter = viewModel.timeFormatter
-        
-        guard let startTimeText = startTimeTextField.text,
-              let endTimeText = endTimeTextField.text
-        else {
-            throw MorningBearDateFormatterError.emptyString
-        }
-        
-        guard let startTime = formatter.date(from: startTimeText),
-              let endTime = formatter.date(from: endTimeText)
-        else {
-            throw MorningBearDateFormatterError.invalidString
-        }
-        
-        guard let image = morningImageView.image else {
-            throw DataError.emptyData
-        }
-        
-        let comment = commentTextView.text ?? ""
-        
-        return MorningRegistrationInfo(image: image, startTime: startTime, endTime: endTime, comment: comment)
-    }
-    
-    enum DataError: LocalizedError {
-        case emptyData
-        
-        var errorDescription: String? {
-            switch self {
-            case .emptyData:
-                return "데이터 처리 중 오류가 발생했습니다. 다시 시도해주세요."
-            }
-        }
     }
 }
