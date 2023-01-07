@@ -46,9 +46,9 @@ public extension MorningBearUIIconButton {
         var image: UIImage {
             switch self {
             case .pencil:
-                return MorningBearUIAsset.Asset.pencil.image
+                return MorningBearUIAsset.Images.pencil.image
             case .questionMark:
-                return MorningBearUIAsset.Asset.questionmarkCircle.image
+                return MorningBearUIAsset.Images.questionmarkCircle.image
             }
         }
     }
