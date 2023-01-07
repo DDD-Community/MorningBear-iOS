@@ -36,7 +36,7 @@ class HomeViewController: UIViewController {
         bindButtons()
 
         // FIXME: 색깔 이거 아닌 것 같음
-        self.view.backgroundColor = MorningBearUIAsset.Colors.thirdBackground.color
+        self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
     }
 }
 
