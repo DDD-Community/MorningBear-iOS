@@ -49,7 +49,8 @@ extension Project {
                              resources: ["Targets/\(name)/Resources/**"],
                              dependencies: [
                                 .external(name: "RxSwift"),
-                                .external(name: "RxCocoa")
+                                .external(name: "RxCocoa"),
+                                .target(name: "MorningBearKit")
                              ])
         
         let tests = Target(name: "\(name)Tests",

@@ -59,7 +59,7 @@ private extension UINavigationController {
             .font: MorningBearUIFontFamily.Pretendard.bold.font(size: 20)
         ]
         
-        let backButton = MorningBearUIAsset.Asset.backArrow.image.withTintColor(.black, renderingMode: .alwaysOriginal)
+        let backButton = MorningBearUIAsset.Images.backArrow.image.withTintColor(.black, renderingMode: .alwaysOriginal)
         appearance.setBackIndicatorImage(backButton, transitionMaskImage: backButton)
 
         self.navigationBar.standardAppearance = appearance

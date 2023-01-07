@@ -17,7 +17,7 @@ import RxCocoa
 class LoginViewController: UIViewController {
     @IBOutlet weak var logoImageView: UIImageView! {
         didSet {
-            logoImageView.image = MorningBearUIAsset.Asset.logo.image
+            logoImageView.image = MorningBearUIAsset.Images.logo.image
         }
     }
     
@@ -31,13 +31,13 @@ class LoginViewController: UIViewController {
     
     @IBOutlet weak var kakaoLoginButton: UIButton! {
         didSet {
-            kakaoLoginButton.setImage(MorningBearUIAsset.Asset.kakaoButton.image, for: .normal)
+            kakaoLoginButton.setImage(MorningBearUIAsset.Images.kakaoButton.image, for: .normal)
         }
     }
     
     @IBOutlet weak var appleLoginButton: UIButton! {
         didSet {
-            appleLoginButton.setImage(MorningBearUIAsset.Asset.appleButton.image, for: .normal)
+            appleLoginButton.setImage(MorningBearUIAsset.Images.appleButton.image, for: .normal)
         }
     }
     
