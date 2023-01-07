@@ -22,20 +22,27 @@ class HomeViewController: UIViewController {
             configureCompositionalCollectionView()
         }
     }
+    @IBOutlet weak var registerButton: LargeButton! {
+        didSet {
+            registerButton.setTitle("미라클 모닝 하기", for: .normal)
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         designNavigationBar()
+        
+        bindButtons()
 
         // FIXME: 색깔 이거 아닌 것 같음
         self.view.backgroundColor = MorningBearUIAsset.Colors.thirdBackground.color
     }
 }
 
-// MARK: - Collection view setting tools
-extension HomeViewController {
-    private func designNavigationBar() {        
+// MARK: - Configure design components
+private extension HomeViewController {
+    func designNavigationBar() {
         // Configure bar items
         self.navigationItem.leftBarButtonItem = MorningBearBarButtonItem.titleButton
         self.navigationItem.leftBarButtonItem?.tintColor = .black
@@ -55,10 +62,21 @@ extension HomeViewController {
             print("tapped")
         }
         .disposed(by: bag)
-        
+    }
+    
+    func bindButtons() {
+        registerButton.rx.tap.bind { [weak self] in
+            guard let self else { return }
+            
+            let registerMorningViewController = UIStoryboard(name: "RegisterMorning", bundle: nil)
+                .instantiateViewController(withIdentifier: "RegisterMorning")
+            self.navigationController?.pushViewController(registerMorningViewController, animated: true)
+        }
+        .disposed(by: bag)
     }
 }
 
+// MARK: - Collection view setting tools
 extension HomeViewController: CollectionViewCompositionable {
     func layoutCollectionView() {
         let provider = CompositionalLayoutProvider()

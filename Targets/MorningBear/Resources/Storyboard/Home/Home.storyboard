@@ -12,7 +12,7 @@
         <!--Home View Controller-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController storyboardIdentifier="Home" id="Y6W-OH-hqX" customClass="HomeViewController" customModule="MorningBearUI" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Home" id="Y6W-OH-hqX" customClass="HomeViewController" customModule="MorningBear" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -28,18 +28,30 @@
                                 </collectionViewFlowLayout>
                                 <cells/>
                             </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="erM-k4-hH4" customClass="LargeButton" customModule="MorningBearUI">
+                                <rect key="frame" x="20" y="742" width="350" height="56"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="56" id="3s5-jv-SoT"/>
+                                </constraints>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Button"/>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="erM-k4-hH4" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="5Au-DV-fva"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="erM-k4-hH4" secondAttribute="bottom" constant="12" id="OvH-rG-Q0F"/>
                             <constraint firstItem="EWa-Qd-diN" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="SaW-sN-KZp"/>
                             <constraint firstAttribute="bottom" secondItem="EWa-Qd-diN" secondAttribute="bottom" id="XMs-TQ-Tj9"/>
                             <constraint firstItem="EWa-Qd-diN" firstAttribute="trailing" secondItem="vDu-zF-Fre" secondAttribute="trailing" id="dda-wv-POT"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="erM-k4-hH4" secondAttribute="trailing" constant="20" id="uKw-OT-mpa"/>
                             <constraint firstItem="EWa-Qd-diN" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="vg3-UJ-RfK"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="EWa-Qd-diN" id="TW0-jN-3gS"/>
+                        <outlet property="registerButton" destination="erM-k4-hH4" id="VmI-fz-p8o"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
