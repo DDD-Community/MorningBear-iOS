@@ -16,6 +16,9 @@ class HomeViewController: UIViewController {
     private let bag = DisposeBag()
     private let viewModel = HomeViewModel()
     
+    // 카메라 뷰: 미리 로딩하기 위해서 처음부터 만들어 놓기
+    private let cameraViewController = UIImagePickerController()
+    
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
             // CollectionViewCompositionable 제공함수. 관련 내용 소스파일 or 주석 참조.
@@ -67,12 +70,20 @@ private extension HomeViewController {
     func bindButtons() {
         registerButton.rx.tap.bind { [weak self] in
             guard let self else { return }
+            self.cameraViewController.sourceType = .camera
+            self.cameraViewController.allowsEditing = true
+            self.cameraViewController.delegate = self
             
-            let registerMorningViewController = UIStoryboard(name: "RegisterMorning", bundle: nil)
-                .instantiateViewController(withIdentifier: "RegisterMorning")
-            self.navigationController?.pushViewController(registerMorningViewController, animated: true)
+            self.show(self.cameraViewController, sender: self)
         }
         .disposed(by: bag)
+    }
+}
+
+// MARK: - Set camera delegate
+extension HomeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        cameraViewController.dismiss(animated: true)
     }
 }
 
