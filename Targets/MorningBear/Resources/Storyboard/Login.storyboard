@@ -15,10 +15,10 @@
         </array>
     </customFonts>
     <scenes>
-        <!--Auth View Controller-->
+        <!--Login View Controller-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController storyboardIdentifier="Login" id="Y6W-OH-hqX" customClass="AuthViewController" customModule="MorningBear" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Login" id="Y6W-OH-hqX" customClass="LoginViewController" customModule="MorningBear" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -38,12 +38,12 @@
                                             <constraint firstAttribute="height" constant="56" id="cBb-il-rFN"/>
                                         </constraints>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title=""/>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xYc-TP-q98">
                                         <rect key="frame" x="0.0" y="72" width="350" height="56"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title=""/>
                                     </button>
                                 </subviews>
                                 <constraints>
@@ -51,29 +51,40 @@
                                 </constraints>
                             </stackView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="DrC-Mz-AO3">
-                                <rect key="frame" x="80" y="272.66666666666669" width="230" height="130"/>
+                                <rect key="frame" x="95" y="326.33333333333331" width="200" height="65"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="130" id="vMJ-mh-qid"/>
+                                    <constraint firstAttribute="height" constant="65" id="vMJ-mh-qid"/>
                                 </constraints>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XMT-ep-9XK">
+                                <rect key="frame" x="174.33333333333334" y="409.33333333333331" width="41.333333333333343" height="20.333333333333314"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="DrC-Mz-AO3" secondAttribute="trailing" constant="80" id="5yQ-Ri-SoU"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="DrC-Mz-AO3" secondAttribute="trailing" constant="95" id="5yQ-Ri-SoU"/>
                             <constraint firstItem="3dH-TA-QaD" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="LGw-fm-I9B"/>
                             <constraint firstItem="3dH-TA-QaD" firstAttribute="top" secondItem="crS-TK-3rF" secondAttribute="bottom" constant="24" id="Rmx-m8-Ujw"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="3dH-TA-QaD" secondAttribute="bottom" constant="12" id="V1h-Wo-9tY"/>
-                            <constraint firstItem="DrC-Mz-AO3" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="80" id="WQC-S5-aCy"/>
-                            <constraint firstItem="DrC-Mz-AO3" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" multiplier="0.8" id="jhL-Z4-Tac"/>
+                            <constraint firstItem="DrC-Mz-AO3" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="95" id="WQC-S5-aCy"/>
+                            <constraint firstItem="DrC-Mz-AO3" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" multiplier="0.85" id="jhL-Z4-Tac"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="crS-TK-3rF" secondAttribute="trailing" constant="20" id="n9a-0z-wgP"/>
                             <constraint firstItem="DrC-Mz-AO3" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="ua0-xc-CPB"/>
+                            <constraint firstItem="XMT-ep-9XK" firstAttribute="top" secondItem="DrC-Mz-AO3" secondAttribute="bottom" constant="18" id="xmJ-fx-eTW"/>
                             <constraint firstItem="crS-TK-3rF" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="y6p-37-wrb"/>
+                            <constraint firstItem="XMT-ep-9XK" firstAttribute="centerX" secondItem="DrC-Mz-AO3" secondAttribute="centerX" id="zPv-5V-Qv6"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="appleLoginButton" destination="xYc-TP-q98" id="io4-g9-YIg"/>
                         <outlet property="kakaoLoginButton" destination="6Z0-8o-sQa" id="K5k-3n-b6d"/>
+                        <outlet property="logoImageView" destination="DrC-Mz-AO3" id="uTZ-Mi-6fd"/>
+                        <outlet property="sloganLabel" destination="XMT-ep-9XK" id="HQJ-0n-CY8"/>
+                        <outlet property="termsOfUseDescriptionLabel" destination="3dH-TA-QaD" id="YPJ-pT-MP0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -83,7 +94,7 @@
     </scenes>
     <resources>
         <namedColor name="Caption Text">
-            <color red="0.72156862745098038" green="0.72156862745098038" blue="0.72156862745098038" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.47058823529411764" green="0.47058823529411764" blue="0.47058823529411764" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
