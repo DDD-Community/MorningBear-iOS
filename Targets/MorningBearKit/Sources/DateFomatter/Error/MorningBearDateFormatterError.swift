@@ -10,11 +10,14 @@ import Foundation
 
 public enum MorningBearDateFormatterError: LocalizedError {
     case invalidString
+    case emptyString
     
     public var errorDescription: String? {
         switch self {
         case .invalidString:
             return "입력 문자열의 포맷이 잘못되었습니다"
+        case .emptyString:
+            return "날짜 값이 존재하지 않습니다"
         }
     }
 }

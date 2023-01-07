@@ -12,6 +12,7 @@ import RxSwift
 import RxCocoa
 
 import MorningBearUI
+import MorningBearKit
 
 class RegisterMorningViewController: UIViewController {
     // MARK: - Instance properties
@@ -46,14 +47,17 @@ class RegisterMorningViewController: UIViewController {
     }
     
     // MARK: Text field
-    @IBOutlet weak var startTimeTextField: MorningBearUIDateTextField! {
+    @IBOutlet weak var startTimeTextField: MorningBearUITextField! {
         didSet {
-            startTimeTextField.placeholder = "오전 8시 30분"
+            startTimeTextField.text = "오전 8시 30분"
+            startTimeTextField.isUserInteractionEnabled = false
         }
     }
-    @IBOutlet weak var endTimeTextField: MorningBearUIDateTextField!{
+    @IBOutlet weak var endTimeTextField: MorningBearUITextField!{
         didSet {
-            endTimeTextField.placeholder = "오전 8시 30분"
+            endTimeTextField.text = "오전 8시 30분"
+            endTimeTextField.isUserInteractionEnabled = false
+
         }
     }
     @IBOutlet weak var commentTextView: MorningBearUITextView! {
@@ -80,6 +84,8 @@ class RegisterMorningViewController: UIViewController {
         super.viewDidLoad()
 
         designNavigationBar()
+        
+        bindButtons()
     }
 }
 
@@ -93,9 +99,12 @@ private extension RegisterMorningViewController {
         registerButton.rx.tap.bind { [weak self] in
             guard let self else { return }
             
-//            let info = try self.convertViewInformation()
-            
-//            self.viewModel.registerMorningInformation(info: )
+            do {
+                let info = try self.convertViewInformation()
+                self.viewModel.registerMorningInformation(info: info)
+            } catch let error {
+                self.showAlert(error)
+            }
         }
         .disposed(by: bag)
     }
@@ -103,22 +112,38 @@ private extension RegisterMorningViewController {
 
 // MARK: Internal tools
 private extension RegisterMorningViewController {
-//    func convertViewInformation() throws -> MorningRegistrationInfo  {
-//        let formatter = viewModel.timeFormatter
+    func convertViewInformation() throws -> MorningRegistrationInfo  {
+        let formatter = viewModel.timeFormatter
         
-//        guard let startTime = formatter.date(from: startTimeTextField.text) else {
-//            throw MorningBearDateFormatterError.invalidString
-//        }
-//
-//        // FIXME: 적절한 로직 필요
-//        let image = morningImageView.image ?? UIImage()
-//
-//        let startTime = startTimeTextField.text
-//        let endTime = endTimeTextField.text
-//        let comment = commentTextView.text
-//
-//        return MorningRegistrationInfo(image: image, startTime: startTime, endTime: endTime, comment: comment)
-//    }
+        guard let startTimeText = startTimeTextField.text,
+              let endTimeText = endTimeTextField.text
+        else {
+            throw MorningBearDateFormatterError.emptyString
+        }
+        
+        guard let startTime = formatter.date(from: startTimeText),
+              let endTime = formatter.date(from: endTimeText)
+        else {
+            throw MorningBearDateFormatterError.invalidString
+        }
+        
+        guard let image = morningImageView.image else {
+            throw DataError.emptyData
+        }
+        
+        let comment = commentTextView.text ?? ""
+        
+        return MorningRegistrationInfo(image: image, startTime: startTime, endTime: endTime, comment: comment)
+    }
+    
+    enum DataError: LocalizedError {
+        case emptyData
+        
+        var errorDescription: String? {
+            switch self {
+            case .emptyData:
+                return "데이터 처리 중 오류가 발생했습니다. 다시 시도해주세요."
+            }
+        }
+    }
 }
-
-
