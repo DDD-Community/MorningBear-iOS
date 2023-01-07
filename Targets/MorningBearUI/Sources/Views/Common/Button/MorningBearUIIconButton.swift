@@ -48,7 +48,7 @@ public extension MorningBearUIIconButton {
             case .pencil:
                 return MorningBearUIAsset.Images.pencil.image
             case .questionMark:
-                return MorningBearUIAsset.Images.questionmarkCircle.image
+                return MorningBearUIAsset.Images.questionMark.image
             }
         }
     }
