@@ -59,4 +59,36 @@ final class MorningBearDateFormatterTests: XCTestCase {
             XCTFail("Date값으로 변환되어서는 안됨")
         }
     }
+    
+    func test__day_format() {
+        formatter = MorningBearDateFormatter.dayFormatter
+        
+        let dateStrings = ["2022년 3월 12일", "2022년 12월 1일", "2022년 3월 2일", "2022년 12월 12일"]
+        
+        for dateString in dateStrings {
+            guard let date = formatter.date(from: dateString) else {
+                XCTFail("String에서 Date 값으로 변환 실패")
+                return
+            }
+            
+            let stringFromDate = formatter.string(from: date)
+            XCTAssertEqual(dateString, stringFromDate)
+        }
+    }
+    
+    func test__shortime_format() {
+        formatter = MorningBearDateFormatter.shortimeFormatter
+        
+        var dateStrings = ["오전 01:30", "오전 12:02", "오전 03:02", "오후 11:39"]
+
+        for dateString in dateStrings {
+            guard let date = formatter.date(from: dateString) else {
+                XCTFail("String에서 Date 값으로 변환 실패")
+                return
+            }
+            
+            let stringFromDate = formatter.string(from: date)
+            XCTAssertEqual(dateString, stringFromDate)
+        }
+    }
 }
