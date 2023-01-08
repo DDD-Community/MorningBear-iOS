@@ -22,8 +22,12 @@ class RegisterMorningViewController: UIViewController {
     
     // MARK: - View components
     // MARK: Image view
-    @IBOutlet weak var morningImageView: UIImageView!
-    private var morningImage: UIImage!
+    private var morningImage: UIImage = UIImage(systemName: "questionmark")!
+    @IBOutlet weak var morningImageView: UIImageView! {
+        didSet {
+            morningImageView.layer.cornerRadius = 8
+        }
+    }
     
     // MARK: Lables
     @IBOutlet weak var categoryLabel: UILabel! {

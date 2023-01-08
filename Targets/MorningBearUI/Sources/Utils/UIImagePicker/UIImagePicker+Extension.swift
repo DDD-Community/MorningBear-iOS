@@ -8,6 +8,9 @@
 
 import UIKit
 
+/// UIIMagePicker에는 고질적인 버그가 있음. 뭐냐면 사진을 찍고 나서 크롭하는 뷰에서 사진이 안 움직임.
+/// 이를 고쳐주는 익스텐션임. 자세한 내용 아래 링크 참조
+/// https://stackoverflow.com/questions/51335187/uiimagepickercontroller-not-properly-cropping-selected-image
 extension UIImagePickerController {
     open override var childForStatusBarHidden: UIViewController? {
         return nil

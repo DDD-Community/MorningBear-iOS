@@ -23,24 +23,23 @@
                                 <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hjx-nN-4oQ">
-                                        <rect key="frame" x="0.0" y="0.0" width="390" height="1035.3333333333333"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="390" height="1085.3333333333333"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ct6-6V-07J">
-                                                <rect key="frame" x="20" y="8" width="350" height="300"/>
-                                                <color key="backgroundColor" white="0.79000000000000004" alpha="1" colorSpace="calibratedWhite"/>
+                                                <rect key="frame" x="20" y="8" width="350" height="350"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="300" id="Nxr-pU-IZi"/>
+                                                    <constraint firstAttribute="width" secondItem="ct6-6V-07J" secondAttribute="height" multiplier="1:1" id="b3u-tB-8Du"/>
                                                 </constraints>
                                             </imageView>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MR2-Wi-jkm" userLabel="Divider">
-                                                <rect key="frame" x="0.0" y="326" width="390" height="6"/>
+                                                <rect key="frame" x="0.0" y="376" width="390" height="6"/>
                                                 <color key="backgroundColor" name="Gray 200"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="6" id="D6n-kt-Ocv"/>
                                                 </constraints>
                                             </view>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="40" translatesAutoresizingMaskIntoConstraints="NO" id="XVF-OX-P2l" userLabel="Content Stack View">
-                                                <rect key="frame" x="20" y="344.00000000000006" width="350" height="545.33333333333348"/>
+                                                <rect key="frame" x="20" y="394.00000000000006" width="350" height="545.33333333333348"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="XV3-X4-JZT" userLabel="Category Stack View">
                                                         <rect key="frame" x="0.0" y="0.0" width="350" height="77.333333333333329"/>
@@ -91,8 +90,8 @@
                                                                     </label>
                                                                 </subviews>
                                                             </stackView>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tSx-WD-dzJ" customClass="MorningBearUITextField" customModule="MorningBearUI">
-                                                                <rect key="frame" x="0.0" y="32.333333333333371" width="350" height="48"/>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tSx-WD-dzJ" customClass="MorningBearUIDateTextField" customModule="MorningBearUI">
+                                                                <rect key="frame" x="0.0" y="32.333333333333314" width="350" height="48"/>
                                                                 <color key="backgroundColor" white="0.79000000000000004" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="48" id="gEs-Ux-DYI"/>
@@ -154,7 +153,7 @@
                                                 </subviews>
                                             </stackView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WTS-Uz-mFH" userLabel="Register Button" customClass="LargeButton" customModule="MorningBearUI">
-                                                <rect key="frame" x="20" y="953.33333333333337" width="350" height="56"/>
+                                                <rect key="frame" x="20" y="1003.3333333333335" width="350" height="56"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="56" id="AgI-kZ-7xU"/>
                                                 </constraints>
