@@ -22,10 +22,23 @@ class RegisterMorningViewController: UIViewController {
     
     // MARK: - View components
     // MARK: Image view
-    private var morningImage: UIImage = UIImage(systemName: "questionmark")!
+    private var morningImage: UIImage?
     @IBOutlet weak var morningImageView: UIImageView! {
         didSet {
             morningImageView.layer.cornerRadius = 8
+        }
+    }
+    
+    @IBOutlet weak var dateLabel: UILabel! {
+        didSet {
+            dateLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 24)
+            dateLabel.text = viewModel.currentTimeString
+        }
+    }
+    @IBOutlet weak var timeLabel: UILabel! {
+        didSet {
+            timeLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 40)
+            timeLabel.text = viewModel.currentTimeString
         }
     }
     
@@ -54,13 +67,13 @@ class RegisterMorningViewController: UIViewController {
     // MARK: Text field
     @IBOutlet weak var startTimeTextField: MorningBearUITextField! {
         didSet {
-            startTimeTextField.text = "오전 8시 30분"
+            startTimeTextField.text = viewModel.currentTimeString
             startTimeTextField.isUserInteractionEnabled = false
         }
     }
     @IBOutlet weak var endTimeTextField: MorningBearUITextField!{
         didSet {
-            endTimeTextField.text = "오전 8시 30분"
+            endTimeTextField.text = viewModel.currentTimeString
             endTimeTextField.isUserInteractionEnabled = false
 
         }
@@ -90,7 +103,18 @@ class RegisterMorningViewController: UIViewController {
 
         designNavigationBar()
         
-        self.morningImageView.image = morningImage
+        
+        if let morningImage {
+            self.morningImageView.image = morningImage
+        } else {
+            let largeConfig = UIImage.SymbolConfiguration(pointSize: 200, weight: .regular, scale: .large)
+
+            let placeholderImage = UIImage(systemName: "xmark.circle", withConfiguration: largeConfig)!
+                .withTintColor(.black, renderingMode: .alwaysOriginal)
+            
+            self.morningImageView.image = placeholderImage
+            self.morningImageView.contentMode = .center
+        }
         
         bindButtons()
     }
