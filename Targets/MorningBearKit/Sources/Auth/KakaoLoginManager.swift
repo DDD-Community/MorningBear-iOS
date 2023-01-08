@@ -6,6 +6,7 @@
 //  Copyright © 2022 com.dache. All rights reserved.
 //
 
+import Foundation
 import RxKakaoSDKUser
 import KakaoSDKUser
 import RxKakaoSDKAuth
@@ -28,10 +29,9 @@ public final class KakaoLoginManager {
                     guard let self = self else { return }
                     
                     print("loginWithKakaoTalk() success.")
-                    let accessToken = oauthToken.accessToken
-                    self.tokenManager.encodeToken(state: .kakao, token: accessToken)
+                    self.tokenManager.progressKakao(oauthToken: oauthToken)
                     
-                }, onError: {error in
+                }, onError: { error in
                     print(error)
                 })
                 .disposed(by: bag)
@@ -44,10 +44,9 @@ public final class KakaoLoginManager {
                     guard let self = self else { return }
                     
                     print("loginWithKakaoAccount() success.")
-                    let accessToken = oauthToken.accessToken
-                    self.tokenManager.encodeToken(state: .kakao, token: accessToken)
+                    self.tokenManager.progressKakao(oauthToken: oauthToken)
                     
-                }, onError: {error in
+                }, onError: { error in
                     print(error)
                 })
                 .disposed(by: bag)
@@ -61,41 +60,18 @@ public final class KakaoLoginManager {
                 
                 //do something
                 _ = user
-            }, onFailure: {error in
+            }, onFailure: { error in
                 print(error)
             })
             .disposed(by: bag)
     }
     
-    public func verifyToken() {
-        // !! has error need to fix
-        
-        /*
-        if (AuthApi.hasToken()) {
-            UserApi.shared.rx.accessTokenInfo()
-                .subscribe(onSuccess:{ (_) in
-                    // 토큰 유효성 체크 성공 (필요 시 토큰 갱신됨)
-                }, onFailure: {error in
-                    if let sdkError = error as? SdkError, sdkError.isInvalidTokenError() == true {
-                        // 로그인 필요
-                    }
-                    else {
-                        // 기타 에러
-                    }
-                })
-                .disposed(by: disposeBag)
-        }
-        
-        else {
-         
-            // 로그인 필요
-        }
-        */
-    }
-    
     public func logout() {
         UserApi.shared.rx.logout()
-            .subscribe(onCompleted:{
+            .subscribe(onCompleted: { [weak self] in
+                guard let self = self else { return }
+                self.tokenManager.removeMorningBearTokenAtLocal()
+                
                 print("logout() success.")
             }, onError: {error in
                 print(error)
@@ -105,9 +81,12 @@ public final class KakaoLoginManager {
     
     public func deleteUser() {
         UserApi.shared.rx.unlink()
-            .subscribe(onCompleted:{
+            .subscribe(onCompleted: { [weak self] in
+                guard let self = self else { return }
+                self.tokenManager.removeMorningBearTokenAtLocal()
+                
                 print("unlink() success.")
-            }, onError: {error in
+            }, onError: { error in
                 print(error)
             })
             .disposed(by: bag)

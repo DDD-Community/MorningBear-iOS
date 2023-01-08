@@ -11,7 +11,7 @@ import AuthenticationServices
 public final class AppleLoginManager: NSObject {
     
     public weak var viewController: UIViewController?
-    public var userIdentifier: String?
+    private let tokenManager: TokenManager
     
     public func login() {
         let request = ASAuthorizationAppleIDProvider().createRequest()
@@ -23,10 +23,10 @@ public final class AppleLoginManager: NSObject {
     }
     
     public func checkCredentialState() {
-        guard userIdentifier != nil else { return }
+        guard let userIdentifier = UserDefaultsManager.shared.userIdentifier else { return }
         
         let appleIDProvider = ASAuthorizationAppleIDProvider()
-        appleIDProvider.getCredentialState(forUserID: userIdentifier!) { credentialState, error in
+        appleIDProvider.getCredentialState(forUserID: userIdentifier) { credentialState, error in
             switch credentialState {
             case .authorized:
                 print("The Apple ID credential is valid.")
@@ -42,7 +42,9 @@ public final class AppleLoginManager: NSObject {
         }
     }
     
-    public override init() {}
+    public override init() {
+        self.tokenManager = TokenManager()
+    }
 }
 
 extension AppleLoginManager: ASAuthorizationControllerPresentationContextProviding {
@@ -56,12 +58,11 @@ extension AppleLoginManager: ASAuthorizationControllerDelegate {
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
             let userIdentifier = appleIDCredential.user
             let email = appleIDCredential.email
-            let idToken = String(data: appleIDCredential.identityToken!, encoding: .utf8)
+            guard let idToken = String(data: appleIDCredential.identityToken!, encoding: .utf8) else { return }
             
-            // TODO: Save userIdentifier at UserDefault for checking credential state
-            self.userIdentifier = userIdentifier
-            
-            print("User id is \(userIdentifier) \n Email is \(String(describing: email)) \n ID token is \(idToken ?? "")")
+            print("User id is \(userIdentifier) \n Email is \(String(describing: email)) \n ID token is \(idToken)")
+            tokenManager.saveUserIdentifierAtLocal(userIdentifier)
+            tokenManager.progressApple(token: idToken)
         }
     }
     
