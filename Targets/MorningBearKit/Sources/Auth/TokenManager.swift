@@ -65,9 +65,14 @@ public final class TokenManager {
         }
     }
     
-    /// 로그인 시 사용한 서비스를 로컬에 저장 (apple, kakao)
+    /// 로그인 시 사용한 서비스명을 로컬에 저장 (apple, kakao)
     private func saveAuthStateAtLocal(_ state: AuthState) {
         UserDefaultsManager.shared.authState = state.rawValue
+    }
+    
+    /// 로그인 시 사용한 서비스명을 로컬에서 삭제 (apple, kakao)
+    private func removeAuthStateAtLocal() {
+        UserDefaultsManager.shared.authState = nil
     }
     
     /// MorningBear token을 로컬에 저장
@@ -82,6 +87,7 @@ public final class TokenManager {
     
     /// 로그아웃 혹은 회원탈퇴시 인증과 관련된 모든 토큰 및 데이터를 로컬에서 삭제
     func removeAll() {
+        removeAuthStateAtLocal()
         removeMorningBearTokenAtLocal()
         removeUserIdentifierAtLocal()
         removeRefreshTokenAtLocal()
