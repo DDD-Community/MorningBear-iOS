@@ -22,7 +22,7 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5na-9g-oEH">
                                 <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hjx-nN-4oQ">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hjx-nN-4oQ" userLabel="Conent Wrapper View">
                                         <rect key="frame" x="0.0" y="0.0" width="390" height="1085.3333333333333"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="309-Ha-LED">
@@ -241,6 +241,7 @@
                         <outlet property="dateLabel" destination="mjQ-hF-EW6" id="8nQ-lf-lL3"/>
                         <outlet property="endMorningLabel" destination="A59-Db-X4W" id="OHK-fd-xUY"/>
                         <outlet property="endTimeTextField" destination="Pi9-Jk-9gO" id="Mk9-4r-Ers"/>
+                        <outlet property="imageWrapperView" destination="309-Ha-LED" id="kO0-YQ-lPs"/>
                         <outlet property="morningImageView" destination="ct6-6V-07J" id="lJR-8O-GZJ"/>
                         <outlet property="registerButton" destination="WTS-Uz-mFH" id="pw9-Rp-Bx5"/>
                         <outlet property="startMorningLabel" destination="vGC-Co-gFz" id="vhR-95-qtT"/>
