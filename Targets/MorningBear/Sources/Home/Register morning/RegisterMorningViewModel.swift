@@ -12,6 +12,7 @@ import MorningBearKit
 
 class RegisterMorningViewModel {
     let currentDate = Date()
+    let categories = ["운동", "공부", "생활", "정서", "취미"]
     
     private let timeFormatter = MorningBearDateFormatter.timeFormatter
     private let shorttimeFormatter = MorningBearDateFormatter.shortimeFormatter

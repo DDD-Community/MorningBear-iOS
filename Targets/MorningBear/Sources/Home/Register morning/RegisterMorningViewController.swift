@@ -20,6 +20,9 @@ class RegisterMorningViewController: UIViewController {
     private let viewModel = RegisterMorningViewModel()
     private let bag = DisposeBag()
     
+    // For category collection view
+    var datasource: UICollectionViewDataSource?
+    var delegate: UICollectionViewDelegate?
     
     // MARK: - View components
     /// 이미지와 라벨을 포함한 래퍼 뷰
@@ -47,6 +50,13 @@ class RegisterMorningViewController: UIViewController {
         didSet {
             timeLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 40)
             timeLabel.text = viewModel.currentTimeString
+        }
+    }
+    
+    // MARK: Category collection view
+    @IBOutlet weak var categoryCollectionView: UICollectionView! {
+        didSet {
+            configureCompositionalCollectionView()
         }
     }
     
@@ -160,12 +170,50 @@ private extension RegisterMorningViewController {
                                                                               startTimeText,
                                                                               endTimeText,
                                                                               commentText)
-
+                
                 self.viewModel.registerMorningInformation(info: info)
             } catch let error {
                 self.showAlert(error)
             }
         }
         .disposed(by: bag)
+    }
+}
+
+// MARK: Set category collection view
+extension RegisterMorningViewController: CollectionViewCompositionable {
+    func layoutCollectionView() {
+        let provider = CompositionalLayoutProvider()
+        let layout = UICollectionViewCompositionalLayout(section: provider.infiniteHorizontalLayoutSection())
+        
+        categoryCollectionView.collectionViewLayout = layout
+    }
+    
+    func designCollectionView() {
+        categoryCollectionView.alwaysBounceHorizontal = true
+        categoryCollectionView.alwaysBounceVertical = false
+    }
+    
+    func connectCollectionViewWithDelegates() {
+        let reuseId = "CapsuleCell"
+        let common = GenericCollectionViewDataSource<CapsuleCell, String>(
+            reuseIndentifier: reuseId,
+            items: viewModel.categories,
+            configure: { cell, item in
+                cell.prepare(title: item)
+            }
+        )
+        
+        datasource = common
+        delegate = common
+        
+        categoryCollectionView.dataSource = datasource
+        categoryCollectionView.delegate = delegate
+    }
+    
+    func registerCells() {
+        let bundle = MorningBearUIResources.bundle
+        let cellNib = UINib(nibName: "CapsuleCell", bundle: bundle)
+        categoryCollectionView.register(cellNib, forCellWithReuseIdentifier: "CapsuleCell")
     }
 }
