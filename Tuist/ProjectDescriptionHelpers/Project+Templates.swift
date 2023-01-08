@@ -201,7 +201,8 @@ extension Project {
                 ]
             ],
             "LSApplicationQueriesSchemes": ["kakaokompassauth"],
-            "UIUserInterfaceStyle": "Dark"
+            "UIUserInterfaceStyle": "Dark",
+            "NSCameraUsageDescription": "미라클 모닝을 기록하기 위해서는 사진 촬영이 필요합니다. 권한을 허용해주세요."
         ]
         
         let mainTarget = Target(

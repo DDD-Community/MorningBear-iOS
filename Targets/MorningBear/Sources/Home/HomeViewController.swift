@@ -16,6 +16,9 @@ class HomeViewController: UIViewController {
     private let bag = DisposeBag()
     private let viewModel = HomeViewModel()
     
+    // 카메라 뷰: 미리 로딩하기 위해서 처음부터 만들어 놓기
+    private let cameraViewController = UIImagePickerController()
+    
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
             // CollectionViewCompositionable 제공함수. 관련 내용 소스파일 or 주석 참조.
@@ -68,9 +71,11 @@ private extension HomeViewController {
         registerButton.rx.tap.bind { [weak self] in
             guard let self else { return }
             
-            let registerMorningViewController = UIStoryboard(name: "RegisterMorning", bundle: nil)
-                .instantiateViewController(withIdentifier: "RegisterMorning")
-            self.navigationController?.pushViewController(registerMorningViewController, animated: true)
+            self.cameraViewController.sourceType = .camera
+            self.cameraViewController.allowsEditing = true
+            self.cameraViewController.delegate = self
+            
+            self.show(self.cameraViewController, sender: self)
         }
         .disposed(by: bag)
     }
@@ -154,6 +159,27 @@ extension HomeViewController: CollectionViewCompositionable {
         collectionView.register(cellNib,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
                                 withReuseIdentifier: "HomeSectionFooterCell")
+    }
+}
+
+
+// MARK: - Set camera delegate
+extension HomeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let takenPhoto = info[.editedImage] as? UIImage {
+            // imageViewPic.contentMode = .scaleToFill
+            guard let registerMorningViewController = UIStoryboard(name: "RegisterMorning", bundle: nil)
+                .instantiateViewController(withIdentifier: "RegisterMorning") as? RegisterMorningViewController else {
+                
+                fatalError("뷰 컨트롤러를 불러올 수 없음")
+            }
+            
+            registerMorningViewController.prepare(takenPhoto)
+            self.navigationController?.pushViewController(registerMorningViewController, animated: true)
+        }
+        
+        
+        cameraViewController.dismiss(animated: true)
     }
 }
 

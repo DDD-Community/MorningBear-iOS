@@ -22,7 +22,25 @@ class RegisterMorningViewController: UIViewController {
     
     // MARK: - View components
     // MARK: Image view
-    @IBOutlet weak var morningImageView: UIImageView!
+    private var morningImage: UIImage?
+    @IBOutlet weak var morningImageView: UIImageView! {
+        didSet {
+            morningImageView.layer.cornerRadius = 8
+        }
+    }
+    
+    @IBOutlet weak var dateLabel: UILabel! {
+        didSet {
+            dateLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 24)
+            dateLabel.text = viewModel.currdntDayString
+        }
+    }
+    @IBOutlet weak var timeLabel: UILabel! {
+        didSet {
+            timeLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 40)
+            timeLabel.text = viewModel.currentTimeString
+        }
+    }
     
     // MARK: Lables
     @IBOutlet weak var categoryLabel: UILabel! {
@@ -49,13 +67,13 @@ class RegisterMorningViewController: UIViewController {
     // MARK: Text field
     @IBOutlet weak var startTimeTextField: MorningBearUITextField! {
         didSet {
-            startTimeTextField.text = "오전 8시 30분"
+            startTimeTextField.text = viewModel.currentTimeString
             startTimeTextField.isUserInteractionEnabled = false
         }
     }
     @IBOutlet weak var endTimeTextField: MorningBearUITextField!{
         didSet {
-            endTimeTextField.text = "오전 8시 30분"
+            endTimeTextField.text = viewModel.currentTimeString
             endTimeTextField.isUserInteractionEnabled = false
 
         }
@@ -79,17 +97,35 @@ class RegisterMorningViewController: UIViewController {
     }
     @IBOutlet weak var registerButton: LargeButton!
     
-    // MARK: View controller methods
+    // MARK: - View controller methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
         designNavigationBar()
         
+        
+        if let morningImage {
+            self.morningImageView.image = morningImage
+        } else {
+            let largeConfig = UIImage.SymbolConfiguration(pointSize: 200, weight: .regular, scale: .large)
+
+            let placeholderImage = UIImage(systemName: "xmark.circle", withConfiguration: largeConfig)!
+                .withTintColor(.black, renderingMode: .alwaysOriginal)
+            
+            self.morningImageView.image = placeholderImage
+            self.morningImageView.contentMode = .center
+        }
+        
         bindButtons()
     }
 }
 
-// MARK: Related to view
+extension RegisterMorningViewController {
+    func prepare(_ image: UIImage) {
+        self.morningImage = image
+    }
+}
+
 private extension RegisterMorningViewController {
     func designNavigationBar() {
         navigationItem.title = "오늘의 미라클모닝"

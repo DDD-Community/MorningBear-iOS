@@ -11,8 +11,15 @@ import UIKit
 import MorningBearKit
 
 class RegisterMorningViewModel {
-    let timeFormatter = MorningBearDateFormatter.timeFormatter
+    let currentDate = Date()
     
+    private let timeFormatter = MorningBearDateFormatter.timeFormatter
+    private let shorttimeFormatter = MorningBearDateFormatter.shortimeFormatter
+    private let dayFormatter = MorningBearDateFormatter.dayFormatter
+}
+
+// MARK: - Public tools
+extension RegisterMorningViewModel {
     func registerMorningInformation(info: MorningRegistrationInfo) {
         print(info)
     }
@@ -37,9 +44,19 @@ class RegisterMorningViewModel {
         
         return MorningRegistrationInfo(image: image, startTime: startTimeDate, endTime: endTimeDate, comment: comment)
     }
+    
+    var currentTimeString: String {
+        return timeFormatter.string(from: currentDate)
+    }
+    
+    var currdntDayString: String {
+        return dayFormatter.string(from: currentDate)
+    }
 }
 
+// MARK: - Error
 extension RegisterMorningViewModel {
+    // FIXME: 전역 에러로 바꾸는 것도 괜찮을 듯
     enum DataError: LocalizedError {
         case emptyData
         case invalidData

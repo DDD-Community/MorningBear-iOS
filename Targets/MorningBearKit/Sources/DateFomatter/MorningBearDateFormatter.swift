@@ -18,9 +18,17 @@ public struct MorningBearDateFormatter {
         return formatter
     }
     
+    public static var shortimeFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "a hh:mm"
+
+        return formatter
+    }
+    
     public static var dayFormatter: DateFormatter {
         let formatter = DateFormatter()
-        formatter.dateFormat = "YYYY MM DD"
+        formatter.dateFormat = "yyyy년 M월 d일"
+        
         
         return formatter
     }
