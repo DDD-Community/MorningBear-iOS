@@ -32,7 +32,7 @@ class RegisterMorningViewController: UIViewController {
     @IBOutlet weak var dateLabel: UILabel! {
         didSet {
             dateLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 24)
-            dateLabel.text = viewModel.currentTimeString
+            dateLabel.text = viewModel.currdntDayString
         }
     }
     @IBOutlet weak var timeLabel: UILabel! {

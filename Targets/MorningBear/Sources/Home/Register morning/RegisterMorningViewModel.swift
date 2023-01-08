@@ -11,7 +11,11 @@ import UIKit
 import MorningBearKit
 
 class RegisterMorningViewModel {
-    let timeFormatter = MorningBearDateFormatter.timeFormatter
+    let currentDate = Date()
+    
+    private let timeFormatter = MorningBearDateFormatter.timeFormatter
+    private let shorttimeFormatter = MorningBearDateFormatter.shortimeFormatter
+    private let dayFormatter = MorningBearDateFormatter.dayFormatter
 }
 
 // MARK: - Public tools
@@ -42,9 +46,11 @@ extension RegisterMorningViewModel {
     }
     
     var currentTimeString: String {
-        let currentDate = Date()
-        
         return timeFormatter.string(from: currentDate)
+    }
+    
+    var currdntDayString: String {
+        return dayFormatter.string(from: currentDate)
     }
 }
 
