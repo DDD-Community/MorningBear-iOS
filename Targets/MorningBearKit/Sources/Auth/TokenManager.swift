@@ -95,12 +95,12 @@ public final class TokenManager {
     }
     
     // MARK: - Only for Apple
-    /// UserDefaultManager를 통해 kakao refresh token 저장
+    /// UserDefaultManager를 통해 apple의 userIdentifier 값을 로컬에 저장
     func saveUserIdentifierAtLocal(_ uid: String) {
         UserDefaultsManager.shared.userIdentifier = uid
     }
     
-    /// UserDefaultManager를 통해 kakao refresh token 저장
+    /// UserDefaultManager를 통해 apple의 userIdentifier 값을 로컬에서 삭제
     func removeUserIdentifierAtLocal() {
         UserDefaultsManager.shared.userIdentifier = nil
     }
