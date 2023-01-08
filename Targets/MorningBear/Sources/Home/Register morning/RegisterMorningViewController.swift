@@ -7,9 +7,20 @@
 //
 
 import UIKit
+
+import RxSwift
+import RxCocoa
+
 import MorningBearUI
+import MorningBearKit
 
 class RegisterMorningViewController: UIViewController {
+    // MARK: - Instance properties
+    private let viewModel = RegisterMorningViewModel()
+    private let bag = DisposeBag()
+    
+    
+    // MARK: - View components
     // MARK: Image view
     @IBOutlet weak var morningImageView: UIImageView!
     
@@ -36,17 +47,24 @@ class RegisterMorningViewController: UIViewController {
     }
     
     // MARK: Text field
-    @IBOutlet weak var startTimeTextField: MorningBearUIDateTextField! {
+    @IBOutlet weak var startTimeTextField: MorningBearUITextField! {
         didSet {
-            startTimeTextField.placeholder = "오전 8시 30분"
+            startTimeTextField.text = "오전 8시 30분"
+            startTimeTextField.isUserInteractionEnabled = false
         }
     }
-    @IBOutlet weak var endTimeTextField: MorningBearUIDateTextField!{
+    @IBOutlet weak var endTimeTextField: MorningBearUITextField!{
         didSet {
-            endTimeTextField.placeholder = "오전 8시 30분"
+            endTimeTextField.text = "오전 8시 30분"
+            endTimeTextField.isUserInteractionEnabled = false
+
         }
     }
-    @IBOutlet weak var commentTextView: MorningBearUITextView!
+    @IBOutlet weak var commentTextView: MorningBearUITextView! {
+        didSet {
+            commentTextView.textContainer.maximumNumberOfLines = 6
+        }
+    }
     
     // MARK: Buttons
     @IBOutlet weak var categoryHelpButton: MorningBearUIIconButton! {
@@ -66,11 +84,44 @@ class RegisterMorningViewController: UIViewController {
         super.viewDidLoad()
 
         designNavigationBar()
+        
+        bindButtons()
     }
 }
 
+// MARK: Related to view
 private extension RegisterMorningViewController {
     func designNavigationBar() {
         navigationItem.title = "오늘의 미라클모닝"
+    }
+    
+    func bindButtons() {
+        registerButton.rx.tap.bind { [weak self] in
+            guard let self else { return }
+            
+            do {
+                guard let startTimeText = self.startTimeTextField.text,
+                      let endTimeText = self.endTimeTextField.text
+                else {
+                    throw RegisterMorningViewModel.DataError.emptyData
+                }
+                
+                guard let image = self.morningImageView.image else {
+                    throw RegisterMorningViewModel.DataError.emptyData
+                }
+                
+                let commentText = self.commentTextView.text ?? ""
+                
+                let info = try self.viewModel.convertViewContentToInformation(image,
+                                                                              startTimeText,
+                                                                              endTimeText,
+                                                                              commentText)
+                
+                self.viewModel.registerMorningInformation(info: info)
+            } catch let error {
+                self.showAlert(error)
+            }
+        }
+        .disposed(by: bag)
     }
 }

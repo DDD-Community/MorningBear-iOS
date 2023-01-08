@@ -91,7 +91,7 @@
                                                                     </label>
                                                                 </subviews>
                                                             </stackView>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tSx-WD-dzJ" customClass="MorningBearUIDateTextField" customModule="MorningBearUI">
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tSx-WD-dzJ" customClass="MorningBearUITextField" customModule="MorningBearUI">
                                                                 <rect key="frame" x="0.0" y="32.333333333333371" width="350" height="48"/>
                                                                 <color key="backgroundColor" white="0.79000000000000004" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <constraints>
@@ -114,7 +114,7 @@
                                                                     </label>
                                                                 </subviews>
                                                             </stackView>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pi9-Jk-9gO" customClass="MorningBearUIDateTextField" customModule="MorningBearUI">
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pi9-Jk-9gO" customClass="MorningBearUITextField" customModule="MorningBearUI">
                                                                 <rect key="frame" x="0.0" y="32.333333333333371" width="350" height="48"/>
                                                                 <color key="backgroundColor" white="0.79000000000000004" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <constraints>
@@ -222,7 +222,7 @@
     </scenes>
     <resources>
         <namedColor name="Gray 200">
-            <color red="0.92199999094009399" green="0.93300002813339233" blue="0.95300000905990601" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.92156862745098034" green="0.93333333333333335" blue="0.95294117647058818" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
