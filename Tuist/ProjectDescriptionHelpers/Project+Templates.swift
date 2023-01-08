@@ -13,20 +13,27 @@ extension Project {
     /// Helper function to create the Project for this ExampleApp
     public static func app(name: String,
                            platform: Platform,
-                           additionalTargets: (kit: String, UI: String, Network: String, Storage: String)) -> Project {
+                           additionalTargets: (kit: String,
+                                               UI: String,
+                                               Network: String,
+                                               Storage: String,
+                                               Image: String
+                           )) -> Project {
         var targets = makeAppTargets(name: name,
                                      platform: platform,
                                      dependencies: [
                                         TargetDependency.target(name: additionalTargets.kit),
                                         TargetDependency.target(name: additionalTargets.UI),
                                         TargetDependency.target(name: additionalTargets.Network),
-                                        TargetDependency.target(name: additionalTargets.Storage)
+                                        TargetDependency.target(name: additionalTargets.Storage),
+                                        TargetDependency.target(name: additionalTargets.Image)
                                      ])
         
         targets += makeToolKitFrameworkTargets(name: additionalTargets.kit, platform: platform)
         targets += makeUIFrameworkTargets(name: additionalTargets.UI, platform: platform)
         targets += makeNetworkFrameworkTargets(name: additionalTargets.Network, platform: platform)
         targets += makeStorageFrameworkTargets(name: additionalTargets.Storage, platform: platform)
+        targets += makeImageFrameworkTargets(name: additionalTargets.Image, platform: platform)
 
         
         return Project(name: name,
@@ -149,6 +156,33 @@ extension Project {
                                     "OTHER_LDFLAGS": ["$(inherited)", "-ObjC"],
                                 ]
                              ))
+        
+        let tests = Target(name: "\(name)Tests",
+                           platform: platform,
+                           product: .unitTests,
+                           bundleId: "\(organizationName).\(name)Tests",
+                           infoPlist: .default,
+                           sources: ["Targets/\(name)/Tests/**"],
+                           resources: [],
+                           dependencies: [.target(name: name)])
+        
+        return [sources, tests]
+    }
+    
+    /// Helper function to create a framework target and an associated unit test target
+    private static func makeImageFrameworkTargets(name: String, platform: Platform) -> [Target] {
+        // MARK: - Add new UI dependecies in here
+        let sources = Target(name: name,
+                             platform: platform,
+                             product: .framework,
+                             bundleId: "\(organizationName).\(name)",
+                             deploymentTarget: .iOS(targetVersion: "14.0", devices: .iphone),
+                             infoPlist: .default,
+                             sources: ["Targets/\(name)/Sources/**"],
+                             resources: ["Targets/\(name)/Resources/**"],
+                             dependencies: [
+                                
+                             ])
         
         let tests = Target(name: "\(name)Tests",
                            platform: platform,

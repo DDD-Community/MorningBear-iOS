@@ -29,4 +29,6 @@ let project = Project.app(name: "MorningBear",
                           additionalTargets: ("MorningBearKit",
                                               "MorningBearUI",
                                               "MorningBearNetwork",
-                                              "MorningBearStorage"))
+                                              "MorningBearStorage",
+                                              "MorningBearImage"
+                                             ))

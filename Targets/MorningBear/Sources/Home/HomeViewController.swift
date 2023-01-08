@@ -71,11 +71,21 @@ private extension HomeViewController {
         registerButton.rx.tap.bind { [weak self] in
             guard let self else { return }
             
-            self.cameraViewController.sourceType = .camera
-            self.cameraViewController.allowsEditing = true
-            self.cameraViewController.delegate = self
+            guard let registerMorningViewController = UIStoryboard(name: "RegisterMorning", bundle: nil)
+                .instantiateViewController(withIdentifier: "RegisterMorning") as? RegisterMorningViewController else {
+                
+                fatalError("뷰 컨트롤러를 불러올 수 없음")
+            }
             
-            self.show(self.cameraViewController, sender: self)
+//            registerMorningViewController.prepare(UIImage(systemName: "person")!)
+            self.navigationController?.pushViewController(registerMorningViewController, animated: true)
+            
+            // FIXME: Temp
+//            self.cameraViewController.sourceType = .camera
+//            self.cameraViewController.allowsEditing = true
+//            self.cameraViewController.delegate = self
+//
+//            self.show(self.cameraViewController, sender: self)
         }
         .disposed(by: bag)
     }

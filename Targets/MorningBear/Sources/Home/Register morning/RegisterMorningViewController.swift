@@ -13,6 +13,7 @@ import RxCocoa
 
 import MorningBearUI
 import MorningBearKit
+import MorningBearImage
 
 class RegisterMorningViewController: UIViewController {
     // MARK: - Instance properties
@@ -21,11 +22,18 @@ class RegisterMorningViewController: UIViewController {
     
     
     // MARK: - View components
-    // MARK: Image view
+    /// 이미지와 라벨을 포함한 래퍼 뷰
+    @IBOutlet weak var imageWrapperView: UIView!
+    
     private var morningImage: UIImage?
     @IBOutlet weak var morningImageView: UIImageView! {
         didSet {
             morningImageView.layer.cornerRadius = 8
+            
+            let overlayView = UIView(frame: morningImageView.frame)
+            overlayView.backgroundColor = .black.withAlphaComponent(0.5)
+            
+            morningImageView.addSubview(overlayView)
         }
     }
     
@@ -67,7 +75,7 @@ class RegisterMorningViewController: UIViewController {
     // MARK: Text field
     @IBOutlet weak var startTimeTextField: MorningBearUITextField! {
         didSet {
-            startTimeTextField.text = viewModel.currentTimeString
+            startTimeTextField.text = "오전 12시 1분"
             startTimeTextField.isUserInteractionEnabled = false
         }
     }
@@ -107,10 +115,10 @@ class RegisterMorningViewController: UIViewController {
         if let morningImage {
             self.morningImageView.image = morningImage
         } else {
-            let largeConfig = UIImage.SymbolConfiguration(pointSize: 200, weight: .regular, scale: .large)
+            let largeConfig = UIImage.SymbolConfiguration(pointSize: 85, weight: .regular, scale: .large)
 
             let placeholderImage = UIImage(systemName: "xmark.circle", withConfiguration: largeConfig)!
-                .withTintColor(.black, renderingMode: .alwaysOriginal)
+                .withTintColor(.white, renderingMode: .alwaysOriginal)
             
             self.morningImageView.image = placeholderImage
             self.morningImageView.contentMode = .center
@@ -142,7 +150,7 @@ private extension RegisterMorningViewController {
                     throw RegisterMorningViewModel.DataError.emptyData
                 }
                 
-                guard let image = self.morningImageView.image else {
+                guard let image = self.imageWrapperView.toUIImage else {
                     throw RegisterMorningViewModel.DataError.emptyData
                 }
                 
@@ -152,7 +160,7 @@ private extension RegisterMorningViewController {
                                                                               startTimeText,
                                                                               endTimeText,
                                                                               commentText)
-                
+
                 self.viewModel.registerMorningInformation(info: info)
             } catch let error {
                 self.showAlert(error)
