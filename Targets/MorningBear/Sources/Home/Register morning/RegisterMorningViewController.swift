@@ -166,6 +166,7 @@ private extension RegisterMorningViewController {
                 let commentText = self.commentTextView.text ?? ""
                 
                 let info = try self.viewModel.convertViewContentToInformation(image,
+                                                                              category,
                                                                               startTimeText,
                                                                               endTimeText,
                                                                               commentText)

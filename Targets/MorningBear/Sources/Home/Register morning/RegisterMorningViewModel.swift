@@ -26,6 +26,7 @@ extension RegisterMorningViewModel {
     }
     
     func convertViewContentToInformation(_ image: UIImage,
+                                         _ category: String,
                                          _ startText: String,
                                          _ endText: String,
                                          _ commentText: String) throws -> MorningRegistrationInfo  {
@@ -43,7 +44,9 @@ extension RegisterMorningViewModel {
 
         let comment = commentText
         
-        return MorningRegistrationInfo(image: image, startTime: startTimeDate, endTime: endTimeDate, comment: comment)
+        return MorningRegistrationInfo(image: image, category: category,
+                                       startTime: startTimeDate, endTime: endTimeDate,
+                                       comment: comment)
     }
     
     var currentTimeString: String {
