@@ -1,5 +1,5 @@
 //
-//  UserDefaultsManager.swift
+//  AuthUserDefaultsManager.swift
 //  MorningBearUITests
 //
 //  Created by 이건우 on 2023/01/07.
@@ -8,9 +8,9 @@
 
 import Foundation
 
-public class UserDefaultsManager {
+public class AuthUserDefaultsManager {
     
-    public static let shared: UserDefaultsManager = UserDefaultsManager()
+    public static let shared: AuthUserDefaultsManager = AuthUserDefaultsManager()
     private let defaults = UserDefaults.standard
     
     /// key값을 enum으로 래핑해서 사용, 필요한 key값이 늘어나면 따로 추가할 예정
