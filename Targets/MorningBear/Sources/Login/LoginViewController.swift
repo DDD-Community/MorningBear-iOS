@@ -49,6 +49,7 @@ class LoginViewController: UIViewController {
         }
     }
     
+    
     private let kakaoLoginManager: KakaoLoginManager = KakaoLoginManager()
     private let appleLoginManager: AppleLoginManager = AppleLoginManager()
     private let bag = DisposeBag()
@@ -71,8 +72,15 @@ class LoginViewController: UIViewController {
         
         appleLoginButton.rx.tap.bind { [weak self] _ in
             guard let self = self else { return }
-            self.appleLoginManager.login()
+            
+            self.appleLoginManager.login(presentWindow: self)
         }
         .disposed(by: bag)
+    }
+}
+
+extension LoginViewController: ASAuthorizationControllerPresentationContextProviding {
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        return self.view.window!
     }
 }
