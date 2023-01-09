@@ -70,7 +70,7 @@ public final class KakaoLoginManager {
         UserApi.shared.rx.logout()
             .subscribe(onCompleted: { [weak self] in
                 guard let self = self else { return }
-                self.tokenManager.removeAll()
+                self.tokenManager.removeAllAuthorizationData()
                 
                 print("logout() success.")
             }, onError: {error in
@@ -83,7 +83,7 @@ public final class KakaoLoginManager {
         UserApi.shared.rx.unlink()
             .subscribe(onCompleted: { [weak self] in
                 guard let self = self else { return }
-                self.tokenManager.removeAll()
+                self.tokenManager.removeAllAuthorizationData()
                 
                 print("unlink() success.")
             }, onError: { error in
