@@ -184,7 +184,7 @@ private extension RegisterMorningViewController {
 extension RegisterMorningViewController: CollectionViewCompositionable {
     func layoutCollectionView() {
         let provider = CompositionalLayoutProvider()
-        let layout = UICollectionViewCompositionalLayout(section: provider.infiniteHorizontalLayoutSection())
+        let layout = UICollectionViewCompositionalLayout(section: provider.horizontalScrollLayoutSection(showItemCount: 5))
         
         categoryCollectionView.collectionViewLayout = layout
     }
@@ -196,7 +196,7 @@ extension RegisterMorningViewController: CollectionViewCompositionable {
     
     func connectCollectionViewWithDelegates() {
         let reuseId = "CapsuleCell"
-        let common = GenericCollectionViewDataSource<CapsuleCell, String>(
+        let common = HorizontalScrollCollectionViewDataSource<CapsuleCell, String>(
             reuseIndentifier: reuseId,
             items: viewModel.categories,
             configure: { cell, item in

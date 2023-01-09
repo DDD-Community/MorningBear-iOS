@@ -11,7 +11,7 @@ import UIKit
 /// `UICollectionViewCompositionalLayout`의 `NSCollectionLayoutSection`를
 /// 재사용하기 위해 사용하는 함수 모음입니다
 public struct CompositionalLayoutProvider {
-    public func infiniteHorizontalLayoutSection() -> NSCollectionLayoutSection {
+    public func horizontalScrollLayoutSection(showItemCount count: Int) -> NSCollectionLayoutSection {
         // item
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
@@ -21,7 +21,7 @@ public struct CompositionalLayoutProvider {
         
         // group
         let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(0.2),
+            widthDimension: .fractionalWidth(1.0 / CGFloat(count)),
             heightDimension: .fractionalHeight(1)
         )
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])

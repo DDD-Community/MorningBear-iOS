@@ -8,7 +8,20 @@
 
 import UIKit
 
-public class CapsuleCell: UICollectionViewCell {
+public class CapsuleCell: UICollectionViewCell, HorizontalScrollCellType {
+    public override var isSelected: Bool{
+        willSet{
+            super.isSelected = newValue
+            if newValue == true {
+                self.backgroundColor = .white
+                self.contentLabel.textColor = .black
+            } else {
+                self.backgroundColor = .clear
+                self.contentLabel.textColor = .white
+            }
+        }
+    }
+    
     @IBOutlet weak var contentLabel: UILabel! {
         didSet {
             contentLabel.textColor = .white

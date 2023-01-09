@@ -9,7 +9,9 @@
 import UIKit
 
 /// Generic하게 쓸만 한 `UICollectionViewDataSource`
-public class GenericCollectionViewDataSource<CellType, Item>: NSObject, UICollectionViewDataSource, UICollectionViewDelegate where CellType: UICollectionViewCell {
+public class HorizontalScrollCollectionViewDataSource<CellType, Item>: NSObject,
+                                                                        UICollectionViewDataSource,
+                                                                        UICollectionViewDelegate where CellType: HorizontalScrollCellType {
     let reuseIndentifier: String
     var items: [Item]
     let configure: (CellType, Item) -> Void
@@ -30,6 +32,22 @@ public class GenericCollectionViewDataSource<CellType, Item>: NSObject, UICollec
     
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return items.count
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? CellType else {
+            return
+        }
+        
+        cell.isSelected = false
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? CellType else {
+            return
+        }
+        
+        cell.isSelected = true
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
