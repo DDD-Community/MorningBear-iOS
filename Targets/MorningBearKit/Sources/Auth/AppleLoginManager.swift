@@ -22,7 +22,7 @@ public final class AppleLoginManager: NSObject {
     }
     
     public func checkCredentialState() {
-        guard let userIdentifier = UserDefaultsManager.shared.userIdentifier else { return }
+        guard let userIdentifier = AuthUserDefaultsManager.shared.userIdentifier else { return }
         
         let appleIDProvider = ASAuthorizationAppleIDProvider()
         appleIDProvider.getCredentialState(forUserID: userIdentifier) { credentialState, error in
@@ -54,7 +54,7 @@ extension AppleLoginManager: ASAuthorizationControllerDelegate {
             guard let idToken = String(data: appleIDCredential.identityToken!, encoding: .utf8) else { return }
             
             print("User id is \(userIdentifier) \n Email is \(String(describing: email)) \n ID token is \(idToken)")
-            tokenManager.saveUserIdentifierAtLocal(userIdentifier)
+            tokenManager.saveAppleUserIdentifierAtLocal(userIdentifier)
             tokenManager.progressApple(token: idToken)
         }
     }

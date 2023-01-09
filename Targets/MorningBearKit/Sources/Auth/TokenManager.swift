@@ -20,7 +20,7 @@ public final class TokenManager {
     }
     
     public var hasMorningBearToken: Bool {
-        return UserDefaultsManager.shared.morningBearToken != nil
+        return AuthUserDefaultsManager.shared.morningBearToken != nil
     }
     
     /// Apple 로그인 후 엑세스 토큰에 필요한 프로세스를 진행합니다
@@ -56,8 +56,8 @@ public final class TokenManager {
                 print("encodedToken is", encodedToken)
                 self.saveAuthStateAtLocal(.kakao)
                 self.saveMorningBearTokenAtLocal(encodedToken)
-                self.saveRefreshTokenAtLocal(oauthToken.refreshToken)
-                self.saveExpirationDateAtLocal(oauthToken.expiredAt)
+                self.saveKakaoRefreshTokenAtLocal(oauthToken.refreshToken)
+                self.saveKakaoExpirationDateAtLocal(oauthToken.expiredAt)
                 
             case .failure(let error):
                 print(error)
@@ -67,62 +67,62 @@ public final class TokenManager {
     
     /// 로그인 시 사용한 서비스명을 로컬에 저장 (apple, kakao)
     private func saveAuthStateAtLocal(_ state: AuthState) {
-        UserDefaultsManager.shared.authState = state.rawValue
+        AuthUserDefaultsManager.shared.authState = state.rawValue
     }
     
     /// 로그인 시 사용한 서비스명을 로컬에서 삭제 (apple, kakao)
     private func removeAuthStateAtLocal() {
-        UserDefaultsManager.shared.authState = nil
+        AuthUserDefaultsManager.shared.authState = nil
     }
     
     /// MorningBear token을 로컬에 저장
     private func saveMorningBearTokenAtLocal(_ token: String) {
-        UserDefaultsManager.shared.morningBearToken = token
+        AuthUserDefaultsManager.shared.morningBearToken = token
     }
     
     /// MorningBear token을 로컬에서 삭제
     func removeMorningBearTokenAtLocal() {
-        UserDefaultsManager.shared.morningBearToken = nil
+        AuthUserDefaultsManager.shared.morningBearToken = nil
     }
     
     /// 로그아웃 혹은 회원탈퇴시 인증과 관련된 모든 토큰 및 데이터를 로컬에서 삭제
     func removeAll() {
         removeAuthStateAtLocal()
         removeMorningBearTokenAtLocal()
-        removeUserIdentifierAtLocal()
-        removeRefreshTokenAtLocal()
-        removeExpirationDateAtLocal()
+        removeAppleUserIdentifierAtLocal()
+        removeKakaoRefreshTokenAtLocal()
+        removeKakaoExpirationDateAtLocal()
     }
     
     // MARK: - Only for Apple
     /// UserDefaultManager를 통해 apple의 userIdentifier 값을 로컬에 저장
-    func saveUserIdentifierAtLocal(_ uid: String) {
-        UserDefaultsManager.shared.userIdentifier = uid
+    func saveAppleUserIdentifierAtLocal(_ uid: String) {
+        AuthUserDefaultsManager.shared.userIdentifier = uid
     }
     
     /// UserDefaultManager를 통해 apple의 userIdentifier 값을 로컬에서 삭제
-    func removeUserIdentifierAtLocal() {
-        UserDefaultsManager.shared.userIdentifier = nil
+    func removeAppleUserIdentifierAtLocal() {
+        AuthUserDefaultsManager.shared.userIdentifier = nil
     }
     
     // MARK: - Only For Kakao
     /// UserDefaultManager를 통해 kakao refresh token 저장
-    private func saveRefreshTokenAtLocal(_ token: String) {
-        UserDefaultsManager.shared.refreshToken = token
+    private func saveKakaoRefreshTokenAtLocal(_ token: String) {
+        AuthUserDefaultsManager.shared.refreshToken = token
     }
     
-    /// UserDefaultManager를 통해 kakao refresh token 저장
-    func removeRefreshTokenAtLocal() {
-        UserDefaultsManager.shared.refreshToken = nil
+    /// UserDefaultManager를 통해 kakao refresh token 삭제
+    func removeKakaoRefreshTokenAtLocal() {
+        AuthUserDefaultsManager.shared.refreshToken = nil
     }
     
     /// UserDefaultManager를 통해 kakao access token 만료일 저장
-    private func saveExpirationDateAtLocal(_ date: Date) {
-        UserDefaultsManager.shared.expirationDate = date
+    private func saveKakaoExpirationDateAtLocal(_ date: Date) {
+        AuthUserDefaultsManager.shared.expirationDate = date
     }
     
     /// UserDefaultManager를 통해 kakao access token 만료일 삭제
-    func removeExpirationDateAtLocal() {
-        UserDefaultsManager.shared.expirationDate = nil
+    func removeKakaoExpirationDateAtLocal() {
+        AuthUserDefaultsManager.shared.expirationDate = nil
     }
 }
