@@ -21,8 +21,7 @@ class RegisterMorningViewController: UIViewController {
     private let bag = DisposeBag()
     
     // For category collection view
-    var datasource: UICollectionViewDataSource?
-    var delegate: UICollectionViewDelegate?
+    var categoryCollectionViewProvider: HorizontalScrollCollectionViewProvider<CapsuleCell, String>?
     
     // MARK: - View components
     /// 이미지와 라벨을 포함한 래퍼 뷰
@@ -93,7 +92,6 @@ class RegisterMorningViewController: UIViewController {
         didSet {
             endTimeTextField.text = viewModel.currentTimeString
             endTimeTextField.isUserInteractionEnabled = false
-
         }
     }
     @IBOutlet weak var commentTextView: MorningBearUITextView! {
@@ -120,7 +118,6 @@ class RegisterMorningViewController: UIViewController {
         super.viewDidLoad()
 
         designNavigationBar()
-        
         
         if let morningImage {
             self.morningImageView.image = morningImage
@@ -154,6 +151,8 @@ private extension RegisterMorningViewController {
             guard let self else { return }
             
             do {
+                let category = try self.getCategoryTextInsideCell()
+                
                 guard let startTimeText = self.startTimeTextField.text,
                       let endTimeText = self.endTimeTextField.text
                 else {
@@ -178,6 +177,26 @@ private extension RegisterMorningViewController {
         }
         .disposed(by: bag)
     }
+    
+    func getCategoryTextInsideCell() throws -> String {
+        guard let categoryCollectionViewProvider else {
+            fatalError("카테고리 콜렉션 뷰가 설정되지 않음")
+        }
+        
+        guard let selectedCategoryIndexPath = categoryCollectionViewProvider.currentSelectedIndexPath else {
+            throw RegisterMorningViewModel.DataError.emptyCategory
+        }
+        
+        guard let cell = categoryCollectionView.cellForItem(at: selectedCategoryIndexPath) as? CapsuleCell else {
+            fatalError("셀을 불러올 수 없음")
+        }
+        
+        guard let categoryText = cell.contentText, !categoryText.isEmpty else {
+            fatalError("비어있는 셀 텍스트")
+        }
+        
+        return categoryText
+    }
 }
 
 // MARK: Set category collection view
@@ -196,7 +215,7 @@ extension RegisterMorningViewController: CollectionViewCompositionable {
     
     func connectCollectionViewWithDelegates() {
         let reuseId = "CapsuleCell"
-        let common = HorizontalScrollCollectionViewDataSource<CapsuleCell, String>(
+        categoryCollectionViewProvider = HorizontalScrollCollectionViewProvider<CapsuleCell, String>(
             reuseIndentifier: reuseId,
             items: viewModel.categories,
             configure: { cell, item in
@@ -204,11 +223,8 @@ extension RegisterMorningViewController: CollectionViewCompositionable {
             }
         )
         
-        datasource = common
-        delegate = common
-        
-        categoryCollectionView.dataSource = datasource
-        categoryCollectionView.delegate = delegate
+        categoryCollectionView.dataSource = categoryCollectionViewProvider?.datasource
+        categoryCollectionView.delegate = categoryCollectionViewProvider?.delegate
     }
     
     func registerCells() {

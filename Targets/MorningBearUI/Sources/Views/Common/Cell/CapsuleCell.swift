@@ -22,6 +22,10 @@ public class CapsuleCell: UICollectionViewCell, HorizontalScrollCellType {
         }
     }
     
+    public var contentText: String? {
+        return contentLabel.text
+    }
+    
     @IBOutlet weak var contentLabel: UILabel! {
         didSet {
             contentLabel.textColor = .white

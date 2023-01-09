@@ -9,12 +9,20 @@
 import UIKit
 
 /// Generic하게 쓸만 한 `UICollectionViewDataSource`
-public class HorizontalScrollCollectionViewDataSource<CellType, Item>: NSObject,
-                                                                        UICollectionViewDataSource,
-                                                                        UICollectionViewDelegate where CellType: HorizontalScrollCellType {
-    let reuseIndentifier: String
-    var items: [Item]
-    let configure: (CellType, Item) -> Void
+public class HorizontalScrollCollectionViewProvider<CellType, Item>: NSObject,
+                                                                     UICollectionViewDataSource,
+                                                                     UICollectionViewDelegate where CellType: HorizontalScrollCellType {
+    private let reuseIndentifier: String
+    private var items: [Item]
+    private let configure: (CellType, Item) -> Void
+    
+    public var delegate: UICollectionViewDelegate {
+        return self
+    }
+    public var datasource: UICollectionViewDataSource {
+        return self
+    }
+    public var currentSelectedIndexPath: IndexPath?
     
     public init(reuseIndentifier: String, items: [Item], configure: @escaping (CellType, Item) -> Void) {
         self.reuseIndentifier = reuseIndentifier
@@ -26,6 +34,7 @@ public class HorizontalScrollCollectionViewDataSource<CellType, Item>: NSObject,
         
     }
     
+    // MARK: - set datasources
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
@@ -47,6 +56,7 @@ public class HorizontalScrollCollectionViewDataSource<CellType, Item>: NSObject,
             return
         }
         
+        self.currentSelectedIndexPath = indexPath
         cell.isSelected = true
     }
     

@@ -12,7 +12,7 @@ import MorningBearKit
 
 class RegisterMorningViewModel {
     let currentDate = Date()
-    let categories = ["운동", "공부", "생활", "정서", "취미"]
+    let categories: [String] = ["운동", "공부", "생활", "정서", "취미"]
     
     private let timeFormatter = MorningBearDateFormatter.timeFormatter
     private let shorttimeFormatter = MorningBearDateFormatter.shortimeFormatter
@@ -60,14 +60,17 @@ extension RegisterMorningViewModel {
     // FIXME: 전역 에러로 바꾸는 것도 괜찮을 듯
     enum DataError: LocalizedError {
         case emptyData
+        case emptyCategory
         case invalidDate
         
         var errorDescription: String? {
             switch self {
             case .emptyData:
-                return "데이터 처리 중 오류가 발생했습니다. 다시 시도해주세요."
+                return "데이터 처리 중 오류가 발생했습니다"
+            case .emptyCategory:
+                return "카테고리 정보가 선택되지 않았습니다"
             case .invalidDate:
-                return "날짜 데이터가 바르지 않습니다. 다시 시도해주세요."
+                return "날짜 데이터가 바르지 않습니다"
             }
         }
     }
