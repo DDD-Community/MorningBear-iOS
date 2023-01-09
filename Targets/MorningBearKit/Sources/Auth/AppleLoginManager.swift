@@ -9,24 +9,23 @@
 import AuthenticationServices
 
 public final class AppleLoginManager: NSObject {
+    private let tokenManager: TokenManager
     
-    public weak var viewController: UIViewController?
-    public var userIdentifier: String?
-    
-    public func login() {
+    public func login(presentWindow presentationContextProvider: ASAuthorizationControllerPresentationContextProviding) {
         let request = ASAuthorizationAppleIDProvider().createRequest()
         request.requestedScopes = [.email]
+        
         let controller = ASAuthorizationController(authorizationRequests: [request])
         controller.delegate = self
-        controller.presentationContextProvider = self
+        controller.presentationContextProvider = presentationContextProvider
         controller.performRequests()
     }
     
     public func checkCredentialState() {
-        guard userIdentifier != nil else { return }
+        guard let userIdentifier = AuthUserDefaultsManager.shared.userIdentifier else { return }
         
         let appleIDProvider = ASAuthorizationAppleIDProvider()
-        appleIDProvider.getCredentialState(forUserID: userIdentifier!) { credentialState, error in
+        appleIDProvider.getCredentialState(forUserID: userIdentifier) { credentialState, error in
             switch credentialState {
             case .authorized:
                 print("The Apple ID credential is valid.")
@@ -42,12 +41,8 @@ public final class AppleLoginManager: NSObject {
         }
     }
     
-    public override init() {}
-}
-
-extension AppleLoginManager: ASAuthorizationControllerPresentationContextProviding {
-    public func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-        return viewController!.view.window!
+    public override init() {
+        self.tokenManager = TokenManager()
     }
 }
 
@@ -56,12 +51,11 @@ extension AppleLoginManager: ASAuthorizationControllerDelegate {
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
             let userIdentifier = appleIDCredential.user
             let email = appleIDCredential.email
-            let idToken = String(data: appleIDCredential.identityToken!, encoding: .utf8)
+            guard let idToken = String(data: appleIDCredential.identityToken!, encoding: .utf8) else { return }
             
-            // TODO: Save userIdentifier at UserDefault for checking credential state
-            self.userIdentifier = userIdentifier
-            
-            print("User id is \(userIdentifier) \n Email is \(String(describing: email)) \n ID token is \(idToken ?? "")")
+            print("User id is \(userIdentifier) \n Email is \(String(describing: email)) \n ID token is \(idToken)")
+            tokenManager.saveAppleUserIdentifierAtLocal(userIdentifier)
+            tokenManager.progressApple(token: idToken)
         }
     }
     
