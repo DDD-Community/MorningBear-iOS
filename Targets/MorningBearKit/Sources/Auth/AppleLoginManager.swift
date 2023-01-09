@@ -9,16 +9,15 @@
 import AuthenticationServices
 
 public final class AppleLoginManager: NSObject {
-    
-    public weak var viewController: UIViewController?
     private let tokenManager: TokenManager
     
-    public func login() {
+    public func login(presentWindow presentationContextProvider: ASAuthorizationControllerPresentationContextProviding) {
         let request = ASAuthorizationAppleIDProvider().createRequest()
         request.requestedScopes = [.email]
+        
         let controller = ASAuthorizationController(authorizationRequests: [request])
         controller.delegate = self
-        controller.presentationContextProvider = self
+        controller.presentationContextProvider = presentationContextProvider
         controller.performRequests()
     }
     
@@ -44,12 +43,6 @@ public final class AppleLoginManager: NSObject {
     
     public override init() {
         self.tokenManager = TokenManager()
-    }
-}
-
-extension AppleLoginManager: ASAuthorizationControllerPresentationContextProviding {
-    public func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-        return viewController!.view.window!
     }
 }
 
