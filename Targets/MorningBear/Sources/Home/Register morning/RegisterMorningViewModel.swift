@@ -38,14 +38,19 @@ extension RegisterMorningViewModel {
             throw MorningBearDateFormatterError.invalidString
         }
         
-        guard startTimeDate < endTimeDate else {
+        guard let fullStartDate = startTimeDate.changeYearMonthDayValue(to: currentDate, is24Hour: false),
+              let fullEndDate = endTimeDate.changeYearMonthDayValue(to: currentDate, is24Hour: false) else {
+            throw DataError.invalidDate
+        }
+        
+        guard fullStartDate < fullEndDate else {
             throw DataError.invalidDate
         }
 
         let comment = commentText
         
         return MorningRegistrationInfo(image: image, category: category,
-                                       startTime: startTimeDate, endTime: endTimeDate,
+                                       startTime: fullStartDate, endTime: fullEndDate,
                                        comment: comment)
     }
     
