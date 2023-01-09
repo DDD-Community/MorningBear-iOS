@@ -86,7 +86,7 @@ public final class TokenManager {
     }
     
     /// 로그아웃 혹은 회원탈퇴시 인증과 관련된 모든 토큰 및 데이터를 로컬에서 삭제
-    func removeAll() {
+    func removeAllAuthorizationData() {
         removeAuthStateAtLocal()
         removeMorningBearTokenAtLocal()
         removeAppleUserIdentifierAtLocal()
