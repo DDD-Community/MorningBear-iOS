@@ -84,7 +84,6 @@ class RegisterMorningViewController: UIViewController {
     // MARK: Text field
     @IBOutlet weak var startTimeTextField: MorningBearUITextField! {
         didSet {
-            startTimeTextField.text = "오전 12시 1분"
             startTimeTextField.isUserInteractionEnabled = false
         }
     }
@@ -136,7 +135,8 @@ class RegisterMorningViewController: UIViewController {
 }
 
 extension RegisterMorningViewController {
-    func prepare(_ image: UIImage) {
+    func prepare(startTime: Date, image: UIImage) {
+        self.startTimeTextField.text = viewModel.timeFormatter.string(from: startTime)
         self.morningImage = image
     }
 }
