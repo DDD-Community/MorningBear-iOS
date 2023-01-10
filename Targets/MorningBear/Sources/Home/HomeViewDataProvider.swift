@@ -7,12 +7,16 @@
 //
 
 import UIKit
+
 import MorningBearUI
+import MorningBearKit
 
 /// 해당 섹션에 대한 데이터 리스트를 받아오는 메소드들
 ///
 /// 현재 mock으로 대체했으나 나중에 네트워크 통신 결과로 교체하면 될
 class HomeViewDataProvider {
+    private let localStorage: UserDefaults
+    
     func state() -> State {
         let data = State(nickname: "Mock Nickname")
         return data
@@ -68,6 +72,37 @@ class HomeViewDataProvider {
         ]
         
         return data
+    }
+    
+    init(_ localStorage: UserDefaults = .standard) {
+        self.localStorage = localStorage
+    }
+}
+
+extension HomeViewDataProvider {
+    private enum HomeViewDataProviderStorageKey {
+        case myMorningRecordDate
+        
+        var key: String {
+            switch self {
+            case .myMorningRecordDate:
+                return "myMorningRecordDate"
+            }
+        }
+    }
+    
+    var persistentMyMorningRecordDate: Date? {
+        get {
+            guard let rawDateString = localStorage.string(forKey: HomeViewDataProviderStorageKey.myMorningRecordDate.key) else {
+                return nil
+            }
+            
+            let formatter = MorningBearDateFormatter.default
+            return formatter.date(from: rawDateString)
+        }
+        set {
+            localStorage.set(newValue, forKey: HomeViewDataProviderStorageKey.myMorningRecordDate.key)
+        }
     }
 }
 

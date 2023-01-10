@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 import MorningBearUI
 
 class HomeViewModel {
@@ -16,6 +17,23 @@ class HomeViewModel {
     var recentMorningList: [RecentMorning]
     var badgeList: [Badge]
     var articleList: [Article]
+
+    var isMyMorningRecording: MyMorningRecordingState {
+        get {
+            if let savedDate = dataProvider.persistentMyMorningRecordDate {
+                return .recording(startDate: savedDate)
+            } else {
+                return .idle
+            }
+        }
+        set {
+            if case let .recording(startDate: date) = newValue {
+                dataProvider.persistentMyMorningRecordDate = date
+            } else {
+                dataProvider.persistentMyMorningRecordDate = nil
+            }
+        }
+    }
     
     init(_ dataProvider: HomeViewDataProvider = HomeViewDataProvider()) {
         self.dataProvider = dataProvider
@@ -25,4 +43,9 @@ class HomeViewModel {
         self.badgeList = dataProvider.badges()
         self.articleList = dataProvider.articles()
     }
+}
+
+enum MyMorningRecordingState {
+    case recording(startDate: Date)
+    case idle
 }
