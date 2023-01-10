@@ -38,7 +38,6 @@ class HomeViewController: UIViewController {
         
         bindButtons()
 
-        // FIXME: 색깔 이거 아닌 것 같음
         self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
     }
 }
@@ -50,42 +49,54 @@ private extension HomeViewController {
         self.navigationItem.leftBarButtonItem = MorningBearBarButtonItem.titleButton
         self.navigationItem.leftBarButtonItem?.tintColor = .black
         self.navigationItem.hidesSearchBarWhenScrolling = true
-        
+
         let searchButton = MorningBearBarButtonItem.searchButton
         let alarmButton = MorningBearBarButtonItem.notificationButton
         self.navigationItem.rightBarButtonItems = [searchButton, alarmButton]
-        
+
         // Bind buttons
         searchButton.rx.tap.bind { _ in
             print("tapped")
         }
         .disposed(by: bag)
-        
+
         alarmButton.rx.tap.bind { _ in
             print("tapped")
         }
         .disposed(by: bag)
     }
-    
+
     func bindButtons() {
         registerButton.rx.tap.bind { [weak self] in
-            guard let self else { return }
-            
-            guard let registerMorningViewController = UIStoryboard(name: "RegisterMorning", bundle: nil)
-                .instantiateViewController(withIdentifier: "RegisterMorning") as? RegisterMorningViewController else {
-                
-                fatalError("뷰 컨트롤러를 불러올 수 없음")
+            guard let self else {
+                return
             }
-            
+
+            switch self.viewModel.isMyMorningRecording {
+            case .recording:
+                guard let registerMorningViewController = UIStoryboard(name: "RegisterMorning", bundle: nil)
+                        .instantiateViewController(withIdentifier: "RegisterMorning") as? RegisterMorningViewController
+                else {
+
+                    fatalError("뷰 컨트롤러를 불러올 수 없음")
+                }
+
 //            registerMorningViewController.prepare(UIImage(systemName: "person")!)
-            self.navigationController?.pushViewController(registerMorningViewController, animated: true)
-            
-            // FIXME: Temp
+                self.navigationController?.pushViewController(registerMorningViewController, animated: true)
+
+                    // FIXME: Temp
 //            self.cameraViewController.sourceType = .camera
 //            self.cameraViewController.allowsEditing = true
 //            self.cameraViewController.delegate = self
 //
 //            self.show(self.cameraViewController, sender: self)
+
+            case .idle:
+                print("It's idle")
+                self.viewModel.isMyMorningRecording = .recording(startDate: Date())
+                
+                // TODO: Change button form
+            }
         }
         .disposed(by: bag)
     }
@@ -180,15 +191,18 @@ extension HomeViewController: UIImagePickerControllerDelegate, UINavigationContr
             // imageViewPic.contentMode = .scaleToFill
             guard let registerMorningViewController = UIStoryboard(name: "RegisterMorning", bundle: nil)
                 .instantiateViewController(withIdentifier: "RegisterMorning") as? RegisterMorningViewController else {
-                
+
                 fatalError("뷰 컨트롤러를 불러올 수 없음")
             }
             
-            registerMorningViewController.prepare(takenPhoto)
-            self.navigationController?.pushViewController(registerMorningViewController, animated: true)
+            if case .recording(startDate: let savedStartDate) = viewModel.isMyMorningRecording {
+                registerMorningViewController.prepare(startTime: savedStartDate, image: takenPhoto)
+                self.navigationController?.pushViewController(registerMorningViewController, animated: true)
+            } else {
+                // TODO: Error
+            }
         }
-        
-        
+
         cameraViewController.dismiss(animated: true)
     }
 }
