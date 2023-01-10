@@ -83,6 +83,7 @@ private extension HomeViewController {
 
 //            registerMorningViewController.prepare(UIImage(systemName: "person")!)
                 self.navigationController?.pushViewController(registerMorningViewController, animated: true)
+                self.viewModel.isMyMorningRecording = .idle
 
                     // FIXME: Temp
 //            self.cameraViewController.sourceType = .camera

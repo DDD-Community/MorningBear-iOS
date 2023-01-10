@@ -101,7 +101,17 @@ extension HomeViewDataProvider {
             return formatter.date(from: rawDateString)
         }
         set {
-            localStorage.set(newValue, forKey: HomeViewDataProviderStorageKey.myMorningRecordDate.key)
+            let formatter = MorningBearDateFormatter.default
+            
+            // 기록이 시작되면 Date(newValue)가 nil이 아닌 값으로 입력됨
+            // 기록이 끝나면 nil이 입력되기 때문에 저장 대신 데이터를 지워버림
+            if let startDate = newValue {
+                let dateString = formatter.string(from: startDate)
+                localStorage.set(dateString, forKey: HomeViewDataProviderStorageKey.myMorningRecordDate.key)
+            } else {
+                localStorage.removeObject(forKey: HomeViewDataProviderStorageKey.myMorningRecordDate.key)
+            }
+            
         }
     }
 }
