@@ -10,6 +10,7 @@ import UIKit
 
 struct MorningRegistrationInfo {
     let image: UIImage
+    let category: String
     let startTime: Date
     let endTime: Date
     let comment: String

@@ -92,13 +92,13 @@
                                                                     </button>
                                                                 </subviews>
                                                             </stackView>
-                                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="zp0-md-lBm">
+                                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="EcU-RM-jLC">
                                                                 <rect key="frame" x="0.0" y="46.333333333333314" width="350" height="31"/>
-                                                                <color key="backgroundColor" white="0.79000000000000004" alpha="1" colorSpace="calibratedWhite"/>
+                                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                                 <constraints>
-                                                                    <constraint firstAttribute="height" constant="31" id="jMn-ii-iuu"/>
+                                                                    <constraint firstAttribute="height" constant="31" id="TO2-0G-qwF"/>
                                                                 </constraints>
-                                                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="FFn-Vw-Hat">
+                                                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="KJs-00-G4l">
                                                                     <size key="itemSize" width="128" height="128"/>
                                                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -233,6 +233,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="categoryCollectionView" destination="EcU-RM-jLC" id="mhc-Qt-rKy"/>
                         <outlet property="categoryHelpButton" destination="vzC-d9-FQM" id="YgU-Fc-cFZ"/>
                         <outlet property="categoryLabel" destination="XVT-yT-O7Y" id="ID3-y8-1X6"/>
                         <outlet property="commentLabel" destination="bdZ-Vo-2s8" id="2J9-8w-p7e"/>

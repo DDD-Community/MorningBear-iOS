@@ -179,10 +179,8 @@ extension Project {
                              deploymentTarget: .iOS(targetVersion: "14.0", devices: .iphone),
                              infoPlist: .default,
                              sources: ["Targets/\(name)/Sources/**"],
-                             resources: ["Targets/\(name)/Resources/**"],
-                             dependencies: [
-                                
-                             ])
+                             resources: [],
+                             dependencies: [])
         
         let tests = Target(name: "\(name)Tests",
                            platform: platform,
