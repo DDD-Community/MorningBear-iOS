@@ -28,15 +28,15 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var registerButton: LargeButton! {
         didSet {
             registerButton.setTitle("미라클 모닝 하기", for: .normal)
+            
+            viewModel.elapsedRecordingTime
+                .bind(to: recordingNowButton.timeLabel.rx.text)
+                .disposed(by: bag)
         }
     }
     /// 미라클 모닝 진행중이면 튀어나옴
     @IBOutlet weak var recordingNowButton: RecordingNowButton! {
         didSet {
-            viewModel.elapsedRecordingTime
-                .bind(to: recordingNowButton.timeLabel.rx.text)
-                .disposed(by: bag)
-            
             recordingNowButton.prepare(action: { [weak self] in
                 guard let self else { return }
                 
@@ -51,6 +51,12 @@ class HomeViewController: UIViewController {
         designNavigationBar()
         
         bindButtons()
+        
+        if case .recording(let startDate) = viewModel.isMyMorningRecording {
+            showRecordingNowButton()
+        } else {
+            showStartRecordingButton()
+        }
 
         self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
     }
@@ -98,11 +104,9 @@ private extension HomeViewController {
     }
     
     func startRecording() {
-        self.viewModel.isMyMorningRecording = .recording(startDate: Date())
-        
         // 버튼 전환
-        self.registerButton.isHidden = true
-        self.recordingNowButton.isHidden = false
+        showRecordingNowButton()
+        self.viewModel.startRecording()
     }
     
     func stopRecording() {
@@ -116,11 +120,21 @@ private extension HomeViewController {
 //            registerMorningViewController.prepare(UIImage(systemName: "person")!)
         
         // 버튼 전환
-        self.registerButton.isHidden = false
-        self.recordingNowButton.isHidden = true
+        showStartRecordingButton()
         
         self.navigationController?.pushViewController(registerMorningViewController, animated: true)
-        self.viewModel.isMyMorningRecording = .idle
+        
+        viewModel.stopRecording()
+    }
+    
+    func showRecordingNowButton() {
+        self.registerButton.isHidden = true
+        self.recordingNowButton.isHidden = false
+    }
+    
+    func showStartRecordingButton() {
+        self.registerButton.isHidden = false
+        self.recordingNowButton.isHidden = true
     }
 }
 

@@ -12,18 +12,32 @@ import RxSwift
 import RxRelay
 
 import MorningBearUI
+import MorningBearKit
 
 class HomeViewModel {
     private let dataProvider: HomeViewDataProvider
-    private let bag = DisposeBag()
+    private var bag = DisposeBag()
     
     var state: State?
     var recentMorningList: [RecentMorning]
     var badgeList: [Badge]
     var articleList: [Article]
 
-    var elapsedRecordingTime = BehaviorSubject<String>(value: "")
+    var elapsedRecordingTime: BehaviorSubject<String>
     
+    init(_ dataProvider: HomeViewDataProvider = HomeViewDataProvider()) {
+        self.dataProvider = dataProvider
+        
+        self.state = dataProvider.state()
+        self.recentMorningList = dataProvider.recentMorning()
+        self.badgeList = dataProvider.badges()
+        self.articleList = dataProvider.articles()
+        
+        self.elapsedRecordingTime = BehaviorSubject<String>(value: dataProvider.persistentMyMorningRecordDate?.toString() ?? "wow")
+    }
+}
+
+extension HomeViewModel {
     var isMyMorningRecording: MyMorningRecordingState {
         get {
             if let savedDate = dataProvider.persistentMyMorningRecordDate {
@@ -41,23 +55,26 @@ class HomeViewModel {
         }
     }
     
-    init(_ dataProvider: HomeViewDataProvider = HomeViewDataProvider()) {
-        self.dataProvider = dataProvider
+    func startRecording() {
+        elapsedRecordingTimeObservable
+            .bind(to: elapsedRecordingTime)
+            .disposed(by: bag)
         
-        self.state = dataProvider.state()
-        self.recentMorningList = dataProvider.recentMorning()
-        self.badgeList = dataProvider.badges()
-        self.articleList = dataProvider.articles()
+        isMyMorningRecording = .recording(startDate: Date())
+    }
+    
+    func stopRecording() {
+        bag = DisposeBag()
         
-        if case .recording = isMyMorningRecording {
-            elapsedRecordingTimeObservable
-                .bind(to: elapsedRecordingTime)
-                .disposed(by: bag)
-        }
+        isMyMorningRecording = .idle
     }
 }
 
-extension HomeViewModel {
+private extension HomeViewModel {
+    enum HomeError: LocalizedError {
+        case recordRequestedWhileIdle
+    }
+    
     var elapsedRecordingTimeObservable: Observable<String> {
         let timer = Observable<Int>
             .interval(.seconds(1), scheduler: SerialDispatchQueueScheduler(qos: .background))
@@ -66,7 +83,11 @@ extension HomeViewModel {
             .map { (weakSelf, elapsedTime) -> String in
                 let timeString: String
                 if case .recording(startDate: let startDate) = weakSelf.isMyMorningRecording {
-                    timeString = String(Date().timeIntervalSince(startDate))
+                    let current = Date()
+                    let diffComponents = Calendar.current.dateComponents([.hour, .minute, .second], from: startDate, to: current)
+
+                    timeString = String(format: "%02d:%02d:%02d",
+                                        diffComponents.hour ?? 0, diffComponents.minute ?? 0, diffComponents.second ?? 0)
                 } else {
                     throw HomeError.recordRequestedWhileIdle
                 }
@@ -75,12 +96,6 @@ extension HomeViewModel {
             }
             
         return stringObservable
-    }
-}
-
-private extension HomeViewModel {
-    enum HomeError: LocalizedError {
-        case recordRequestedWhileIdle
     }
 }
 
