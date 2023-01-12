@@ -30,6 +30,16 @@ class HomeViewController: UIViewController {
             registerButton.setTitle("미라클 모닝 하기", for: .normal)
         }
     }
+    /// 미라클 모닝 진행중이면 튀어나옴
+    @IBOutlet weak var recordingNowButton: RecordingNowButton! {
+        didSet {
+            recordingNowButton.prepare(action: { [weak self] in
+                guard let self else { return }
+                
+                self.stopRecording()
+            })
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,32 +84,39 @@ private extension HomeViewController {
 
             switch self.viewModel.isMyMorningRecording {
             case .recording:
-                guard let registerMorningViewController = UIStoryboard(name: "RegisterMorning", bundle: nil)
-                        .instantiateViewController(withIdentifier: "RegisterMorning") as? RegisterMorningViewController
-                else {
-
-                    fatalError("뷰 컨트롤러를 불러올 수 없음")
-                }
-
-//            registerMorningViewController.prepare(UIImage(systemName: "person")!)
-                self.navigationController?.pushViewController(registerMorningViewController, animated: true)
-                self.viewModel.isMyMorningRecording = .idle
-
-                    // FIXME: Temp
-//            self.cameraViewController.sourceType = .camera
-//            self.cameraViewController.allowsEditing = true
-//            self.cameraViewController.delegate = self
-//
-//            self.show(self.cameraViewController, sender: self)
-
+                // TODO: 좀 더 마일드한 오류를 줄 수도..
+                fatalError("녹화 버튼은 이 조건을 가져서는 안 됨")
             case .idle:
-                print("It's idle")
-                self.viewModel.isMyMorningRecording = .recording(startDate: Date())
-                
-                // TODO: Change button form
+                self.startRecording()
             }
         }
         .disposed(by: bag)
+    }
+    
+    func startRecording() {
+        self.viewModel.isMyMorningRecording = .recording(startDate: Date())
+        
+        // 버튼 전환
+        self.registerButton.isHidden = true
+        self.recordingNowButton.isHidden = false
+    }
+    
+    func stopRecording() {
+        guard let registerMorningViewController = UIStoryboard(name: "RegisterMorning", bundle: nil)
+                .instantiateViewController(withIdentifier: "RegisterMorning") as? RegisterMorningViewController
+        else {
+
+            fatalError("뷰 컨트롤러를 불러올 수 없음")
+        }
+
+//            registerMorningViewController.prepare(UIImage(systemName: "person")!)
+        
+        // 버튼 전환
+        self.registerButton.isHidden = false
+        self.recordingNowButton.isHidden = true
+        
+        self.navigationController?.pushViewController(registerMorningViewController, animated: true)
+        self.viewModel.isMyMorningRecording = .idle
     }
 }
 
