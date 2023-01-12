@@ -24,7 +24,7 @@ public class RecordingNowButton: UIView {
             self.layer.cornerRadius = 8
         }
     }
-    @IBOutlet weak var timeLabel: UILabel! {
+    @IBOutlet public weak var timeLabel: UILabel! {
         didSet {
             timeLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 16)
             timeLabel.textColor = .white
@@ -68,6 +68,10 @@ private extension RecordingNowButton {
 }
 
 public extension RecordingNowButton {
+    func prepare(time: String) {
+        timeLabel.text = time
+    }
+    
     func prepare(action: @escaping Action) {
         buttonAction = action
     }

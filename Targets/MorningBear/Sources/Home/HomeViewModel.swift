@@ -8,16 +8,22 @@
 
 import Foundation
 
+import RxSwift
+import RxRelay
+
 import MorningBearUI
 
 class HomeViewModel {
     private let dataProvider: HomeViewDataProvider
+    private let bag = DisposeBag()
     
     var state: State?
     var recentMorningList: [RecentMorning]
     var badgeList: [Badge]
     var articleList: [Article]
 
+    var elapsedRecordingTime = BehaviorSubject<String>(value: "")
+    
     var isMyMorningRecording: MyMorningRecordingState {
         get {
             if let savedDate = dataProvider.persistentMyMorningRecordDate {
@@ -42,6 +48,39 @@ class HomeViewModel {
         self.recentMorningList = dataProvider.recentMorning()
         self.badgeList = dataProvider.badges()
         self.articleList = dataProvider.articles()
+        
+        if case .recording = isMyMorningRecording {
+            elapsedRecordingTimeObservable
+                .bind(to: elapsedRecordingTime)
+                .disposed(by: bag)
+        }
+    }
+}
+
+extension HomeViewModel {
+    var elapsedRecordingTimeObservable: Observable<String> {
+        let timer = Observable<Int>
+            .interval(.seconds(1), scheduler: SerialDispatchQueueScheduler(qos: .background))
+        
+        let stringObservable = timer.withUnretained(self)
+            .map { (weakSelf, elapsedTime) -> String in
+                let timeString: String
+                if case .recording(startDate: let startDate) = weakSelf.isMyMorningRecording {
+                    timeString = String(Date().timeIntervalSince(startDate))
+                } else {
+                    throw HomeError.recordRequestedWhileIdle
+                }
+                
+                return timeString
+            }
+            
+        return stringObservable
+    }
+}
+
+private extension HomeViewModel {
+    enum HomeError: LocalizedError {
+        case recordRequestedWhileIdle
     }
 }
 

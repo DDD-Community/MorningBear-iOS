@@ -33,6 +33,10 @@ class HomeViewController: UIViewController {
     /// 미라클 모닝 진행중이면 튀어나옴
     @IBOutlet weak var recordingNowButton: RecordingNowButton! {
         didSet {
+            viewModel.elapsedRecordingTime
+                .bind(to: recordingNowButton.timeLabel.rx.text)
+                .disposed(by: bag)
+            
             recordingNowButton.prepare(action: { [weak self] in
                 guard let self else { return }
                 
