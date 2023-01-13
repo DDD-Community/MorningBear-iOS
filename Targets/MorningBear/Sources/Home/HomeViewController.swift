@@ -16,7 +16,7 @@ class HomeViewController: UIViewController {
     private let bag = DisposeBag()
     private let viewModel = HomeViewModel()
     
-    // 카메라 뷰: 미리 로딩하기 위해서 처음부터 만들어 놓기
+    /// 카메라 뷰: 미리 로딩하기 위해서 처음부터 만들어 놓기
     private let cameraViewController = UIImagePickerController()
     
     @IBOutlet weak var collectionView: UICollectionView! {
@@ -28,22 +28,10 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var registerButton: LargeButton! {
         didSet {
             registerButton.setTitle("미라클 모닝 하기", for: .normal)
-            
-            viewModel.elapsedRecordingTime
-                .bind(to: recordingNowButton.timeLabel.rx.text)
-                .disposed(by: bag)
         }
     }
     /// 미라클 모닝 진행중이면 튀어나옴
-    @IBOutlet weak var recordingNowButton: RecordingNowButton! {
-        didSet {
-            recordingNowButton.prepare(action: { [weak self] in
-                guard let self else { return }
-                
-                self.stopRecording()
-            })
-        }
-    }
+    @IBOutlet weak var recordingNowButton: RecordingNowButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,13 +39,8 @@ class HomeViewController: UIViewController {
         designNavigationBar()
         
         bindButtons()
+        bindBehaviorAccordingToRecordStatus()
         
-        if case .recording(let startDate) = viewModel.isMyMorningRecording {
-            showRecordingNowButton()
-        } else {
-            showStartRecordingButton()
-        }
-
         self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
     }
 }
@@ -69,38 +52,64 @@ private extension HomeViewController {
         self.navigationItem.leftBarButtonItem = MorningBearBarButtonItem.titleButton
         self.navigationItem.leftBarButtonItem?.tintColor = .black
         self.navigationItem.hidesSearchBarWhenScrolling = true
-
+        
         let searchButton = MorningBearBarButtonItem.searchButton
         let alarmButton = MorningBearBarButtonItem.notificationButton
         self.navigationItem.rightBarButtonItems = [searchButton, alarmButton]
-
+        
         // Bind buttons
         searchButton.rx.tap.bind { _ in
             print("tapped")
         }
         .disposed(by: bag)
-
+        
         alarmButton.rx.tap.bind { _ in
             print("tapped")
         }
         .disposed(by: bag)
     }
-
+    
+    /// 기록 상태에 따라 달라지는 뷰 행동의 정의
+    func bindBehaviorAccordingToRecordStatus() {
+        viewModel.isMyMorningRecording.withUnretained(self)
+            .bind { weakSelf, state in
+                switch state {
+                case .recording:
+                    weakSelf.showRecordingNowButton()
+                case .idle:
+                    weakSelf.showStartRecordingButton()
+                }
+            }
+            .disposed(by: bag)
+        
+        viewModel.elapsedRecordingTime
+            .bind(to: recordingNowButton.timeLabel.rx.text)
+            .disposed(by: bag)
+    }
+    
     func bindButtons() {
-        registerButton.rx.tap.bind { [weak self] in
-            guard let self else {
-                return
+        registerButton.rx.tap.withUnretained(self)
+            .bind { weakSelf, _ in
+                switch weakSelf.viewModel.isMyMorningRecording.value {
+                case .recording:
+                    // TODO: 좀 더 마일드한 오류를 줄 수도..
+                    fatalError("녹화 버튼은 이 조건을 가져서는 안 됨")
+                case .idle:
+                    self.startRecording()
+                }
             }
-
-            switch self.viewModel.isMyMorningRecording {
-            case .recording:
-                // TODO: 좀 더 마일드한 오류를 줄 수도..
-                fatalError("녹화 버튼은 이 조건을 가져서는 안 됨")
-            case .idle:
-                self.startRecording()
+            .disposed(by: bag)
+        
+        recordingNowButton.stopButton.rx.tap.withUnretained(self)
+            .bind { weakSelf, _ in
+                switch weakSelf.viewModel.isMyMorningRecording.value {
+                case .recording:
+                    weakSelf.stopRecording()
+                case .idle:
+                    fatalError("중지 버튼은 이 조건을 가져서는 안 됨")
+                }
             }
-        }
-        .disposed(by: bag)
+            .disposed(by: bag)
     }
     
     func startRecording() {
@@ -231,7 +240,7 @@ extension HomeViewController: UIImagePickerControllerDelegate, UINavigationContr
                 fatalError("뷰 컨트롤러를 불러올 수 없음")
             }
             
-            if case .recording(startDate: let savedStartDate) = viewModel.isMyMorningRecording {
+            if case .recording(startDate: let savedStartDate) = viewModel.isMyMorningRecording.value {
                 registerMorningViewController.prepare(startTime: savedStartDate, image: takenPhoto)
                 self.navigationController?.pushViewController(registerMorningViewController, animated: true)
             } else {

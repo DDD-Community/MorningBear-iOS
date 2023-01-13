@@ -13,9 +13,6 @@ import RxCocoa
 
 public class RecordingNowButton: UIView {
     public typealias Action = () -> Void
-
-    private let bag = DisposeBag()
-    private var buttonAction: Action?
     
     @IBOutlet var wrapperView: UIView! {
         didSet {
@@ -30,7 +27,7 @@ public class RecordingNowButton: UIView {
             timeLabel.textColor = .white
         }
     }
-    @IBOutlet weak var stopButton: UIButton! {
+    @IBOutlet public weak var stopButton: UIButton! {
         didSet {
             stopButton.setTitle("종료하기", for: .normal)
             stopButton.setTitleColor(.white, for: .normal)
@@ -45,34 +42,17 @@ public class RecordingNowButton: UIView {
         super.init(frame: frame)
         
         loadXib()
-        bindButton()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         
         loadXib()
-        bindButton()
-    }
-}
-
-private extension RecordingNowButton {
-    func bindButton() {
-        stopButton.rx.tap.bind { [weak self] in
-            guard let self else { return }
-            
-            self.buttonAction?()
-        }
-        .disposed(by: bag)
     }
 }
 
 public extension RecordingNowButton {
     func prepare(time: String) {
         timeLabel.text = time
-    }
-    
-    func prepare(action: @escaping Action) {
-        buttonAction = action
     }
 }
