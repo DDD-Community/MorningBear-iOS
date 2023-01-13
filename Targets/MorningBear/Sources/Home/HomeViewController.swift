@@ -76,13 +76,13 @@ private extension HomeViewController {
                 switch state {
                 case .recording:
                     weakSelf.showRecordingNowButton()
-                case .idle:
+                case .stop:
                     weakSelf.showStartRecordingButton()
                 }
             }
             .disposed(by: bag)
         
-        viewModel.elapsedRecordingTime
+        viewModel.elapsedTime
             .bind(to: recordingNowButton.timeLabel.rx.text)
             .disposed(by: bag)
     }
@@ -94,7 +94,7 @@ private extension HomeViewController {
                 case .recording:
                     // TODO: 좀 더 마일드한 오류를 줄 수도..
                     fatalError("녹화 버튼은 이 조건을 가져서는 안 됨")
-                case .idle:
+                case .stop:
                     self.startRecording()
                 }
             }
@@ -105,7 +105,7 @@ private extension HomeViewController {
                 switch weakSelf.viewModel.isMyMorningRecording.value {
                 case .recording:
                     weakSelf.stopRecording()
-                case .idle:
+                case .stop:
                     fatalError("중지 버튼은 이 조건을 가져서는 안 됨")
                 }
             }

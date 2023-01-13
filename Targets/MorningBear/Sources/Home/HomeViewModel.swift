@@ -23,7 +23,7 @@ class HomeViewModel {
     var badgeList: [Badge]
     var articleList: [Article]
 
-    var elapsedRecordingTime: BehaviorRelay<String?>
+    var elapsedTime: BehaviorRelay<String?>
     var isMyMorningRecording: BehaviorRelay<MyMorningRecordingState>
     
     init(_ dataProvider: HomeViewDataProvider = HomeViewDataProvider()) {
@@ -34,8 +34,8 @@ class HomeViewModel {
         self.badgeList = dataProvider.badges()
         self.articleList = dataProvider.articles()
         
-        self.elapsedRecordingTime = BehaviorRelay<String?>(value: "00:00:00")
-        self.isMyMorningRecording = BehaviorRelay<MyMorningRecordingState>(value: .idle)
+        self.elapsedTime = BehaviorRelay<String?>(value: "00:00:00")
+        self.isMyMorningRecording = BehaviorRelay<MyMorningRecordingState>(value: .stop)
         
         configureBindings()
         
@@ -44,32 +44,18 @@ class HomeViewModel {
             startRecording()
         }
     }
-    
-    private func configureBindings() {
-        isMyMorningRecording.withUnretained(self)
-            .bind { weakSelf, state in
-                // Setter
-                if case let .recording(startDate: date) = state {
-                    weakSelf.dataProvider.persistentMyMorningRecordDate = date
-                } else {
-                    weakSelf.elapsedRecordingTime.accept("00:00:00")
-                    weakSelf.dataProvider.persistentMyMorningRecordDate = nil
-                }
-            }
-            .disposed(by: bag)
-    }
 }
 
 extension HomeViewModel {
     func startRecording() {
-        guard case .idle = self.isMyMorningRecording.value else {
+        guard case .stop = self.isMyMorningRecording.value else {
             return
         }
         
         let current = Date()
         
-        elapsedRecordingTimeObservable(current)
-            .bind(to: elapsedRecordingTime)
+        elapsedTimeStringObservable(startDate: current)
+            .bind(to: elapsedTime)
             .disposed(by: bag)
         
         isMyMorningRecording.accept(.recording(startDate: current))
@@ -80,37 +66,51 @@ extension HomeViewModel {
             return
         }
         
-        bag = DisposeBag()
-        isMyMorningRecording.accept(.idle)
+        bag = DisposeBag() // reset bindings
+        isMyMorningRecording.accept(.stop)
     }
 }
 
 private extension HomeViewModel {
-    enum HomeError: LocalizedError {
-        case recordRequestedWhileIdle
+    func configureBindings() {
+        isMyMorningRecording.withUnretained(self)
+            .bind { weakSelf, state in
+                // Setter
+                if case let .recording(startDate: date) = state {
+                    weakSelf.dataProvider.persistentMyMorningRecordDate = date
+                } else {
+                    weakSelf.elapsedTime.accept("00:00:00")
+                    weakSelf.dataProvider.persistentMyMorningRecordDate = nil
+                }
+            }
+            .disposed(by: bag)
     }
     
     var fetchMyMorningRecordingState: MyMorningRecordingState {
         if let savedDate = dataProvider.persistentMyMorningRecordDate {
             return .recording(startDate: savedDate)
         } else {
-            return .idle
+            return .stop
         }
     }
     
-    func elapsedRecordingTimeObservable(_ startTime: Date) -> Observable<String> {
-        let timer = Observable<Int>
-            .interval(.seconds(1), scheduler: SerialDispatchQueueScheduler(qos: .background))
-        
-        let stringObservable = timer.withUnretained(self)
+    var timerObservable: Observable<Int> {
+        return Observable<Int>.interval(
+            .seconds(1), scheduler: SerialDispatchQueueScheduler(qos: .background)
+        )
+    }
+    
+    func elapsedTimeStringObservable(startDate: Date) -> Observable<String> {
+        let stringObservable = timerObservable.withUnretained(self)
             .map { (weakSelf, elapsedTime) -> String in
                 let current = Date()
                 let diffComponents = Calendar.current.dateComponents(
-                    [.hour, .minute, .second], from: startTime, to: current
+                    [.hour, .minute, .second], from: startDate, to: current
                 )
                 
-                let timeString = String(format: "%02d:%02d:%02d",
-                                        diffComponents.hour ?? 0, diffComponents.minute ?? 0, diffComponents.second ?? 0)
+                let timeString = String(
+                    format: "%02d:%02d:%02d", diffComponents.hour ?? 0, diffComponents.minute ?? 0, diffComponents.second ?? 0
+                )
                 
                 return timeString
             }
@@ -119,7 +119,13 @@ private extension HomeViewModel {
     }
 }
 
+private extension HomeViewModel {
+    enum HomeError: LocalizedError {
+        case recordRequestedWhileIdle
+    }
+}
+
 enum MyMorningRecordingState {
     case recording(startDate: Date)
-    case idle
+    case stop
 }
