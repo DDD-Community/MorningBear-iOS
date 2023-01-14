@@ -18,13 +18,26 @@ class HomeViewModel {
     private let dataProvider: HomeViewDataProvider
     private var bag = DisposeBag()
     
+    // MARK: Public stored properties
     var state: State?
     var recentMorningList: [RecentMorning]
     var badgeList: [Badge]
     var articleList: [Article]
 
-    var elapsedTime: BehaviorRelay<String?>
-    var isMyMorningRecording: BehaviorRelay<MyMorningRecordingState>
+    // MARK: Observables
+    /// `accept`로 인한 수정을 막기 위해 Relay를 `observable`로 변환해서 씀
+    /// - warning: `Observable`의 상태는 직접 수정되어서는 안됨.
+    ///     반드시 `startRecording`, `stopRecording`에 의해서만 수정될 수 있도록 유의할 것
+    private var elapsedTimeRelay: BehaviorRelay<String>
+    var elapsedTimeObservable: Observable<String> {
+        elapsedTimeRelay.asObservable()
+    }
+    
+    private var recordingStateRelay: BehaviorRelay<MyMorningRecordingState>
+    var recordingStateObservable: Observable<MyMorningRecordingState> {
+        recordingStateRelay.asObservable()
+    }
+    
     
     init(_ dataProvider: HomeViewDataProvider = HomeViewDataProvider()) {
         self.dataProvider = dataProvider
@@ -34,53 +47,63 @@ class HomeViewModel {
         self.badgeList = dataProvider.badges()
         self.articleList = dataProvider.articles()
         
-        self.elapsedTime = BehaviorRelay<String?>(value: "00:00:00")
-        self.isMyMorningRecording = BehaviorRelay<MyMorningRecordingState>(value: .stop)
+        self.elapsedTimeRelay = BehaviorRelay<String>(value: "00:00:00")
+        
+        self.recordingStateRelay = BehaviorRelay<MyMorningRecordingState>(value: .waiting)
         
         configureBindings()
-        
+
         // 리코딩 기록 있으면 녹화 재개
-        if case .recording = fetchMyMorningRecordingState {
-            startRecording()
+        if case .recording(let startDate) = fetchMyMorningRecordingState {
+            startRecording(with: startDate)
         }
     }
 }
 
+// MARK: - Public tools
 extension HomeViewModel {
-    func startRecording() {
-        guard case .stop = self.isMyMorningRecording.value else {
+    var isMyMorningRecording: MyMorningRecordingState {
+        recordingStateRelay.value
+    }
+    
+    /// 기록을 시작함. 시작 시간 주어지지 않으면 현재 시간으로 자동 설정
+    func startRecording(with startDate: Date = Date()) {
+        guard isMyMorningRecording == .waiting || isMyMorningRecording == .stop else {
             return
         }
         
-        let current = Date()
-        
-        elapsedTimeStringObservable(startDate: current)
-            .bind(to: elapsedTime)
+        timeIntervalObservable(from: startDate)
+            .bind(to: elapsedTimeRelay)
             .disposed(by: bag)
         
-        isMyMorningRecording.accept(.recording(startDate: current))
+        recordingStateRelay.accept(.recording(startDate: startDate))
     }
     
     func stopRecording() {
-        guard case .recording = self.isMyMorningRecording.value else {
+        guard case .recording = self.recordingStateRelay.value else {
             return
         }
         
         bag = DisposeBag() // reset bindings
-        isMyMorningRecording.accept(.stop)
+        configureBindings() // set bindings again
+        recordingStateRelay.accept(.stop)
     }
 }
 
+// MARK: - Internal tools
 private extension HomeViewModel {
     func configureBindings() {
-        isMyMorningRecording.withUnretained(self)
+        recordingStateObservable.withUnretained(self)
             .bind { weakSelf, state in
                 // Setter
-                if case let .recording(startDate: date) = state {
+                switch state {
+                case .recording(startDate: let date):
                     weakSelf.dataProvider.persistentMyMorningRecordDate = date
-                } else {
-                    weakSelf.elapsedTime.accept("00:00:00")
+                case .stop:
+                    weakSelf.elapsedTimeRelay.accept("00:00:00")
                     weakSelf.dataProvider.persistentMyMorningRecordDate = nil
+                case .waiting:
+                    weakSelf.elapsedTimeRelay.accept("00:00:00")
                 }
             }
             .disposed(by: bag)
@@ -100,10 +123,11 @@ private extension HomeViewModel {
         )
     }
     
-    func elapsedTimeStringObservable(startDate: Date) -> Observable<String> {
+    func timeIntervalObservable(from startDate: Date) -> Observable<String> {
         let stringObservable = timerObservable.withUnretained(self)
             .map { (weakSelf, elapsedTime) -> String in
                 let current = Date()
+                
                 let diffComponents = Calendar.current.dateComponents(
                     [.hour, .minute, .second], from: startDate, to: current
                 )
@@ -125,7 +149,8 @@ private extension HomeViewModel {
     }
 }
 
-enum MyMorningRecordingState {
+enum MyMorningRecordingState: Equatable {
     case recording(startDate: Date)
     case stop
+    case waiting
 }
