@@ -82,7 +82,7 @@ extension HomeSectionFooterCell {
     
     /// 기타 모양, 디자인요소 설정
     private func designCell() {
-        button.backgroundColor = .white
+        button.backgroundColor = MorningBearUIAsset.Colors.gray800.color
         button.sizeToFit()
         
         button.layer.cornerRadius = 10
@@ -97,6 +97,6 @@ extension HomeSectionFooterCell {
     /// 폰트 설정
     private func configureFont() {
         button.titleLabel?.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 16)
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(.white, for: .normal)
     }
 }
