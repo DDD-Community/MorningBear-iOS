@@ -53,16 +53,10 @@ private extension HomeViewController {
         self.navigationItem.leftBarButtonItem?.tintColor = .black
         self.navigationItem.hidesSearchBarWhenScrolling = true
         
-        let searchButton = MorningBearBarButtonItem.searchButton
         let alarmButton = MorningBearBarButtonItem.notificationButton
-        self.navigationItem.rightBarButtonItems = [searchButton, alarmButton]
+        self.navigationItem.rightBarButtonItems = [alarmButton]
         
         // Bind buttons
-        searchButton.rx.tap.bind { _ in
-            print("tapped")
-        }
-        .disposed(by: bag)
-        
         alarmButton.rx.tap.bind { _ in
             print("tapped")
         }

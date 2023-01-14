@@ -8,9 +8,10 @@
 
 import UIKit
 
-public struct MorningBearBarButtonItem {
-    public static let titleButton =  UIBarButtonItem(title: "모닝베어~")
+public struct MorningBearBarButtonItem {    
+    public static let titleButton =  UIBarButtonItem(image: MorningBearUIAsset.Images.tempLogo.image.withRenderingMode(.alwaysOriginal))
     public static let searchButton = UIBarButtonItem(systemItem: .search)
-    public static let notificationButton = UIBarButtonItem(systemItem: .rewind)
-    public static let backButton = UIBarButtonItem(image: MorningBearUIAsset.Images.backArrow.image.withTintColor(.black))
+    public static let notificationButton = UIBarButtonItem(image: MorningBearUIAsset.Images.bell.image.withRenderingMode(.alwaysOriginal))
+    
+    public static let backButton = UIBarButtonItem(image: MorningBearUIAsset.Images.backArrow.image.withRenderingMode(.alwaysOriginal))
 }
