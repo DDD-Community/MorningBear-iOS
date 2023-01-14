@@ -17,7 +17,7 @@ public class CapsuleCell: UICollectionViewCell, HorizontalScrollCellType {
                 self.contentLabel.textColor = .black
             } else {
                 self.backgroundColor = .clear
-                self.contentLabel.textColor = .white
+                self.contentLabel.textColor = MorningBearUIAsset.Colors.gray500.color
             }
         }
     }
@@ -28,7 +28,7 @@ public class CapsuleCell: UICollectionViewCell, HorizontalScrollCellType {
     
     @IBOutlet weak var contentLabel: UILabel! {
         didSet {
-            contentLabel.textColor = .white
+            contentLabel.textColor = MorningBearUIAsset.Colors.gray500.color
             contentLabel.font = MorningBearUIFontFamily.Pretendard.regular.font(size: 14)
         }
     }
@@ -38,7 +38,7 @@ public class CapsuleCell: UICollectionViewCell, HorizontalScrollCellType {
         
         prepareCell(title: nil)
         layer.cornerRadius = 15
-        layer.borderColor = UIColor.white.cgColor
+        layer.borderColor = MorningBearUIAsset.Colors.gray500.color.cgColor
         layer.borderWidth = 1
     }
     

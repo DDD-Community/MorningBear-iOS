@@ -34,7 +34,13 @@ class HomeViewController: UIViewController {
         }
     }
     /// 미라클 모닝 진행중이면 튀어나옴
-    @IBOutlet weak var recordingNowButton: RecordingNowButton!
+    @IBOutlet weak var recordingNowButton: RecordingNowButton! {
+        didSet {
+            recordingNowButton.layer.shadowColor = UIColor.black.cgColor
+            recordingNowButton.layer.shadowOpacity = 0.15
+            recordingNowButton.layer.shadowRadius = 15
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,7 +49,7 @@ class HomeViewController: UIViewController {
         
         bindButtons()
         bindBehaviorAccordingToRecordStatus()
-        
+
         self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
     }
 }

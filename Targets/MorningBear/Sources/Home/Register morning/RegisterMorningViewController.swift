@@ -100,6 +100,7 @@ class RegisterMorningViewController: UIViewController {
     @IBOutlet weak var commentTextView: MorningBearUITextView! {
         didSet {
             commentTextView.textContainer.maximumNumberOfLines = 6
+            commentTextView.placeholder(text: "오늘 실천한 미라클 모닝에 관하여 입력해주세요")
         }
     }
     
@@ -255,6 +256,8 @@ extension RegisterMorningViewController: CollectionViewCompositionable {
 
 extension RegisterMorningViewController {
     func setKeyboardObserver() {
+        print("Reg")
+
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow),
                                                name: UIResponder.keyboardWillShowNotification, object: nil)
         
@@ -267,14 +270,18 @@ extension RegisterMorningViewController {
         let userInfo = notification.userInfo!
         var keyboardFrame:CGRect = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
+        
+        print("WTF")
 
         var contentInset: UIEdgeInsets = self.scrollView.contentInset
         contentInset.bottom = keyboardFrame.size.height
         scrollView.contentInset = contentInset
-        scrollView.contentOffset.y += keyboardFrame.size.height
+//        scrollView.contentOffset.y += keyboardFrame.size.height
     }
 
     @objc func keyboardWillHide(notification:NSNotification){
+        
+        print("Gone")
         let contentInset:UIEdgeInsets = UIEdgeInsets.zero
         scrollView.contentInset = contentInset
     }
