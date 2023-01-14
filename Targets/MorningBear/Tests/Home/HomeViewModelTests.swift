@@ -7,28 +7,81 @@
 //
 
 import XCTest
+
 @testable import MorningBear
 
 final class HomeViewModelTests: XCTestCase {
+    var mockLocalStorage: UserDefaults!
+    var mockHomeDataProvider: HomeViewDataProvider!
     var viewModel: HomeViewModel!
 
     override func setUpWithError() throws {
-        viewModel = HomeViewModel()
+        mockLocalStorage = UserDefaults(suiteName: "test home")!
+        mockHomeDataProvider = HomeViewDataProvider(mockLocalStorage)
+        viewModel = HomeViewModel(mockHomeDataProvider)
     }
-
+    
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        UserDefaults.standard.removeSuite(named: "test home")
+        mockHomeDataProvider = nil
+        viewModel = nil
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    
+    func test__morning_recording_flag() throws {
+        mockHomeDataProvider.persistentMyMorningRecordDate = nil
+        viewModel = HomeViewModel(mockHomeDataProvider)
+        
+        
+        guard viewModel.isMyMorningRecording == .waiting || viewModel.isMyMorningRecording == .stop else {
+            XCTFail("\(viewModel.isMyMorningRecording)")
+            return
+        }
+        
+        mockHomeDataProvider.persistentMyMorningRecordDate = Date()
+        viewModel = HomeViewModel(mockHomeDataProvider)
+        
+        guard case .recording = viewModel.isMyMorningRecording else {
+            XCTFail("\(viewModel.isMyMorningRecording)")
+            return
+        }
+    }
+    
+    func test__start_recording() throws {
+        mockHomeDataProvider.persistentMyMorningRecordDate = nil
+        viewModel = HomeViewModel(mockHomeDataProvider)
+        
+        guard viewModel.isMyMorningRecording == .waiting || viewModel.isMyMorningRecording == .stop else {
+            XCTFail("\(viewModel.isMyMorningRecording)")
+            return
+        }
+        
+        viewModel.startRecording()
+        
+        guard case .recording = viewModel.isMyMorningRecording else {
+            XCTFail()
+            return
+        }
+    }
+    
+    func test__stop_recording() throws {
+        mockHomeDataProvider.persistentMyMorningRecordDate = Date()
+        viewModel = HomeViewModel(mockHomeDataProvider)
+        
+        guard case .recording = viewModel.isMyMorningRecording else {
+            XCTFail("\(viewModel.isMyMorningRecording)")
+            return
+        }
+        
+        viewModel.stopRecording()
+        
+        guard case .stop = viewModel.isMyMorningRecording else {
+            XCTFail()
+            return
+        }
     }
 }
 
 private extension HomeViewModelTests {
+    
     
 }

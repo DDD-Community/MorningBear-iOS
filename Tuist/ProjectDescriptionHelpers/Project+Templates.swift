@@ -57,6 +57,8 @@ extension Project {
                              dependencies: [
                                 .external(name: "RxSwift"),
                                 .external(name: "RxCocoa"),
+                                .external(name: "Quick"),
+                                .external(name: "Nimble"),
                                 .target(name: "MorningBearKit")
                              ])
         

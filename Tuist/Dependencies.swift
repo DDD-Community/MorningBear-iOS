@@ -35,6 +35,14 @@ let dependencies = Dependencies(
             url: "https://github.com/Alamofire/Alamofire",
             requirement: .upToNextMajor(from: "5.6.0")
         ),
+        .remote(
+            url: "https://github.com/Quick/Quick",
+            requirement: .upToNextMajor(from: "6.1.0")
+        ),
+        .remote(
+            url: "https://github.com/Quick/nimble",
+            requirement: .upToNextMajor(from: "11.2.0")
+        ),
         .local(path: .relativeToRoot("Local/GraphQL/StarWarsAPI")),
         .local(path: .relativeToRoot("Local/GraphQL/MorningBearAPI"))
     ],

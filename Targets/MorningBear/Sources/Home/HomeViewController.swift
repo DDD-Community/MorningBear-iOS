@@ -71,18 +71,20 @@ private extension HomeViewController {
     
     /// 기록 상태에 따라 달라지는 뷰 행동의 정의
     func bindBehaviorAccordingToRecordStatus() {
-        viewModel.isMyMorningRecording.withUnretained(self)
+        viewModel.recordingStateObservable.withUnretained(self)
             .bind { weakSelf, state in
                 switch state {
                 case .recording:
                     weakSelf.showRecordingNowButton()
                 case .stop:
                     weakSelf.showStartRecordingButton()
+                case .waiting:
+                    weakSelf.showStartRecordingButton()
                 }
             }
             .disposed(by: bag)
-        
-        viewModel.elapsedTime
+
+        viewModel.elapsedTimeObservable
             .bind(to: recordingNowButton.timeLabel.rx.text)
             .disposed(by: bag)
     }
@@ -90,22 +92,26 @@ private extension HomeViewController {
     func bindButtons() {
         registerButton.rx.tap.withUnretained(self)
             .bind { weakSelf, _ in
-                switch weakSelf.viewModel.isMyMorningRecording.value {
+                switch weakSelf.viewModel.isMyMorningRecording {
                 case .recording:
                     // TODO: 좀 더 마일드한 오류를 줄 수도..
                     fatalError("녹화 버튼은 이 조건을 가져서는 안 됨")
                 case .stop:
-                    self.startRecording()
+                    weakSelf.startRecording()
+                case .waiting:
+                    weakSelf.startRecording()
                 }
             }
             .disposed(by: bag)
         
         recordingNowButton.stopButton.rx.tap.withUnretained(self)
             .bind { weakSelf, _ in
-                switch weakSelf.viewModel.isMyMorningRecording.value {
+                switch weakSelf.viewModel.isMyMorningRecording {
                 case .recording:
                     weakSelf.stopRecording()
                 case .stop:
+                    fatalError("중지 버튼은 이 조건을 가져서는 안 됨")
+                case .waiting:
                     fatalError("중지 버튼은 이 조건을 가져서는 안 됨")
                 }
             }
@@ -240,7 +246,7 @@ extension HomeViewController: UIImagePickerControllerDelegate, UINavigationContr
                 fatalError("뷰 컨트롤러를 불러올 수 없음")
             }
             
-            if case .recording(startDate: let savedStartDate) = viewModel.isMyMorningRecording.value {
+            if case .recording(startDate: let savedStartDate) = viewModel.isMyMorningRecording {
                 registerMorningViewController.prepare(startTime: savedStartDate, image: takenPhoto)
                 self.navigationController?.pushViewController(registerMorningViewController, animated: true)
             } else {

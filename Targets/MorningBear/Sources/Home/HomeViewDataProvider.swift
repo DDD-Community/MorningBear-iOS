@@ -80,7 +80,36 @@ class HomeViewDataProvider {
 }
 
 extension HomeViewDataProvider {
-    private enum HomeViewDataProviderStorageKey {
+    /// 기기에 저장된 기록 시작시간을 반환/저장
+    ///
+    /// `timeIntervalSince1970`을 이용해 관리함
+    var persistentMyMorningRecordDate: Date? {
+        get {
+            guard let timeIntervalSince1970 = localStorage.object(
+                forKey: HomeViewDataProviderStorageKey.myMorningRecordDate.key
+            ) as? Double else {
+                return nil
+            }
+            
+            let formattedDate = Date(timeIntervalSince1970: timeIntervalSince1970)
+            return formattedDate
+        }
+        set {
+            // 기록이 시작되면 Date(newValue)가 nil이 아닌 값으로 입력됨
+            // 기록이 끝나면 nil이 입력되기 때문에 저장 대신 데이터를 지워버림
+            if let startDate = newValue {
+                let timeintervalSince1970 = startDate.timeIntervalSince1970
+                localStorage.set(timeintervalSince1970, forKey: HomeViewDataProviderStorageKey.myMorningRecordDate.key)
+            } else {
+                localStorage.removeObject(forKey: HomeViewDataProviderStorageKey.myMorningRecordDate.key)
+            }
+            
+        }
+    }
+}
+
+private extension HomeViewDataProvider {
+    enum HomeViewDataProviderStorageKey {
         case myMorningRecordDate
         
         var key: String {
@@ -88,30 +117,6 @@ extension HomeViewDataProvider {
             case .myMorningRecordDate:
                 return "myMorningRecordDate"
             }
-        }
-    }
-    
-    var persistentMyMorningRecordDate: Date? {
-        get {
-            guard let rawDateString = localStorage.string(forKey: HomeViewDataProviderStorageKey.myMorningRecordDate.key) else {
-                return nil
-            }
-            
-            let formatter = MorningBearDateFormatter.default
-            return formatter.date(from: rawDateString)
-        }
-        set {
-            let formatter = MorningBearDateFormatter.default
-            
-            // 기록이 시작되면 Date(newValue)가 nil이 아닌 값으로 입력됨
-            // 기록이 끝나면 nil이 입력되기 때문에 저장 대신 데이터를 지워버림
-            if let startDate = newValue {
-                let dateString = formatter.string(from: startDate)
-                localStorage.set(dateString, forKey: HomeViewDataProviderStorageKey.myMorningRecordDate.key)
-            } else {
-                localStorage.removeObject(forKey: HomeViewDataProviderStorageKey.myMorningRecordDate.key)
-            }
-            
         }
     }
 }
