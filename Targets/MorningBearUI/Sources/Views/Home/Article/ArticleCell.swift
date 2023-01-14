@@ -15,12 +15,22 @@ public class ArticleCell: UICollectionViewCell {
         }
     }
     
-    @IBOutlet weak var titleLabel: UILabel! 
-    @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var titleLabel: UILabel! {
+        didSet {
+            titleLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 16)
+        }
+    }
+    @IBOutlet weak var descriptionLabel: UILabel! {
+        didSet {
+            descriptionLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 14)
+            descriptionLabel.numberOfLines = 2
+        }
+    }
     
     public override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        
+        designCell()
     }
     
     public override func prepareForReuse() {
@@ -37,5 +47,11 @@ public class ArticleCell: UICollectionViewCell {
         self.imageView.image = article.image
         self.titleLabel.text = article.title
         self.descriptionLabel.text = article.description
+    }
+}
+
+private extension ArticleCell {
+    func designCell() {
+        self.layer.cornerRadius = 12
     }
 }

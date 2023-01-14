@@ -218,7 +218,7 @@ public struct CompositionalLayoutProvider {
     ///
     /// - Parameters:
     ///     - column: 한 행에 표시되는 아이템 개수
-    public func horizontalScrollLayoutSection(column: Int) -> NSCollectionLayoutSection {
+    public func horizontalScrollLayoutSection(column: Int, groupWidthFraction: CGFloat = 0.8) -> NSCollectionLayoutSection {
         // item
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(calculatedWidthFraction(column)),
@@ -229,7 +229,7 @@ public struct CompositionalLayoutProvider {
 
         // group
         let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(0.8),
+            widthDimension: .fractionalWidth(groupWidthFraction),
             heightDimension: .estimated(180)
         )
         
