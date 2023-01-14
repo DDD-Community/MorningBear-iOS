@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
@@ -19,7 +19,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5na-9g-oEH">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" keyboardDismissMode="interactive" translatesAutoresizingMaskIntoConstraints="NO" id="5na-9g-oEH">
                                 <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hjx-nN-4oQ" userLabel="Conent Wrapper View">
@@ -227,6 +227,8 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="5na-9g-oEH" firstAttribute="trailing" secondItem="vDu-zF-Fre" secondAttribute="trailing" id="2Yz-Gi-tYe"/>
+                            <constraint firstItem="5na-9g-oEH" firstAttribute="height" secondItem="5EZ-qb-Rvc" secondAttribute="height" id="TCq-kJ-csa"/>
+                            <constraint firstItem="5na-9g-oEH" firstAttribute="width" secondItem="5EZ-qb-Rvc" secondAttribute="width" id="UJV-E1-hsh"/>
                             <constraint firstItem="5na-9g-oEH" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="Y4I-Ey-UVU"/>
                             <constraint firstAttribute="bottom" secondItem="5na-9g-oEH" secondAttribute="bottom" id="bBR-xA-zNu"/>
                             <constraint firstItem="5na-9g-oEH" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="o1R-c6-9UG"/>
@@ -245,9 +247,11 @@
                         <outlet property="imageWrapperView" destination="309-Ha-LED" id="kO0-YQ-lPs"/>
                         <outlet property="morningImageView" destination="ct6-6V-07J" id="lJR-8O-GZJ"/>
                         <outlet property="registerButton" destination="WTS-Uz-mFH" id="pw9-Rp-Bx5"/>
+                        <outlet property="scrollView" destination="5na-9g-oEH" id="NIT-eC-00C"/>
                         <outlet property="startMorningLabel" destination="vGC-Co-gFz" id="vhR-95-qtT"/>
                         <outlet property="startTimeTextField" destination="tSx-WD-dzJ" id="ExH-pF-2Vi"/>
                         <outlet property="timeLabel" destination="ZNa-7X-oLQ" id="M7y-26-wpU"/>
+                        <outlet property="topmostView" destination="5EZ-qb-Rvc" id="tFs-fN-xeP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

@@ -24,6 +24,9 @@ class RegisterMorningViewController: UIViewController {
     var categoryCollectionViewProvider: HorizontalScrollCollectionViewProvider<CapsuleCell, String>?
     
     // MARK: View components
+    @IBOutlet var topmostView: UIView!
+    @IBOutlet weak var scrollView: UIScrollView!
+    
     /// 이미지와 라벨을 포함한 래퍼 뷰
     @IBOutlet weak var imageWrapperView: UIView!
     
@@ -118,6 +121,8 @@ class RegisterMorningViewController: UIViewController {
         super.viewDidLoad()
 
         designNavigationBar()
+        
+        setKeyboardObserver()
         
         if let morningImage {
             self.morningImageView.image = morningImage
@@ -244,5 +249,33 @@ extension RegisterMorningViewController: CollectionViewCompositionable {
         let bundle = MorningBearUIResources.bundle
         let cellNib = UINib(nibName: "CapsuleCell", bundle: bundle)
         categoryCollectionView.register(cellNib, forCellWithReuseIdentifier: "CapsuleCell")
+    }
+}
+
+
+extension RegisterMorningViewController {
+    func setKeyboardObserver() {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow),
+                                               name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification, object:nil)
+    }
+    
+    @objc func keyboardWillShow(notification:NSNotification){
+        //give room at the bottom of the scroll view, so it doesn't cover up anything the user needs to tap
+        let userInfo = notification.userInfo!
+        var keyboardFrame:CGRect = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        keyboardFrame = self.view.convert(keyboardFrame, from: nil)
+
+        var contentInset: UIEdgeInsets = self.scrollView.contentInset
+        contentInset.bottom = keyboardFrame.size.height
+        scrollView.contentInset = contentInset
+        scrollView.contentOffset.y += keyboardFrame.size.height
+    }
+
+    @objc func keyboardWillHide(notification:NSNotification){
+        let contentInset:UIEdgeInsets = UIEdgeInsets.zero
+        scrollView.contentInset = contentInset
     }
 }
