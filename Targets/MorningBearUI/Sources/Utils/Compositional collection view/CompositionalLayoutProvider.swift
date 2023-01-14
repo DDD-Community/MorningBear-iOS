@@ -230,7 +230,7 @@ public struct CompositionalLayoutProvider {
         // group
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(0.8),
-            heightDimension: .absolute(176)
+            heightDimension: .estimated(180)
         )
         
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])

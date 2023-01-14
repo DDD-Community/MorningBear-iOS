@@ -88,7 +88,7 @@ extension HomeSectionFooterCell {
         button.layer.cornerRadius = 10
         
         // Set shadows
-        button.layer.shadowColor = UIColor.gray.cgColor
+        button.layer.shadowColor = UIColor.black.cgColor
         button.layer.shadowOpacity = 0.15
         button.layer.shadowRadius = 15
     }
