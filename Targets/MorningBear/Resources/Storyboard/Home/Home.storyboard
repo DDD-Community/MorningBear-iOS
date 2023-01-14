@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -36,21 +36,32 @@
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" title="Button"/>
                             </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EKf-E3-UZa" customClass="RecordingNowButton" customModule="MorningBearUI">
+                                <rect key="frame" x="20" y="742" width="350" height="56"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="56" id="Rxw-GV-EHb"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="erM-k4-hH4" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="5Au-DV-fva"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="EKf-E3-UZa" secondAttribute="bottom" constant="12" id="HUb-6X-hn0"/>
+                            <constraint firstItem="EKf-E3-UZa" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="Jzn-oe-zl9"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="erM-k4-hH4" secondAttribute="bottom" constant="12" id="OvH-rG-Q0F"/>
                             <constraint firstItem="EWa-Qd-diN" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="SaW-sN-KZp"/>
                             <constraint firstAttribute="bottom" secondItem="EWa-Qd-diN" secondAttribute="bottom" id="XMs-TQ-Tj9"/>
                             <constraint firstItem="EWa-Qd-diN" firstAttribute="trailing" secondItem="vDu-zF-Fre" secondAttribute="trailing" id="dda-wv-POT"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="EKf-E3-UZa" secondAttribute="trailing" constant="20" id="rOs-Mn-HwH"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="erM-k4-hH4" secondAttribute="trailing" constant="20" id="uKw-OT-mpa"/>
                             <constraint firstItem="EWa-Qd-diN" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="vg3-UJ-RfK"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="EWa-Qd-diN" id="TW0-jN-3gS"/>
+                        <outlet property="recordingNowButton" destination="EKf-E3-UZa" id="Z4x-NX-CX5"/>
                         <outlet property="registerButton" destination="erM-k4-hH4" id="VmI-fz-p8o"/>
                     </connections>
                 </viewController>

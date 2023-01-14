@@ -16,14 +16,14 @@ import MorningBearKit
 import MorningBearImage
 
 class RegisterMorningViewController: UIViewController {
-    // MARK: - Instance properties
+    // MARK: Instance properties
     private let viewModel = RegisterMorningViewModel()
     private let bag = DisposeBag()
     
     // For category collection view
     var categoryCollectionViewProvider: HorizontalScrollCollectionViewProvider<CapsuleCell, String>?
     
-    // MARK: - View components
+    // MARK: View components
     /// 이미지와 라벨을 포함한 래퍼 뷰
     @IBOutlet weak var imageWrapperView: UIView!
     
@@ -82,9 +82,9 @@ class RegisterMorningViewController: UIViewController {
     }
     
     // MARK: Text field
+    private var startTimeText: String?
     @IBOutlet weak var startTimeTextField: MorningBearUITextField! {
         didSet {
-            startTimeTextField.text = "오전 12시 1분"
             startTimeTextField.isUserInteractionEnabled = false
         }
     }
@@ -131,16 +131,28 @@ class RegisterMorningViewController: UIViewController {
             self.morningImageView.contentMode = .center
         }
         
+        if let startTimeText {
+            self.startTimeTextField.text = startTimeText
+        } else {
+            fatalError("시작 시간은 반드시 존재해야 함")
+        }
+        
         bindButtons()
     }
 }
 
+// MARK: - Public tools
 extension RegisterMorningViewController {
-    func prepare(_ image: UIImage) {
-        self.morningImage = image
+    func prepare(startTime: Date, image: UIImage?) {
+        startTimeText = viewModel.timeFormatter.string(from: startTime)
+        
+        if let image {
+            morningImage = image
+        } 
     }
 }
 
+// MARK: - Internal tools
 private extension RegisterMorningViewController {
     func designNavigationBar() {
         navigationItem.title = "오늘의 미라클모닝"
@@ -200,7 +212,7 @@ private extension RegisterMorningViewController {
     }
 }
 
-// MARK: Set category collection view
+// MARK: - Set category collection view
 extension RegisterMorningViewController: CollectionViewCompositionable {
     func layoutCollectionView() {
         let provider = CompositionalLayoutProvider()

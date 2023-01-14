@@ -16,7 +16,7 @@ class HomeViewController: UIViewController {
     private let bag = DisposeBag()
     private let viewModel = HomeViewModel()
     
-    // 카메라 뷰: 미리 로딩하기 위해서 처음부터 만들어 놓기
+    /// 카메라 뷰: 미리 로딩하기 위해서 처음부터 만들어 놓기
     private let cameraViewController = UIImagePickerController()
     
     @IBOutlet weak var collectionView: UICollectionView! {
@@ -30,6 +30,8 @@ class HomeViewController: UIViewController {
             registerButton.setTitle("미라클 모닝 하기", for: .normal)
         }
     }
+    /// 미라클 모닝 진행중이면 튀어나옴
+    @IBOutlet weak var recordingNowButton: RecordingNowButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,8 +39,8 @@ class HomeViewController: UIViewController {
         designNavigationBar()
         
         bindButtons()
-
-        // FIXME: 색깔 이거 아닌 것 같음
+        bindBehaviorAccordingToRecordStatus()
+        
         self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
     }
 }
@@ -67,27 +69,90 @@ private extension HomeViewController {
         .disposed(by: bag)
     }
     
-    func bindButtons() {
-        registerButton.rx.tap.bind { [weak self] in
-            guard let self else { return }
-            
-            guard let registerMorningViewController = UIStoryboard(name: "RegisterMorning", bundle: nil)
-                .instantiateViewController(withIdentifier: "RegisterMorning") as? RegisterMorningViewController else {
-                
-                fatalError("뷰 컨트롤러를 불러올 수 없음")
+    /// 기록 상태에 따라 달라지는 뷰 행동의 정의
+    func bindBehaviorAccordingToRecordStatus() {
+        viewModel.recordingStateObservable.withUnretained(self)
+            .bind { weakSelf, state in
+                switch state {
+                case .recording:
+                    weakSelf.showRecordingNowButton()
+                case .stop:
+                    weakSelf.showStartRecordingButton()
+                case .waiting:
+                    weakSelf.showStartRecordingButton()
+                }
             }
-            
-//            registerMorningViewController.prepare(UIImage(systemName: "person")!)
-            self.navigationController?.pushViewController(registerMorningViewController, animated: true)
-            
-            // FIXME: Temp
-//            self.cameraViewController.sourceType = .camera
-//            self.cameraViewController.allowsEditing = true
-//            self.cameraViewController.delegate = self
-//
-//            self.show(self.cameraViewController, sender: self)
+            .disposed(by: bag)
+
+        viewModel.elapsedTimeObservable
+            .bind(to: recordingNowButton.timeLabel.rx.text)
+            .disposed(by: bag)
+    }
+    
+    func bindButtons() {
+        registerButton.rx.tap.withUnretained(self)
+            .bind { weakSelf, _ in
+                switch weakSelf.viewModel.isMyMorningRecording {
+                case .recording:
+                    // TODO: 좀 더 마일드한 오류를 줄 수도..
+                    fatalError("녹화 버튼은 이 조건을 가져서는 안 됨")
+                case .stop:
+                    weakSelf.startRecording()
+                case .waiting:
+                    weakSelf.startRecording()
+                }
+            }
+            .disposed(by: bag)
+        
+        recordingNowButton.stopButton.rx.tap.withUnretained(self)
+            .bind { weakSelf, _ in
+                switch weakSelf.viewModel.isMyMorningRecording {
+                case .recording:
+                    weakSelf.stopRecording()
+                case .stop:
+                    fatalError("중지 버튼은 이 조건을 가져서는 안 됨")
+                case .waiting:
+                    fatalError("중지 버튼은 이 조건을 가져서는 안 됨")
+                }
+            }
+            .disposed(by: bag)
+    }
+    
+    func startRecording() {
+        // 버튼 전환
+        showRecordingNowButton()
+        viewModel.startRecording()
+    }
+    
+    func stopRecording() {
+        guard let registerMorningViewController = UIStoryboard(
+            name: "RegisterMorning", bundle: nil
+        ).instantiateViewController(withIdentifier: "RegisterMorning") as? RegisterMorningViewController
+        else {
+            fatalError("뷰 컨트롤러를 불러올 수 없음")
         }
-        .disposed(by: bag)
+        
+        do {
+            let startDate = try viewModel.stopRecording()
+            registerMorningViewController.prepare(startTime: startDate, image: nil)
+        } catch let error {
+            showAlert(error)
+        }
+
+        self.navigationController?.pushViewController(registerMorningViewController, animated: true)
+        
+        // 버튼 전환
+        showStartRecordingButton()
+    }
+    
+    func showRecordingNowButton() {
+        self.registerButton.isHidden = true
+        self.recordingNowButton.isHidden = false
+    }
+    
+    func showStartRecordingButton() {
+        self.registerButton.isHidden = false
+        self.recordingNowButton.isHidden = true
     }
 }
 
@@ -180,15 +245,18 @@ extension HomeViewController: UIImagePickerControllerDelegate, UINavigationContr
             // imageViewPic.contentMode = .scaleToFill
             guard let registerMorningViewController = UIStoryboard(name: "RegisterMorning", bundle: nil)
                 .instantiateViewController(withIdentifier: "RegisterMorning") as? RegisterMorningViewController else {
-                
+
                 fatalError("뷰 컨트롤러를 불러올 수 없음")
             }
             
-            registerMorningViewController.prepare(takenPhoto)
-            self.navigationController?.pushViewController(registerMorningViewController, animated: true)
+            if case .recording(startDate: let savedStartDate) = viewModel.isMyMorningRecording {
+                registerMorningViewController.prepare(startTime: savedStartDate, image: takenPhoto)
+                self.navigationController?.pushViewController(registerMorningViewController, animated: true)
+            } else {
+                // TODO: Error
+            }
         }
-        
-        
+
         cameraViewController.dismiss(animated: true)
     }
 }

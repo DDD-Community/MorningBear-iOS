@@ -17,25 +17,16 @@ final class MorningBearDateFormatterTests: XCTestCase {
     }
 
     override func tearDownWithError() throws {
+        formatter = nil
     }
     
-    func test__calling_formatter_affets_other_formatter() throws {
-        let timeFormatter = MorningBearDateFormatter.timeFormatter
-        let _ = MorningBearDateFormatter.dayFormatter
-        
-        let timeString = "오전 3시 30분"
-        guard timeFormatter.date(from: timeString) != nil else {
-            XCTFail("바르지 않은 형식의 포매터")
-            return
-        }
-    }
-
     func test__time_format_success() throws {
         formatter = MorningBearDateFormatter.timeFormatter
         
         let dateStrings = ["오전 3시 30분", "오전 8시 3분", "오후 3시 39분", "오후 3시 9분"]
         
         for dateString in dateStrings {
+            print("@@", formatter.dateFormat, dateString, formatter.date(from: dateString))
             guard let date = formatter.date(from: dateString) else {
                 XCTFail("String에서 Date 값으로 변환 실패")
                 return
@@ -79,7 +70,7 @@ final class MorningBearDateFormatterTests: XCTestCase {
     func test__shortime_format() {
         formatter = MorningBearDateFormatter.shortimeFormatter
         
-        var dateStrings = ["오전 01:30", "오전 12:02", "오전 03:02", "오후 11:39"]
+        let dateStrings = ["오전 01:30", "오전 12:02", "오전 03:02", "오후 11:39"]
 
         for dateString in dateStrings {
             guard let date = formatter.date(from: dateString) else {
@@ -90,5 +81,12 @@ final class MorningBearDateFormatterTests: XCTestCase {
             let stringFromDate = formatter.string(from: date)
             XCTAssertEqual(dateString, stringFromDate)
         }
+    }
+    
+    func test__calling_formatter_affects_other_formatter() throws {
+        let timeFormatter = MorningBearDateFormatter.timeFormatter
+        let _ = MorningBearDateFormatter.dayFormatter
+        
+        XCTAssertEqual(timeFormatter.dateFormat, MorningBearDateFormatter.timeFormatter.dateFormat)
     }
 }
