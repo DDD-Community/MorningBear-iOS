@@ -79,14 +79,18 @@ extension HomeViewModel {
         recordingStateRelay.accept(.recording(startDate: startDate))
     }
     
-    func stopRecording() {
-        guard case .recording = self.recordingStateRelay.value else {
-            return
+    func stopRecording() throws -> Date {
+        if case .recording(let startDate) = isMyMorningRecording {
+            bag = DisposeBag() // reset bindings
+            configureBindings() // set bindings again
+            
+            recordingStateRelay.accept(.stop)
+            return startDate
+        } else {
+            
+            recordingStateRelay.accept(.stop)
+            throw HomeError.stopRecordingWhileIdle
         }
-        
-        bag = DisposeBag() // reset bindings
-        configureBindings() // set bindings again
-        recordingStateRelay.accept(.stop)
     }
 }
 
@@ -145,7 +149,14 @@ private extension HomeViewModel {
 
 private extension HomeViewModel {
     enum HomeError: LocalizedError {
-        case recordRequestedWhileIdle
+        case stopRecordingWhileIdle
+        
+        var errorDescription: String? {
+            switch self {
+            case .stopRecordingWhileIdle:
+                return "잘못된 동작입니다. 다시 시도해주세요"
+            }
+        }
     }
 }
 

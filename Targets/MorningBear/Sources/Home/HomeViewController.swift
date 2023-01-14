@@ -121,25 +121,28 @@ private extension HomeViewController {
     func startRecording() {
         // 버튼 전환
         showRecordingNowButton()
-        self.viewModel.startRecording()
+        viewModel.startRecording()
     }
     
     func stopRecording() {
-        guard let registerMorningViewController = UIStoryboard(name: "RegisterMorning", bundle: nil)
-                .instantiateViewController(withIdentifier: "RegisterMorning") as? RegisterMorningViewController
+        guard let registerMorningViewController = UIStoryboard(
+            name: "RegisterMorning", bundle: nil
+        ).instantiateViewController(withIdentifier: "RegisterMorning") as? RegisterMorningViewController
         else {
-
             fatalError("뷰 컨트롤러를 불러올 수 없음")
         }
+        
+        do {
+            let startDate = try viewModel.stopRecording()
+            registerMorningViewController.prepare(startTime: startDate, image: nil)
+        } catch let error {
+            showAlert(error)
+        }
 
-//            registerMorningViewController.prepare(UIImage(systemName: "person")!)
+        self.navigationController?.pushViewController(registerMorningViewController, animated: true)
         
         // 버튼 전환
         showStartRecordingButton()
-        
-        self.navigationController?.pushViewController(registerMorningViewController, animated: true)
-        
-        viewModel.stopRecording()
     }
     
     func showRecordingNowButton() {
