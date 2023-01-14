@@ -28,6 +28,9 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var registerButton: LargeButton! {
         didSet {
             registerButton.setTitle("미라클 모닝 하기", for: .normal)
+            registerButton.layer.shadowColor = UIColor.black.cgColor
+            registerButton.layer.shadowOpacity = 0.15
+            registerButton.layer.shadowRadius = 15
         }
     }
     /// 미라클 모닝 진행중이면 튀어나옴
@@ -184,7 +187,7 @@ extension HomeViewController: CollectionViewCompositionable {
         collectionView.isScrollEnabled = true
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.showsVerticalScrollIndicator = true
-        collectionView.contentInset = .zero
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 90, right: 0) // 버튼 때문에 아래 패딩 줌
         collectionView.backgroundColor = .clear
         collectionView.clipsToBounds = true
     }
@@ -356,7 +359,7 @@ extension HomeViewController {
         case .recentMornings:
             headerCell.prepare(title: "나의 최근 미라클모닝")
         case .badges:
-            headerCell.prepare(title: "내가 모은 배지", buttonText: "모두 보기>") { [weak self] in
+            headerCell.prepare(title: "내가 획득한 배지", buttonText: "모두 보기>") { [weak self] in
                 guard let self = self else {
                     return
                 }
@@ -368,7 +371,7 @@ extension HomeViewController {
                 self.navigationController?.pushViewController(myBadgeViewController, animated: true)
             }
         case .articles:
-            headerCell.prepare(title: "읽을거리", buttonText: "모두 보기>") {
+            headerCell.prepare(title: "지금 읽기 딱 좋은 아티클", buttonText: "모두 보기>") {
                 print("읽을거리")
             }
         default:

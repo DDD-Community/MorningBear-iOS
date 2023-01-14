@@ -89,9 +89,8 @@ extension HomeSectionFooterCell {
         
         // Set shadows
         button.layer.shadowColor = UIColor.gray.cgColor
-        button.layer.shadowOpacity = 0.3
-        button.layer.shadowRadius = 8
-        button.layer.shadowOffset = .zero
+        button.layer.shadowOpacity = 0.15
+        button.layer.shadowRadius = 15
     }
     
     /// 폰트 설정
