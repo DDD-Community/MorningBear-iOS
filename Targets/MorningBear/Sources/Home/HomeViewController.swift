@@ -373,8 +373,16 @@ extension HomeViewController {
                 self.navigationController?.pushViewController(myBadgeViewController, animated: true)
             }
         case .articles:
-            headerCell.prepare(title: "지금 읽기 딱 좋은 아티클", buttonText: "모두 보기>") {
-                print("읽을거리")
+            headerCell.prepare(title: "지금 읽기 딱 좋은 아티클", buttonText: "모두 보기>") { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                
+                // 아티클 모두 보기 목록으로 이동(네비게이션)
+                let articlesCollectionViewController = UIStoryboard(name: "ArticlesCollection", bundle: nil)
+                    .instantiateViewController(withIdentifier: "ArticlesCollection")
+                
+                self.navigationController?.pushViewController(articlesCollectionViewController, animated: true)
             }
         default:
             break
