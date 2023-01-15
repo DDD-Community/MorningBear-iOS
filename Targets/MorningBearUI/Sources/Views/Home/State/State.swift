@@ -10,8 +10,10 @@ import Foundation
 
 public struct State {
     let nickname: String
+    let oneLiner: String
     
-    public init(nickname: String) {
+    public init(nickname: String, oneLiner: String) {
         self.nickname = nickname
+        self.oneLiner = oneLiner
     }
 }
