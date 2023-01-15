@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import Nimble
 
 @testable import MorningBear
 
@@ -33,7 +34,7 @@ final class HomeViewModelTests: XCTestCase {
         
         
         guard viewModel.isMyMorningRecording == .waiting || viewModel.isMyMorningRecording == .stop else {
-            XCTFail("\(viewModel.isMyMorningRecording)")
+            fail("with unexpected record condition: \(viewModel.isMyMorningRecording)")
             return
         }
         
@@ -41,7 +42,7 @@ final class HomeViewModelTests: XCTestCase {
         viewModel = HomeViewModel(mockHomeDataProvider)
         
         guard case .recording = viewModel.isMyMorningRecording else {
-            XCTFail("\(viewModel.isMyMorningRecording)")
+            fail("with unexpected record condition: \(viewModel.isMyMorningRecording)")
             return
         }
     }
@@ -51,31 +52,33 @@ final class HomeViewModelTests: XCTestCase {
         viewModel = HomeViewModel(mockHomeDataProvider)
         
         guard viewModel.isMyMorningRecording == .waiting || viewModel.isMyMorningRecording == .stop else {
-            XCTFail("\(viewModel.isMyMorningRecording)")
+            fail("with unexpected record condition: \(viewModel.isMyMorningRecording)")
             return
         }
         
         viewModel.startRecording()
         
         guard case .recording = viewModel.isMyMorningRecording else {
-            XCTFail()
+            fail("with unexpected record condition: \(viewModel.isMyMorningRecording)")
             return
         }
     }
     
     func test__stop_recording() throws {
-        mockHomeDataProvider.persistentMyMorningRecordDate = Date()
+        let startDate = Date()
+        mockHomeDataProvider.persistentMyMorningRecordDate = startDate
         viewModel = HomeViewModel(mockHomeDataProvider)
         
         guard case .recording = viewModel.isMyMorningRecording else {
-            XCTFail("\(viewModel.isMyMorningRecording)")
+            fail("with unexpected record condition: \(viewModel.isMyMorningRecording)")
             return
         }
         
-        viewModel.stopRecording()
+        let savedStartDate = try viewModel.stopRecording()
+        expect(startDate).to(equal(savedStartDate))
         
         guard case .stop = viewModel.isMyMorningRecording else {
-            XCTFail()
+            fail("with unexpected record condition: \(viewModel.isMyMorningRecording)")
             return
         }
     }
