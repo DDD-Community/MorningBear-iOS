@@ -24,7 +24,6 @@ class RegisterMorningViewController: UIViewController {
     var categoryCollectionViewProvider: HorizontalScrollCollectionViewProvider<CapsuleCell, String>?
     
     // MARK: View components
-    @IBOutlet var topmostView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
     
     /// 이미지와 라벨을 포함한 래퍼 뷰

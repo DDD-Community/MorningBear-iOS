@@ -251,7 +251,6 @@
                         <outlet property="startMorningLabel" destination="vGC-Co-gFz" id="vhR-95-qtT"/>
                         <outlet property="startTimeTextField" destination="tSx-WD-dzJ" id="ExH-pF-2Vi"/>
                         <outlet property="timeLabel" destination="ZNa-7X-oLQ" id="M7y-26-wpU"/>
-                        <outlet property="topmostView" destination="5EZ-qb-Rvc" id="tFs-fN-xeP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
