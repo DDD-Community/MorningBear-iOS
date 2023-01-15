@@ -28,17 +28,13 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var registerButton: LargeButton! {
         didSet {
             registerButton.setTitle("미라클 모닝 하기", for: .normal)
-            registerButton.layer.shadowColor = UIColor.black.cgColor
-            registerButton.layer.shadowOpacity = 0.15
-            registerButton.layer.shadowRadius = 15
+            registerButton.layer.dropShadow(.standard)
         }
     }
     /// 미라클 모닝 진행중이면 튀어나옴
     @IBOutlet weak var recordingNowButton: RecordingNowButton! {
         didSet {
-            recordingNowButton.layer.shadowColor = UIColor.black.cgColor
-            recordingNowButton.layer.shadowOpacity = 0.15
-            recordingNowButton.layer.shadowRadius = 15
+            recordingNowButton.layer.dropShadow(.standard)
         }
     }
     
