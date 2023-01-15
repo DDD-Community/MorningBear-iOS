@@ -163,7 +163,9 @@ extension HomeViewController: CollectionViewCompositionable {
         let layout = UICollectionViewCompositionalLayout { (section, env) -> NSCollectionLayoutSection? in
             switch HomeSection.getSection(index: section) {
             case .state:
-                return provider.plainLayoutSection(height: 286) // 1개 셀
+                let layout = provider.plainLayoutSection(height: 286)
+                layout.contentInsets.top += 16
+                return layout // 1개 셀
             case .recentMornings:
                 return provider.staticGridLayoutSection(column: 2)
             case .badges:
