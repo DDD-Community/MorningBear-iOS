@@ -80,7 +80,7 @@ public struct CompositionalLayoutProvider {
     public func staticGridLayoutSection(column: Int) -> NSCollectionLayoutSection {
         // item
         let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(calculatedWidthFraction(column)-0.01),
+            widthDimension: .fractionalWidth(calculatedWidthFraction(column)-0.015),
             heightDimension: .fractionalHeight(1)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
