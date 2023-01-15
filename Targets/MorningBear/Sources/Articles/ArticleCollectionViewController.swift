@@ -77,4 +77,10 @@ extension ArticleCollectionViewController: UICollectionViewDelegate, UICollectio
         cell.prepare(article: article)
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let article = viewModel.articles[indexPath.row]
+
+        article.openURL(context: UIApplication.shared)
+    }
 }

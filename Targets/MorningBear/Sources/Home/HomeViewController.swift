@@ -330,6 +330,17 @@ extension HomeViewController: UICollectionViewDataSource {
         }
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch HomeSection.getSection(index: indexPath.section) {
+        case .articles:
+            let article = viewModel.articleList[indexPath.row]
+            article.openURL(context: UIApplication.shared)
+        default:
+            // TODO: 언젠간..
+            break
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         // 헤더 & 푸터 설정
         switch kind {
