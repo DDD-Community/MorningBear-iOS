@@ -20,7 +20,7 @@ class HomeViewDataProvider {
     private let articleDataProvider = ArticleDataProvider() // FIXME: protocolize later
     
     func state() -> State {
-        let data = State(nickname: "Mock Nickname")
+        let data = State(nickname: "니나노", oneLiner: "갓생사는 멋진 사람 되기!")
         return data
     }
     

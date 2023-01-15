@@ -12,6 +12,7 @@ public class StateCell: UICollectionViewCell {
     @IBOutlet weak var oneLinerWrapperView: UIView! {
         didSet {
             oneLinerWrapperView.backgroundColor = MorningBearUIAsset.Colors.gray800.color
+            oneLinerWrapperView.layer.cornerRadius = 8
         }
     }
     @IBOutlet weak var oneLinerLabel: UILabel! {
