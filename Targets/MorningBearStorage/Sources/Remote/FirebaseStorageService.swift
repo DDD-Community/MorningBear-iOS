@@ -11,7 +11,7 @@ import Foundation
 import FirebaseStorage
 import RxSwift
 
-struct FirebaseStorage: StorageType {
+struct FirebaseStorageService: StorageType {
     private let storage: Storage
     
     init(_ storage: Storage = Storage.storage()) {

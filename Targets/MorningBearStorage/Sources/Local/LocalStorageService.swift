@@ -10,7 +10,7 @@ import Foundation
 
 import RxSwift
 
-struct LocalStorage: StorageType {
+struct LocalStorageService: StorageType {
     private let storage: FileManager
     
     init(_ storage: FileManager = FileManager.default) {
@@ -64,7 +64,7 @@ struct LocalStorage: StorageType {
     }
 }
 
-extension LocalStorage {
+extension LocalStorageService {
     /// 프로젝트 내에서 사용되는 기본 로컬 스토리지 인스턴스.
     ///
     /// 기본값으로 `FileManager`의 `documentDirectory`를 사용함

@@ -40,8 +40,12 @@ public struct LocalStorageManager<Instance, Storage> where Instance: Codable, St
         return downloadTask
     }
     
-    public init(_ localStorage: Storage = LocalStorage()) {
-        self.localStorage = localStorage
+    public init(_ localStorage: Storage?) {
+        if let localStorage {
+            self.localStorage = localStorage
+        } else {
+            self.localStorage = LocalStorageService() as! Storage
+        }
         self.coderSet = CoderSet()
     }
 }
