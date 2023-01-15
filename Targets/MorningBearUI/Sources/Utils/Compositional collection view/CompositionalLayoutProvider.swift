@@ -106,7 +106,7 @@ public struct CompositionalLayoutProvider {
     public func staticGridLayoutSection(column: Int) -> NSCollectionLayoutSection {
         // item
         let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(calculatedWidthFraction(column)-0.015),
+            widthDimension: .fractionalWidth(calculatedFraction(column)-0.015),
             heightDimension: .fractionalHeight(1)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -153,53 +153,38 @@ public struct CompositionalLayoutProvider {
     ///
     /// - Parameters:
     ///     - column: 한 행에 표시되는 아이템 개수
-    public func dynamicGridLayoutSection(column: Int) -> NSCollectionLayoutSection {
-        let height: CGFloat = 118
-        let inset = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10)
-        
-        let section = dynamicGridLayoutSection(column: column, height: height, inset: inset)
+    public func dynamicGridLayoutSection(column: Int, row: Int) -> NSCollectionLayoutSection {
+        let section = dynamicGridLayoutSection(column: column, row: row, spacing: 12)
         
         return section
     }
     
-    public func dynamicGridLayoutSection(column: Int, height: CGFloat, inset: NSDirectionalEdgeInsets) -> NSCollectionLayoutSection {
+    public func dynamicGridLayoutSection(column: Int, row: Int, spacing: CGFloat) -> NSCollectionLayoutSection {
+        let spacing: CGFloat = 12
+        
         // item
         let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(calculatedWidthFraction(column)),
+            widthDimension: .fractionalWidth(calculatedFraction(column)),
             heightDimension: .fractionalHeight(1)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10)
+        item.contentInsets = NSDirectionalEdgeInsets(top: spacing/2, leading: spacing/2, bottom: spacing/2, trailing: spacing/2)
 
-        // row group
-        let rowGroupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1),
-            heightDimension: .estimated(height)
-        )
-        let rowGroup = NSCollectionLayoutGroup.horizontal(
-            layoutSize: rowGroupSize,
-            subitems: [item]
-        )
-        
-        // stacking group(stacking row groups)
+        // stacking group
         let stackingGroupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
-            heightDimension: .fractionalHeight(1)
+            heightDimension: .fractionalHeight(calculatedFraction(row+1))
         )
-        let stackingGroup = NSCollectionLayoutGroup.vertical(
+        let stackingGroup = NSCollectionLayoutGroup.horizontal(
             layoutSize: stackingGroupSize,
-            subitems: [rowGroup]
+            subitems: [item]
         )
-        stackingGroup.interItemSpacing = .fixed(40)
-        
 
         // section
         let section = NSCollectionLayoutSection(group: stackingGroup)
         section.orthogonalScrollingBehavior = .none
-        
-        section.contentInsets = narrowSectionInset
-        section.interGroupSpacing = 7.5
-        
+        section.contentInsets = sectionInset(estimated: 20, itemSpacing: spacing)
+
         return section
     }
     
@@ -209,7 +194,7 @@ public struct CompositionalLayoutProvider {
     public func squareCellDynamicGridLayoutSection(column: Int) -> NSCollectionLayoutSection {
         // item
         let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(calculatedWidthFraction(column)),
+            widthDimension: .fractionalWidth(calculatedFraction(column)),
             heightDimension: .fractionalHeight(1)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -247,7 +232,7 @@ public struct CompositionalLayoutProvider {
     public func horizontalScrollLayoutSection(column: Int, groupWidthFraction: CGFloat = 0.8) -> NSCollectionLayoutSection {
         // item
         let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(calculatedWidthFraction(column)),
+            widthDimension: .fractionalWidth(calculatedFraction(column)),
             heightDimension: .fractionalHeight(1.0)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -279,8 +264,13 @@ public struct CompositionalLayoutProvider {
 // MARK: Internal tools
 extension CompositionalLayoutProvider {
     /// (1 / 열 개수) = 한 열 당 셀이 차지하는 가로 크기 비율
-    private func calculatedWidthFraction(_ column: Int) -> CGFloat {
-        1.0 / CGFloat(column)
+    private func calculatedFraction(_ elementCount: Int) -> CGFloat {
+        1.0 / CGFloat(elementCount)
+    }
+    
+    private func sectionInset(estimated: CGFloat, itemSpacing: CGFloat) -> NSDirectionalEdgeInsets {
+        return NSDirectionalEdgeInsets(top: 0, leading: estimated - itemSpacing, bottom: 0, trailing: estimated - itemSpacing)
+
     }
     
     /// 섹션 국룰 좌우 패딩(좌 20, 우 20)

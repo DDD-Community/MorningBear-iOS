@@ -33,7 +33,7 @@ extension MyBadgesViewController: CollectionViewCompositionable {
             case .state:
                 return provider.plainLayoutSection(height: 160, inset: .zero) // 1개 셀
             case .badges:
-                return provider.dynamicGridLayoutSection(column: 3)
+                return provider.dynamicGridLayoutSection(column: 3, row: 4)
             case .none:
                 return nil
             }
