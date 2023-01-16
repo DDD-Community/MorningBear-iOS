@@ -82,21 +82,20 @@ extension HomeSectionFooterCell {
     
     /// 기타 모양, 디자인요소 설정
     private func designCell() {
-        button.backgroundColor = .white
+        button.backgroundColor = MorningBearUIAsset.Colors.gray800.color
         button.sizeToFit()
         
         button.layer.cornerRadius = 10
         
         // Set shadows
-        button.layer.shadowColor = UIColor.gray.cgColor
-        button.layer.shadowOpacity = 0.3
-        button.layer.shadowRadius = 8
-        button.layer.shadowOffset = .zero
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOpacity = 0.15
+        button.layer.shadowRadius = 15
     }
     
     /// 폰트 설정
     private func configureFont() {
         button.titleLabel?.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 16)
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(.white, for: .normal)
     }
 }

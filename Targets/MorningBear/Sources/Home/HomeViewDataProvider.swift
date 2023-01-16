@@ -58,7 +58,7 @@ class HomeViewDataProvider {
     
     func articles() -> [Article] {
         let data: [Article] = [
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
+            .init(image: UIColor.random.image(), title: "아티클 제목", description: "아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!"),
             .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
             .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
             .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),

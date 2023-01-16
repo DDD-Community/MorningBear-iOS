@@ -31,6 +31,8 @@ public class RecordingNowButton: UIView {
         didSet {
             stopButton.setTitle("종료하기", for: .normal)
             stopButton.setTitleColor(.white, for: .normal)
+            stopButton.setTitleColor(.white.withAlphaComponent(0.5), for: .highlighted)
+
             stopButton.titleLabel?.font = MorningBearUIFontFamily.Pretendard.regular.font(size: 12)
             
             stopButton.backgroundColor = MorningBearUIAsset.Colors.canceledDark.color

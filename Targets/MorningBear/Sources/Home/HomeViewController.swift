@@ -28,10 +28,15 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var registerButton: LargeButton! {
         didSet {
             registerButton.setTitle("미라클 모닝 하기", for: .normal)
+            registerButton.layer.dropShadow(.standard)
         }
     }
     /// 미라클 모닝 진행중이면 튀어나옴
-    @IBOutlet weak var recordingNowButton: RecordingNowButton!
+    @IBOutlet weak var recordingNowButton: RecordingNowButton! {
+        didSet {
+            recordingNowButton.layer.dropShadow(.standard)
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +45,7 @@ class HomeViewController: UIViewController {
         
         bindButtons()
         bindBehaviorAccordingToRecordStatus()
-        
+
         self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
     }
 }
@@ -53,16 +58,10 @@ private extension HomeViewController {
         self.navigationItem.leftBarButtonItem?.tintColor = .black
         self.navigationItem.hidesSearchBarWhenScrolling = true
         
-        let searchButton = MorningBearBarButtonItem.searchButton
         let alarmButton = MorningBearBarButtonItem.notificationButton
-        self.navigationItem.rightBarButtonItems = [searchButton, alarmButton]
+        self.navigationItem.rightBarButtonItems = [alarmButton]
         
         // Bind buttons
-        searchButton.rx.tap.bind { _ in
-            print("tapped")
-        }
-        .disposed(by: bag)
-        
         alarmButton.rx.tap.bind { _ in
             print("tapped")
         }
@@ -170,7 +169,7 @@ extension HomeViewController: CollectionViewCompositionable {
             case .badges:
                 return provider.horizontalScrollLayoutSection(column: 2)
             case .articles:
-                let section = provider.horizontalScrollLayoutSection(column: 1)
+                let section = provider.horizontalScrollLayoutSection(column: 1, groupWidthFraction: 0.7)
                 section.orthogonalScrollingBehavior = .groupPagingCentered // 페이징 추가함. 변경 가능
                 
                 return section
@@ -190,7 +189,7 @@ extension HomeViewController: CollectionViewCompositionable {
         collectionView.isScrollEnabled = true
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.showsVerticalScrollIndicator = true
-        collectionView.contentInset = .zero
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 90, right: 0) // 버튼 때문에 아래 패딩 줌
         collectionView.backgroundColor = .clear
         collectionView.clipsToBounds = true
     }
@@ -362,7 +361,7 @@ extension HomeViewController {
         case .recentMornings:
             headerCell.prepare(title: "나의 최근 미라클모닝")
         case .badges:
-            headerCell.prepare(title: "내가 모은 배지", buttonText: "모두 보기>") { [weak self] in
+            headerCell.prepare(title: "내가 획득한 배지", buttonText: "모두 보기>") { [weak self] in
                 guard let self = self else {
                     return
                 }
@@ -374,7 +373,7 @@ extension HomeViewController {
                 self.navigationController?.pushViewController(myBadgeViewController, animated: true)
             }
         case .articles:
-            headerCell.prepare(title: "읽을거리", buttonText: "모두 보기>") {
+            headerCell.prepare(title: "지금 읽기 딱 좋은 아티클", buttonText: "모두 보기>") {
                 print("읽을거리")
             }
         default:

@@ -48,13 +48,14 @@ private extension MorningBearUITextField {
     func designTextField() {
         // Set border
         self.layer.cornerRadius = 12
-        self.layer.borderColor = MorningBearUIAsset.Colors.gray200.color.cgColor
+        self.layer.borderColor = MorningBearUIAsset.Colors.gray500.color.cgColor
         self.layer.borderWidth = 1
         
         // Set background
         self.backgroundColor = .clear
         
         // Set content configs
+        self.textColor = MorningBearUIAsset.Colors.gray500.color
         self.font = MorningBearUIFontFamily.Pretendard.regular.font(size: 14)
         self.addLeftPadding()
     }
@@ -62,7 +63,7 @@ private extension MorningBearUITextField {
 
 fileprivate extension UITextField {
     func addLeftPadding() {
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: self.frame.height))
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: self.frame.height))
         self.leftView = paddingView
         self.leftViewMode = ViewMode.always
     }

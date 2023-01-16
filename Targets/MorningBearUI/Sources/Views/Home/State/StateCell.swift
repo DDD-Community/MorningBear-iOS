@@ -11,13 +11,14 @@ import UIKit
 public class StateCell: UICollectionViewCell {
     @IBOutlet weak var stateWrapperView: UIView! {
         didSet {
-            stateWrapperView.backgroundColor = .white
             stateWrapperView.layer.cornerRadius = 12
+            stateWrapperView.backgroundColor = MorningBearUIAsset.Colors.gray900.color
         }
     }
     @IBOutlet weak var titleLabel: UILabel! {
         didSet {
             titleLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 24)
+            titleLabel.textColor = MorningBearUIAsset.Colors.primaryText.color
         }
     }
     @IBOutlet weak var subTitleLabel: UILabel! {
@@ -50,16 +51,19 @@ public class StateCell: UICollectionViewCell {
     @IBOutlet weak var countLabel: UILabel! {
         didSet {
             countLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 16)
+            countLabel.textColor = MorningBearUIAsset.Colors.primaryText.color
         }
     }
     @IBOutlet weak var timeLabel: UILabel! {
         didSet {
             timeLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 16)
+            timeLabel.textColor = MorningBearUIAsset.Colors.primaryText.color
         }
     }
     @IBOutlet weak var badgeLabel: UILabel! {
         didSet {
             badgeLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 16)
+            badgeLabel.textColor = MorningBearUIAsset.Colors.primaryText.color
         }
     }
     

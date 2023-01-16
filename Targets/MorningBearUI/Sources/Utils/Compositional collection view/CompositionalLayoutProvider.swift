@@ -80,7 +80,7 @@ public struct CompositionalLayoutProvider {
     public func staticGridLayoutSection(column: Int) -> NSCollectionLayoutSection {
         // item
         let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(calculatedWidthFraction(column)-0.01),
+            widthDimension: .fractionalWidth(calculatedWidthFraction(column)-0.015),
             heightDimension: .fractionalHeight(1)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -218,7 +218,7 @@ public struct CompositionalLayoutProvider {
     ///
     /// - Parameters:
     ///     - column: 한 행에 표시되는 아이템 개수
-    public func horizontalScrollLayoutSection(column: Int) -> NSCollectionLayoutSection {
+    public func horizontalScrollLayoutSection(column: Int, groupWidthFraction: CGFloat = 0.8) -> NSCollectionLayoutSection {
         // item
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(calculatedWidthFraction(column)),
@@ -229,8 +229,8 @@ public struct CompositionalLayoutProvider {
 
         // group
         let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(0.8),
-            heightDimension: .absolute(176)
+            widthDimension: .fractionalWidth(groupWidthFraction),
+            heightDimension: .estimated(180)
         )
         
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])

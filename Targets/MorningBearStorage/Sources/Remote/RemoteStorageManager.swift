@@ -36,8 +36,12 @@ public struct RemoteStorageManager<Storage> where Storage: StorageType {
         return downloadTask
     }
     
-    public init(_ remoteStorageService: Storage = FirebaseStorage()) {
-        self.remoteStorageService = remoteStorageService
+    public init(_ remoteStorageService: Storage?) {
+        if let remoteStorageService {
+            self.remoteStorageService = remoteStorageService
+        } else {
+            self.remoteStorageService = FirebaseStorageService() as! Storage
+        }
     }
 }
 

@@ -52,7 +52,7 @@ private extension UINavigationController {
         // Design navigation controller
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = MorningBearUIAsset.Colors.gray100.color
+        appearance.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
         
         // 네비게이션 타이틀 텍스트 설정
         appearance.titleTextAttributes = [

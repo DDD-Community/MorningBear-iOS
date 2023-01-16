@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
@@ -19,11 +19,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5na-9g-oEH">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" keyboardDismissMode="interactive" translatesAutoresizingMaskIntoConstraints="NO" id="5na-9g-oEH">
                                 <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hjx-nN-4oQ" userLabel="Conent Wrapper View">
-                                        <rect key="frame" x="0.0" y="0.0" width="390" height="1085.3333333333333"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="390" height="1089.3333333333333"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="309-Ha-LED">
                                                 <rect key="frame" x="20" y="8" width="350" height="350"/>
@@ -71,7 +71,7 @@
                                                 </constraints>
                                             </view>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="40" translatesAutoresizingMaskIntoConstraints="NO" id="XVF-OX-P2l" userLabel="Content Stack View">
-                                                <rect key="frame" x="20" y="394.00000000000006" width="350" height="545.33333333333348"/>
+                                                <rect key="frame" x="20" y="394.00000000000006" width="350" height="549.33333333333348"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="XV3-X4-JZT" userLabel="Category Stack View">
                                                         <rect key="frame" x="0.0" y="0.0" width="350" height="77.333333333333329"/>
@@ -109,7 +109,7 @@
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="oGu-cx-rZE" userLabel="Start Time Stack View">
-                                                        <rect key="frame" x="0.0" y="117.33333333333331" width="350" height="80.333333333333314"/>
+                                                        <rect key="frame" x="0.0" y="117.33333333333331" width="350" height="82.333333333333314"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="iic-Qn-ey7">
                                                                 <rect key="frame" x="0.0" y="0.0" width="350" height="20.333333333333332"/>
@@ -123,16 +123,16 @@
                                                                 </subviews>
                                                             </stackView>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tSx-WD-dzJ" customClass="MorningBearUIDateTextField" customModule="MorningBearUI">
-                                                                <rect key="frame" x="0.0" y="32.333333333333314" width="350" height="48"/>
+                                                                <rect key="frame" x="0.0" y="32.333333333333314" width="350" height="50"/>
                                                                 <color key="backgroundColor" white="0.79000000000000004" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <constraints>
-                                                                    <constraint firstAttribute="height" constant="48" id="gEs-Ux-DYI"/>
+                                                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="48" id="gEs-Ux-DYI"/>
                                                                 </constraints>
                                                             </view>
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="kwW-lt-ENK" userLabel="End Time Stack View">
-                                                        <rect key="frame" x="0.0" y="237.66666666666666" width="350" height="80.333333333333343"/>
+                                                        <rect key="frame" x="0.0" y="239.66666666666666" width="350" height="82.333333333333343"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="63z-CV-DH7">
                                                                 <rect key="frame" x="0.0" y="0.0" width="350" height="20.333333333333332"/>
@@ -146,16 +146,16 @@
                                                                 </subviews>
                                                             </stackView>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pi9-Jk-9gO" customClass="MorningBearUITextField" customModule="MorningBearUI">
-                                                                <rect key="frame" x="0.0" y="32.333333333333371" width="350" height="48"/>
+                                                                <rect key="frame" x="0.0" y="32.333333333333371" width="350" height="50"/>
                                                                 <color key="backgroundColor" white="0.79000000000000004" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <constraints>
-                                                                    <constraint firstAttribute="height" constant="48" id="7TZ-A3-XAb"/>
+                                                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="48" id="7TZ-A3-XAb"/>
                                                                 </constraints>
                                                             </view>
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="Lld-xS-DNo" userLabel="Comment Stack View">
-                                                        <rect key="frame" x="0.0" y="358" width="350" height="187.33333333333337"/>
+                                                        <rect key="frame" x="0.0" y="362" width="350" height="187.33333333333337"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="V1j-wb-MQS">
                                                                 <rect key="frame" x="0.0" y="0.0" width="350" height="34.333333333333336"/>
@@ -185,7 +185,7 @@
                                                 </subviews>
                                             </stackView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WTS-Uz-mFH" userLabel="Register Button" customClass="LargeButton" customModule="MorningBearUI">
-                                                <rect key="frame" x="20" y="1003.3333333333335" width="350" height="56"/>
+                                                <rect key="frame" x="20" y="1007.3333333333335" width="350" height="56"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="56" id="AgI-kZ-7xU"/>
                                                 </constraints>
@@ -227,6 +227,8 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="5na-9g-oEH" firstAttribute="trailing" secondItem="vDu-zF-Fre" secondAttribute="trailing" id="2Yz-Gi-tYe"/>
+                            <constraint firstItem="5na-9g-oEH" firstAttribute="height" secondItem="5EZ-qb-Rvc" secondAttribute="height" id="TCq-kJ-csa"/>
+                            <constraint firstItem="5na-9g-oEH" firstAttribute="width" secondItem="5EZ-qb-Rvc" secondAttribute="width" id="UJV-E1-hsh"/>
                             <constraint firstItem="5na-9g-oEH" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="Y4I-Ey-UVU"/>
                             <constraint firstAttribute="bottom" secondItem="5na-9g-oEH" secondAttribute="bottom" id="bBR-xA-zNu"/>
                             <constraint firstItem="5na-9g-oEH" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="o1R-c6-9UG"/>
@@ -245,6 +247,7 @@
                         <outlet property="imageWrapperView" destination="309-Ha-LED" id="kO0-YQ-lPs"/>
                         <outlet property="morningImageView" destination="ct6-6V-07J" id="lJR-8O-GZJ"/>
                         <outlet property="registerButton" destination="WTS-Uz-mFH" id="pw9-Rp-Bx5"/>
+                        <outlet property="scrollView" destination="5na-9g-oEH" id="NIT-eC-00C"/>
                         <outlet property="startMorningLabel" destination="vGC-Co-gFz" id="vhR-95-qtT"/>
                         <outlet property="startTimeTextField" destination="tSx-WD-dzJ" id="ExH-pF-2Vi"/>
                         <outlet property="timeLabel" destination="ZNa-7X-oLQ" id="M7y-26-wpU"/>
