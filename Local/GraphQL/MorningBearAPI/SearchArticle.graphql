@@ -3,6 +3,8 @@ query SearchArticle($input: Int) {
     title
     link
     description
+    bloggername
     bloggerlink
+    postdate
   }
 }
