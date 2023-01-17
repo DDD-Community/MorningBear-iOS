@@ -11,6 +11,9 @@ import UIKit
 import MorningBearUI
 
 class MyMorningsViewController: UIViewController {
+    private let viewModel = MyMorningsViewModel()
+    var diffableDataSource: UICollectionViewDiffableDataSource<Section, RecentMorning>!
+    
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
             configureCompositionalCollectionView()
@@ -22,6 +25,8 @@ class MyMorningsViewController: UIViewController {
 
         navigationController?.navigationBar.topItem?.backButtonTitle = ""
         navigationItem.title = "나의 미라클모닝"
+        
+        diffableDataSource.updateDataSource(in: .main, with: viewModel.myMornings)
     }
 }
 
@@ -43,7 +48,7 @@ extension MyMorningsViewController: CollectionViewCompositionable {
     
     func connectCollectionViewWithDelegates() {
         collectionView.delegate = self
-        collectionView.dataSource = self
+        collectionView.dataSource = diffableDataSource
     }
     
     func registerCells() {
@@ -58,36 +63,32 @@ extension MyMorningsViewController: CollectionViewCompositionable {
         cellNib = UINib(nibName: "RecentMorningCell", bundle: bundle)
         collectionView.register(cellNib,
                                 forCellWithReuseIdentifier: "RecentMorningCell")
+        
+        self.diffableDataSource = configureDiffableDataSource { collectionView, indexPath, model in
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "RecentMorningCell", for: indexPath
+            ) as! RecentMorningCell
+            
+            cell.prepare(RecentMorning(image: UIColor.random.image(), title: "kkk", desc: "kkk"))
+            return cell
+        }
+        
+        self.diffableDataSource.supplementaryViewProvider = { (view, kind, indexPath) in
+            switch kind {
+            case UICollectionView.elementKindSectionHeader:
+                return self.properHeaderCell(for: indexPath)
+            default:
+                return UICollectionReusableView()
+            }
+        }
     }
 }
 
-extension MyMorningsViewController: UICollectionViewDelegate {}
-
-extension MyMorningsViewController: UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 15 // 임시
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "RecentMorningCell", for: indexPath
-        ) as! RecentMorningCell
-        
-        cell.prepare(RecentMorning(image: UIColor.random.image(), title: "kkk", desc: "kkk"))
-        return cell
-    }
-    
-    // 헤더 설정
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        switch kind {
-        case UICollectionView.elementKindSectionHeader:
-            return properHeaderCell(for: indexPath)
-        default:
-            return UICollectionReusableView()
+extension MyMorningsViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.row > viewModel.myMornings.count - 3 {
+            let newMornings = viewModel.fetchNewMorning()
+            diffableDataSource.updateDataSource(in: .main, with: newMornings)
         }
     }
 }
@@ -106,7 +107,7 @@ extension MyMorningsViewController {
         
         
         headerCell.prepare(title: "나의 최근 미라클 모닝", buttonText: "정렬 방식") { [weak self] in
-            guard let self = self else {
+            guard let self else {
                 return
             }
             
@@ -115,5 +116,11 @@ extension MyMorningsViewController {
         }
         
         return headerCell
+    }
+}
+
+extension MyMorningsViewController: DiffableDataSourcing {
+    enum Section {
+        case main
     }
 }

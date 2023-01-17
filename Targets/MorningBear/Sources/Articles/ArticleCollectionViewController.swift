@@ -109,6 +109,7 @@ extension ArticleCollectionViewController: UICollectionViewDataSourcePrefetching
     }
 }
 
+// MARK: - Related to diffable datasource
 private extension ArticleCollectionViewController {
     func diffableDatasource(with collectionView: UICollectionView) -> UICollectionViewDiffableDataSource<ArticleSection, Article> {
         let datasource = UICollectionViewDiffableDataSource<ArticleSection, Article>(collectionView: collectionView)
@@ -134,7 +135,6 @@ private extension ArticleCollectionViewController {
             snapshot.appendSections([.main])
         }
         
-        print(snapshot.numberOfItems)
         snapshot.appendItems(newArticle)
         
         DispatchQueue.global(qos: .background).async {
