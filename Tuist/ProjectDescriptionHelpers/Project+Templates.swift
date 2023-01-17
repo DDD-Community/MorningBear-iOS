@@ -116,8 +116,6 @@ extension Project {
                              resources: [],
                              dependencies: [
                                 .external(name: "Apollo"),
-                                .external(name: "StarWarsAPI"),
-                                .external(name: "StarWarsAPITestMocks"),
                                 .external(name: "MorningBearAPITestMocks"),
                                 .external(name: "MorningBearAPI"),
                                 .external(name: "Alamofire")

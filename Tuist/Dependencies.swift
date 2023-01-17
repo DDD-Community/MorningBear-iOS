@@ -39,7 +39,6 @@ let dependencies = Dependencies(
             url: "https://github.com/Quick/nimble",
             requirement: .upToNextMajor(from: "11.2.0")
         ),
-        .local(path: .relativeToRoot("Local/GraphQL/StarWarsAPI")),
         .local(path: .relativeToRoot("Local/GraphQL/MorningBearAPI"))
     ],
     platforms: [.iOS]
