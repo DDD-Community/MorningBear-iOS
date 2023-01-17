@@ -26,6 +26,25 @@ class MyMorningsViewController: UIViewController {
         navigationController?.navigationBar.topItem?.backButtonTitle = ""
         navigationItem.title = "나의 미라클모닝"
         
+        
+        self.diffableDataSource = configureDiffableDataSource { collectionView, indexPath, model in
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "RecentMorningCell", for: indexPath
+            ) as! RecentMorningCell
+            
+            cell.prepare(RecentMorning(image: UIColor.random.image(), title: "kkk", desc: "kkk"))
+            return cell
+        }
+        
+        self.diffableDataSource.supplementaryViewProvider = { (view, kind, indexPath) in
+            switch kind {
+            case UICollectionView.elementKindSectionHeader:
+                return self.properHeaderCell(for: indexPath)
+            default:
+                return UICollectionReusableView()
+            }
+        }
+        
         diffableDataSource.updateDataSource(in: .main, with: viewModel.myMornings)
     }
 }
@@ -63,24 +82,6 @@ extension MyMorningsViewController: CollectionViewCompositionable {
         cellNib = UINib(nibName: "RecentMorningCell", bundle: bundle)
         collectionView.register(cellNib,
                                 forCellWithReuseIdentifier: "RecentMorningCell")
-        
-        self.diffableDataSource = configureDiffableDataSource { collectionView, indexPath, model in
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "RecentMorningCell", for: indexPath
-            ) as! RecentMorningCell
-            
-            cell.prepare(RecentMorning(image: UIColor.random.image(), title: "kkk", desc: "kkk"))
-            return cell
-        }
-        
-        self.diffableDataSource.supplementaryViewProvider = { (view, kind, indexPath) in
-            switch kind {
-            case UICollectionView.elementKindSectionHeader:
-                return self.properHeaderCell(for: indexPath)
-            default:
-                return UICollectionReusableView()
-            }
-        }
     }
 }
 

@@ -12,7 +12,7 @@ import MorningBearUI
 
 class ArticleCollectionViewController: UIViewController {
     private let viewModel = ArticleCollectionViewModel()
-    private var diffableDatasource: UICollectionViewDiffableDataSource<ArticleSection, Article>!
+    var diffableDataSource: UICollectionViewDiffableDataSource<ArticleSection, Article>!
     
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
@@ -24,7 +24,20 @@ class ArticleCollectionViewController: UIViewController {
         super.viewDidLoad()
         
         designNavigationBar()
-        updateDataSource(with: viewModel.articles)
+        
+        diffableDataSource = configureDiffableDataSource { [weak self] collectionView, indexPath, model in
+            guard let self else { return UICollectionViewCell() }
+            
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "ArticleCell", for: indexPath
+            ) as! ArticleCell
+            
+            let article = self.viewModel.articles[indexPath.row]
+            cell.prepare(article: article)
+            return cell
+        }
+        
+        diffableDataSource.updateDataSource(in: .main, with: viewModel.articles)
     }
 }
 
@@ -54,9 +67,7 @@ extension ArticleCollectionViewController: CollectionViewCompositionable {
     func connectCollectionViewWithDelegates() {
         collectionView.delegate = self
         
-        diffableDatasource = self.diffableDatasource(with: collectionView)
-        collectionView.dataSource = self.diffableDatasource
-        
+        collectionView.dataSource = diffableDataSource
         collectionView.prefetchDataSource = self
     }
     
@@ -69,27 +80,13 @@ extension ArticleCollectionViewController: CollectionViewCompositionable {
     }
 }
 
-extension ArticleCollectionViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension ArticleCollectionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         print(indexPath.row, viewModel.articles.count)
         if indexPath.row > viewModel.articles.count - 3 {
             let newArticles = viewModel.fetchArticles()
-            updateDataSource(with: newArticles)
+            diffableDataSource.updateDataSource(in: .main, with: newArticles)
         }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.articles.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "ArticleCell", for: indexPath
-        ) as! ArticleCell
-        
-        let article = viewModel.articles[indexPath.row]
-        cell.prepare(article: article)
-        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -99,10 +96,6 @@ extension ArticleCollectionViewController: UICollectionViewDelegate, UICollectio
     }
 }
 
-enum ArticleSection {
-    case main
-}
-
 extension ArticleCollectionViewController: UICollectionViewDataSourcePrefetching {
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
 //        updateDataSource()
@@ -110,35 +103,8 @@ extension ArticleCollectionViewController: UICollectionViewDataSourcePrefetching
 }
 
 // MARK: - Related to diffable datasource
-private extension ArticleCollectionViewController {
-    func diffableDatasource(with collectionView: UICollectionView) -> UICollectionViewDiffableDataSource<ArticleSection, Article> {
-        let datasource = UICollectionViewDiffableDataSource<ArticleSection, Article>(collectionView: collectionView)
-        { [weak self] collectionView, indexPath, article in
-            guard let self else { return UICollectionViewCell() }
-            
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "ArticleCell", for: indexPath
-            ) as! ArticleCell
-            
-            let article = self.viewModel.articles[indexPath.row]
-            cell.prepare(article: article)
-            
-            return cell
-        }
-        
-        return datasource
-    }
-    
-    func updateDataSource(with newArticle: [Article]) {
-        var snapshot = diffableDatasource.snapshot()
-        if snapshot.sectionIdentifiers.isEmpty {
-            snapshot.appendSections([.main])
-        }
-        
-        snapshot.appendItems(newArticle)
-        
-        DispatchQueue.global(qos: .background).async {
-            self.diffableDatasource.apply(snapshot, animatingDifferences: true)
-        }
+extension ArticleCollectionViewController: DiffableDataSourcing {
+    enum ArticleSection {
+        case main
     }
 }

@@ -17,9 +17,9 @@ public protocol DiffableDataSourcing {
 }
 
 extension DiffableDataSourcing {
-    public typealias Handler = (UICollectionView, IndexPath, Model) -> UICollectionViewCell
+    public typealias Handler = (_ collectionView: UICollectionView, _ indexPath: IndexPath, _ model:Model) -> UICollectionViewCell
     
-    public func configureDiffableDataSource(prepareAction: @escaping Handler) -> UICollectionViewDiffableDataSource<Section, Model> {
+    public func configureDiffableDataSource(_ prepareAction: @escaping Handler) -> UICollectionViewDiffableDataSource<Section, Model> {
         let datasource = UICollectionViewDiffableDataSource<Section, Model>(collectionView: collectionView) { (collectionView, indexPath, model) -> UICollectionViewCell in
             
             return prepareAction(collectionView, indexPath, model)
