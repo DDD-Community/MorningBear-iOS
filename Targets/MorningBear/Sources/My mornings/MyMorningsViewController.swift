@@ -11,8 +11,10 @@ import UIKit
 import MorningBearUI
 
 class MyMorningsViewController: UIViewController {
+    typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, RecentMorning>
+    
     private let viewModel = MyMorningsViewModel()
-    var diffableDataSource: UICollectionViewDiffableDataSource<Section, RecentMorning>!
+    var diffableDataSource: DiffableDataSource!
     
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
@@ -26,17 +28,8 @@ class MyMorningsViewController: UIViewController {
         navigationController?.navigationBar.topItem?.backButtonTitle = ""
         navigationItem.title = "나의 미라클모닝"
         
-        
-        self.diffableDataSource = configureDiffableDataSource { collectionView, indexPath, model in
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "RecentMorningCell", for: indexPath
-            ) as! RecentMorningCell
-            
-            cell.prepare(RecentMorning(image: UIColor.random.image(), title: "kkk", desc: "kkk"))
-            return cell
-        }
-        
-        self.diffableDataSource.supplementaryViewProvider = { (view, kind, indexPath) in
+        diffableDataSource = configureDiffableDataSource(with: collectionView)
+        diffableDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
             switch kind {
             case UICollectionView.elementKindSectionHeader:
                 return self.properHeaderCell(for: indexPath)
@@ -94,6 +87,26 @@ extension MyMorningsViewController: UICollectionViewDelegate {
     }
 }
 
+extension MyMorningsViewController: DiffableDataSourcing {
+    func configureDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
+        let dataSource = makeDiffableDataSource(with: collectionView) { collectionView, indexPath, model in
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "RecentMorningCell", for: indexPath
+            ) as! RecentMorningCell
+            
+            cell.prepare(RecentMorning(image: UIColor.random.image(), title: "kkk", desc: "kkk"))
+            return cell
+        }
+        
+        return dataSource
+    }
+    
+    enum Section {
+        case main
+    }
+}
+
+
 // MARK: - Internal tools
 extension MyMorningsViewController {
     /// 섹션 별로 적절한 헤더 뷰를 제공
@@ -117,11 +130,5 @@ extension MyMorningsViewController {
         }
         
         return headerCell
-    }
-}
-
-extension MyMorningsViewController: DiffableDataSourcing {
-    enum Section {
-        case main
     }
 }

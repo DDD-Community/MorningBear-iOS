@@ -11,8 +11,10 @@ import UIKit
 import MorningBearUI
 
 class ArticleCollectionViewController: UIViewController {
+    typealias DiffableDataSource = UICollectionViewDiffableDataSource<ArticleSection, Article>
+    
     private let viewModel = ArticleCollectionViewModel()
-    var diffableDataSource: UICollectionViewDiffableDataSource<ArticleSection, Article>!
+    var diffableDataSource: DiffableDataSource!
     
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
@@ -25,18 +27,7 @@ class ArticleCollectionViewController: UIViewController {
         
         designNavigationBar()
         
-        diffableDataSource = configureDiffableDataSource { [weak self] collectionView, indexPath, model in
-            guard let self else { return UICollectionViewCell() }
-            
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "ArticleCell", for: indexPath
-            ) as! ArticleCell
-            
-            let article = self.viewModel.articles[indexPath.row]
-            cell.prepare(article: article)
-            return cell
-        }
-        
+        diffableDataSource = configureDiffableDataSource(with: collectionView)
         diffableDataSource.updateDataSource(in: .main, with: viewModel.articles)
     }
 }
@@ -82,7 +73,6 @@ extension ArticleCollectionViewController: CollectionViewCompositionable {
 
 extension ArticleCollectionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        print(indexPath.row, viewModel.articles.count)
         if indexPath.row > viewModel.articles.count - 3 {
             let newArticles = viewModel.fetchArticles()
             diffableDataSource.updateDataSource(in: .main, with: newArticles)
@@ -104,6 +94,22 @@ extension ArticleCollectionViewController: UICollectionViewDataSourcePrefetching
 
 // MARK: - Related to diffable datasource
 extension ArticleCollectionViewController: DiffableDataSourcing {
+    func configureDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
+        let dataSource = makeDiffableDataSource(with: collectionView) { [weak self] collectionView, indexPath, model in
+            guard let self else { return UICollectionViewCell() }
+            
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "ArticleCell", for: indexPath
+            ) as! ArticleCell
+            
+            let article = self.viewModel.articles[indexPath.row]
+            cell.prepare(article: article)
+            return cell
+        }
+        
+        return dataSource
+    }
+    
     enum ArticleSection {
         case main
     }

@@ -14,12 +14,15 @@ public protocol DiffableDataSourcing {
     
     var collectionView: UICollectionView! { get }
     var diffableDataSource: UICollectionViewDiffableDataSource<Section, Model>! { get set }
+    
+    func configureDiffableDataSource(with collectionView: UICollectionView) -> UICollectionViewDiffableDataSource<Section, Model>
 }
 
 extension DiffableDataSourcing {
     public typealias Handler = (_ collectionView: UICollectionView, _ indexPath: IndexPath, _ model:Model) -> UICollectionViewCell
+//    public typealias SupplementaryViewHandler = (_ collectionView: UICollectionView, _ kind: String, _ indexPath: IndexPath) -> UICollectionReusableView
     
-    public func configureDiffableDataSource(_ prepareAction: @escaping Handler) -> UICollectionViewDiffableDataSource<Section, Model> {
+    public func makeDiffableDataSource(with collectionView: UICollectionView, _ prepareAction: @escaping Handler) -> UICollectionViewDiffableDataSource<Section, Model> {
         let datasource = UICollectionViewDiffableDataSource<Section, Model>(collectionView: collectionView) { (collectionView, indexPath, model) -> UICollectionViewCell in
             
             return prepareAction(collectionView, indexPath, model)
@@ -42,11 +45,4 @@ public extension UICollectionViewDiffableDataSource {
             self.apply(snapshot, animatingDifferences: true)
         }
     }
-}
-
-protocol DataReceiving {
-    associatedtype Model
-    
-    var sources: [Model] { get set }
-    func fetch() -> Model
 }
