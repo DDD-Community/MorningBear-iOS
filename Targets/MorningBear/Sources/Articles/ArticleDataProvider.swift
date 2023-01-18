@@ -55,6 +55,14 @@ struct ArticleDataProvider {
 
 extension MorningBearAPI.SearchArticleQuery.Data.SearchArticle  {
     var toNativeType: Article {
-        Article(image: UIColor.random.image(), title: self.title ?? "", description: self.description ?? "")
+        var weblink: URL? = nil // self.link가 없으면 URL == nil
+        if let link = self.link {
+            weblink = URL(string: link)!
+        }
+        
+        return Article(image: UIColor.random.image(),
+                       title: self.title ?? "",
+                       description: self.description ?? "",
+                       weblink: weblink)
     }
 }

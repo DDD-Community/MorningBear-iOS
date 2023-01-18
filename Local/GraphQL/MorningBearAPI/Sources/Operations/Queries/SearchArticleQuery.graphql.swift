@@ -14,9 +14,7 @@ public class SearchArticleQuery: GraphQLQuery {
           title
           link
           description
-          bloggername
           bloggerlink
-          postdate
         }
       }
       """
@@ -54,9 +52,7 @@ public class SearchArticleQuery: GraphQLQuery {
         .field("title", String?.self),
         .field("link", String?.self),
         .field("description", String?.self),
-        .field("bloggername", String?.self),
         .field("bloggerlink", String?.self),
-        .field("postdate", String?.self),
       ] }
 
       ///  제목 
@@ -65,12 +61,8 @@ public class SearchArticleQuery: GraphQLQuery {
       public var link: String? { __data["link"] }
       ///  설명 
       public var description: String? { __data["description"] }
-      ///  블로그명 
-      public var bloggername: String? { __data["bloggername"] }
       ///  블로그 링크 
       public var bloggerlink: String? { __data["bloggerlink"] }
-      ///  포스팅 날짜 
-      public var postdate: String? { __data["postdate"] }
     }
   }
 }

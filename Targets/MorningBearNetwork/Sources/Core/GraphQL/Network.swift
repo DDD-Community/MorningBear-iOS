@@ -52,13 +52,13 @@ class NetworkInterceptorProvider: DefaultInterceptorProvider {
 }
 
 class CustomInterceptor: ApolloInterceptor {
-    
     func interceptAsync<Operation: GraphQLOperation>(
         chain: RequestChain,
         request: HTTPRequest<Operation>,
         response: HTTPResponse<Operation>?,
         completion: @escaping (Swift.Result<GraphQLResult<Operation.Data>, Error>) -> Void) {
-        request.addHeader(name: "Authorization", value: "Bearer <<TOKEN>>")
+        request.addHeader(name: "Authorization",
+                          value: "Bearer UXve76eMe1aZXd/oMJgKCfeSHvoj5ZrSPrzMljqxK3NKQkwq/24Yj8pec9t3mlRQnWI4gCw8d37I19er1Xwr9Q==")
         
         print("request :\(request)")
         print("response :\(String(describing: response))")
