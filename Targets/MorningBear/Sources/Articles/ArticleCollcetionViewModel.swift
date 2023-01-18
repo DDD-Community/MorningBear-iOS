@@ -9,28 +9,26 @@
 import Foundation
 
 import RxSwift
+import RxCocoa
 
 import MorningBearUI
 
 class ArticleCollectionViewModel {
     private let dataProvider: ArticleDataProvider
     
-    var articles: [Article]
+    private(set) var articles = [Article]()
     
-    func asyncFetch() -> Single<[Article]> {
-        dataProvider.fetch()
-    }
-    
-    func fetchArticles() -> [Article] {
-        let newArticles = dataProvider.articles()
-        articles.append(contentsOf: newArticles)
-        
-        return newArticles
+    func fetchArticle() -> Observable<[Article]> {
+        return dataProvider.fetch()
+            .do(onSuccess: {[weak self] newArticles in
+                guard let self else { return }
+                
+                self.articles.append(contentsOf: newArticles)
+            })
+            .asObservable()
     }
     
     init(_ dataProvider: ArticleDataProvider = ArticleDataProvider()) {
         self.dataProvider = dataProvider
-        
-        self.articles = dataProvider.articles()
     }
 }
