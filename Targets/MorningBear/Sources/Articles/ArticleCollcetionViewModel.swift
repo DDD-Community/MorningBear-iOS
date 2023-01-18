@@ -8,12 +8,18 @@
 
 import Foundation
 
+import RxSwift
+
 import MorningBearUI
 
 class ArticleCollectionViewModel {
     private let dataProvider: ArticleDataProvider
     
     var articles: [Article]
+    
+    func asyncFetch() -> Single<[Article]> {
+        dataProvider.fetch()
+    }
     
     func fetchArticles() -> [Article] {
         let newArticles = dataProvider.articles()
