@@ -8,11 +8,14 @@
 
 import UIKit
 
+import RxSwift
+
 import MorningBearUI
 
 class ArticleCollectionViewController: UIViewController {
     typealias DiffableDataSource = UICollectionViewDiffableDataSource<ArticleSection, Article>
     
+    private let bag = DisposeBag()
     private let viewModel = ArticleCollectionViewModel()
     var diffableDataSource: DiffableDataSource!
     
@@ -74,6 +77,18 @@ extension ArticleCollectionViewController: CollectionViewCompositionable {
 extension ArticleCollectionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if indexPath.row > viewModel.articles.count - 3 {
+            viewModel.asyncFetch()
+                .observe(on: SerialDispatchQueueScheduler(qos: .userInitiated))
+                .asDriver(onErrorJustReturn: [])
+                .drive(onNext: { [weak self] newArticles in
+                    guard let self else { return }
+                    
+                    print(newArticles)
+                    self.diffableDataSource.updateDataSource(in: .main, with: newArticles)
+                    self.viewModel.articles.append(contentsOf: newArticles)
+                })
+                .disposed(by: bag)
+            
             let newArticles = viewModel.fetchArticles()
             diffableDataSource.updateDataSource(in: .main, with: newArticles)
         }
