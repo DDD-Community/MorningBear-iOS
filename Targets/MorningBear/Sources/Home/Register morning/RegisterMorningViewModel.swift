@@ -21,15 +21,15 @@ class RegisterMorningViewModel {
 
 // MARK: - Public tools
 extension RegisterMorningViewModel {
-    func registerMorningInformation(info: MorningRegistrationInfo) {
+    private func sendRegisterRequest(info: MorningRegistrationInfo) {
         print(info)
     }
     
-    func convertViewContentToInformation(_ image: UIImage,
-                                         _ category: String,
-                                         _ startText: String,
-                                         _ endText: String,
-                                         _ commentText: String) throws -> MorningRegistrationInfo  {
+    func registerMorningInformation(_ image: UIImage,
+                                    _ category: String,
+                                    _ startText: String,
+                                    _ endText: String,
+                                    _ commentText: String) throws {
         let formatter = self.timeFormatter
         
         guard let startTimeDate = formatter.date(from: startText),
@@ -49,9 +49,11 @@ extension RegisterMorningViewModel {
 
         let comment = commentText
         
-        return MorningRegistrationInfo(image: image, category: category,
-                                       startTime: fullStartDate, endTime: fullEndDate,
-                                       comment: comment)
+        let info = MorningRegistrationInfo(image: image, category: category,
+                                           startTime: fullStartDate, endTime: fullEndDate,
+                                           comment: comment)
+        
+        sendRegisterRequest(info: info)
     }
     
     var currentTimeString: String {
