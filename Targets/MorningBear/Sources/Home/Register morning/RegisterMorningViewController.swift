@@ -124,9 +124,12 @@ class RegisterMorningViewController: UIViewController {
         
         setKeyboardObserver()
         
+        // 등록 뷰에서 보이는 이미지 초기화
         if let morningImage {
+            // 밖에서 받았으면 그걸로 초기화
             self.morningImageView.image = morningImage
         } else {
+            // 없으면 기본 이미지로 초기화
             let largeConfig = UIImage.SymbolConfiguration(pointSize: 85, weight: .regular, scale: .large)
 
             let placeholderImage = UIImage(systemName: "xmark.circle", withConfiguration: largeConfig)!
@@ -168,27 +171,29 @@ private extension RegisterMorningViewController {
             guard let self else { return }
             
             do {
+                // 고른 카테고리 텍스트 가져오고(선택 안하면 에러)
                 let category = try self.getCategoryTextInsideCell()
                 
+                // 시간 정상적으로 있는지 체크
                 guard let startTimeText = self.startTimeTextField.text,
                       let endTimeText = self.endTimeTextField.text
                 else {
                     throw RegisterMorningViewModel.DataError.emptyData
                 }
                 
+                // 이미지 정상인지 체크
                 guard let image = self.imageWrapperView.toUIImage else {
                     throw RegisterMorningViewModel.DataError.emptyData
                 }
                 
                 let commentText = self.commentTextView.text ?? ""
                 
-                let info = try self.viewModel.convertViewContentToInformation(image,
-                                                                              category,
-                                                                              startTimeText,
-                                                                              endTimeText,
-                                                                              commentText)
-                
-                self.viewModel.registerMorningInformation(info: info)
+                // 정보 등록
+                try self.viewModel.registerMorningInformation(image,
+                                                              category,
+                                                              startTimeText,
+                                                              endTimeText,
+                                                              commentText)
             } catch let error {
                 self.showAlert(error)
             }
@@ -252,7 +257,7 @@ extension RegisterMorningViewController: CollectionViewCompositionable {
     }
 }
 
-
+// MARK: - Keyboard avoidance 설정
 extension RegisterMorningViewController {
     func setKeyboardObserver() {
         print("Reg")
