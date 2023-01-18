@@ -11,14 +11,17 @@ public class Mutation: MockObject {
 
   public struct MockFields {
     @Field<User>("saveMyInfo") public var saveMyInfo
+    @Field<Photo>("saveMyPhoto") public var saveMyPhoto
   }
 }
 
 public extension Mock where O == Mutation {
   convenience init(
-    saveMyInfo: Mock<User>? = nil
+    saveMyInfo: Mock<User>? = nil,
+    saveMyPhoto: Mock<Photo>? = nil
   ) {
     self.init()
     self.saveMyInfo = saveMyInfo
+    self.saveMyPhoto = saveMyPhoto
   }
 }
