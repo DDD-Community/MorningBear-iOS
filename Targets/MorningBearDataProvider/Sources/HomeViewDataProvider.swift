@@ -8,18 +8,24 @@
 
 import UIKit
 
-import MorningBearUI
+@_exported import MorningBearData
 import MorningBearKit
 
 /// 해당 섹션에 대한 데이터 리스트를 받아오는 메소드들
 ///
 /// 현재 mock으로 대체했으나 나중에 네트워크 통신 결과로 교체하면 될
-class HomeViewDataProvider {
+public class HomeViewDataProvider {
     private let localStorage: UserDefaults
-    private let badgeDataProvider = MyBadgeDataProvider() // FIXME: protocolize later
+    private let badgeDataProvider = BadgeStateDataProvider() // FIXME: protocolize later
     private let articleDataProvider = ArticleDataProvider() // FIXME: protocolize later
     private let myMorningDataProvider = MyMorningDataProvider()
     
+    public init(localStorage: UserDefaults = .standard) {
+        self.localStorage = localStorage
+    }
+}
+
+public extension HomeViewDataProvider {
     func state() -> State {
         let data = State(nickname: "니나노", oneLiner: "갓생사는 멋진 사람 되기!")
         return data
@@ -37,12 +43,6 @@ class HomeViewDataProvider {
         return articleDataProvider.articles()
     }
     
-    init(_ localStorage: UserDefaults = .standard) {
-        self.localStorage = localStorage
-    }
-}
-
-extension HomeViewDataProvider {
     /// 기기에 저장된 기록 시작시간을 반환/저장
     ///
     /// `timeIntervalSince1970`을 이용해 관리함

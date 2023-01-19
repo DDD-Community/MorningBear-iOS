@@ -7,10 +7,11 @@
 //
 
 import UIKit
-import MorningBearUI
 
-struct MyMorningDataProvider {
-    func fetch() -> [RecentMorning] {
+@_exported import MorningBearData
+
+public struct MyMorningDataProvider {
+    public func fetch() -> [RecentMorning] {
         return [
             .init(image: UIColor.random.image(), title: "concept아이템(title1)", desc: "concept아이템(desc1)"),
             .init(image: UIColor.random.image(), title: "concept아이템(title2)", desc: "concept아이템(desc2)"),
@@ -24,4 +25,6 @@ struct MyMorningDataProvider {
             .init(image: UIColor.random.image(), title: "concept아이템(title10)", desc: "concept아이템(desc10)"),
         ]
     }
+    
+    public init() {}
 }

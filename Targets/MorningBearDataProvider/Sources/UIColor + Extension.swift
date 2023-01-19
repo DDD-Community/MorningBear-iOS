@@ -9,7 +9,7 @@
 import UIKit
 
 /// 임시로 사용하는 샘플 이미지 제너레이터
-extension UIColor {
+public extension UIColor {
     static var random: UIColor {
         UIColor(
             red: CGFloat(drand48()),

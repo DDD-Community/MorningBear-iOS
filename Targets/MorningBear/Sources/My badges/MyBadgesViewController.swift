@@ -101,7 +101,7 @@ extension MyBadgesViewController: UICollectionViewDataSource {
             ) as! MyBadgeStateCell
             
             
-            cell.prepare(MyBadgeState(nickname: "크크크", badgeCount: 12))
+            cell.prepare(BadgeState(nickname: "크크크", badgeCount: 12))
             return cell
             
         case .badges:
