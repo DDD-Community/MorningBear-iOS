@@ -8,6 +8,7 @@
 
 import UIKit
 
+import MorningBearData
 import MorningBearKit
 
 class RegisterMorningViewModel {

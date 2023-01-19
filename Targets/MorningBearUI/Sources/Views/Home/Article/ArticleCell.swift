@@ -8,7 +8,7 @@
 
 import UIKit
 
-import MorningBearData
+@_exported import MorningBearData
 
 public class ArticleCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView! {

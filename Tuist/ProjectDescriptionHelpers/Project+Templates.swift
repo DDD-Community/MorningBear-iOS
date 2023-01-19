@@ -19,7 +19,8 @@ extension Project {
                                                Storage: String,
                                                Image: String,
                                                Data: String,
-                                               DataProvider: String
+                                               DataProvider: String,
+                                               DataEditor: String
                            )) -> Project {
         var targets = makeAppTargets(name: name,
                                      platform: platform,
@@ -30,7 +31,8 @@ extension Project {
                                         TargetDependency.target(name: additionalTargets.Storage),
                                         TargetDependency.target(name: additionalTargets.Image),
                                         TargetDependency.target(name: additionalTargets.Data),
-                                        TargetDependency.target(name: additionalTargets.DataProvider)
+                                        TargetDependency.target(name: additionalTargets.DataProvider),
+                                        TargetDependency.target(name: additionalTargets.DataEditor)
                                      ])
         
         targets += makeToolKitFrameworkTargets(name: additionalTargets.kit, platform: platform)
@@ -40,6 +42,7 @@ extension Project {
         targets += makeImageFrameworkTargets(name: additionalTargets.Image, platform: platform)
         targets += makeDataFrameworkTargets(name: additionalTargets.Data, platform: platform)
         targets += makeDataProviderFrameworkTargets(name: additionalTargets.DataProvider, platform: platform)
+        targets += makeDataEditorFrameworkTargets(name: additionalTargets.DataEditor, platform: platform)
 
         
         return Project(name: name,
@@ -225,6 +228,33 @@ extension Project {
     
     /// Helper function to create a framework target and an associated unit test target
     private static func makeDataProviderFrameworkTargets(name: String, platform: Platform) -> [Target] {
+        // MARK: - Add new UI dependecies in here
+        let sources = Target(name: name,
+                             platform: platform,
+                             product: .framework,
+                             bundleId: "\(organizationName).\(name)",
+                             deploymentTarget: .iOS(targetVersion: "14.0", devices: .iphone),
+                             infoPlist: .default,
+                             sources: ["Targets/\(name)/Sources/**"],
+                             resources: [],
+                             dependencies: [
+                                .target(name: "MorningBearKit")
+                             ])
+        
+        let tests = Target(name: "\(name)Tests",
+                           platform: platform,
+                           product: .unitTests,
+                           bundleId: "\(organizationName).\(name)Tests",
+                           infoPlist: .default,
+                           sources: ["Targets/\(name)/Tests/**"],
+                           resources: [],
+                           dependencies: [.target(name: name)])
+        
+        return [sources, tests]
+    }
+    
+    /// Helper function to create a framework target and an associated unit test target
+    private static func makeDataEditorFrameworkTargets(name: String, platform: Platform) -> [Target] {
         // MARK: - Add new UI dependecies in here
         let sources = Target(name: name,
                              platform: platform,

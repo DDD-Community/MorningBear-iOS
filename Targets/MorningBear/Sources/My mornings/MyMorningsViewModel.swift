@@ -7,7 +7,8 @@
 //
 
 import Foundation
-import MorningBearUI
+
+import MorningBearDataProvider
 
 class MyMorningsViewModel {
     private let dataProvider: MyMorningDataProvider
