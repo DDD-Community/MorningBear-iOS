@@ -11,7 +11,7 @@ import UIKit
 
 import RxSwift
 
-import MorningBearUI
+import MorningBearData
 import MorningBearNetwork
 import MorningBearAPI
 
