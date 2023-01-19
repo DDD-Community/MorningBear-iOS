@@ -13,7 +13,14 @@ import MorningBearUI
 class ArticleCollectionViewModel {
     private let dataProvider: ArticleDataProvider
     
-    let articles: [Article]
+    var articles: [Article]
+    
+    func fetchArticles() -> [Article] {
+        let newArticles = dataProvider.articles()
+        articles.append(contentsOf: newArticles)
+        
+        return newArticles
+    }
     
     init(_ dataProvider: ArticleDataProvider = ArticleDataProvider()) {
         self.dataProvider = dataProvider

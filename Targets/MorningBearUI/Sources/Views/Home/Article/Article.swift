@@ -8,7 +8,8 @@
 
 import UIKit
 
-public struct Article {
+public struct Article: Hashable, Identifiable {
+    public let id: UUID = .init()
     let image: UIImage
     let title: String
     let description: String

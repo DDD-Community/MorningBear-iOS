@@ -18,6 +18,7 @@ class HomeViewDataProvider {
     private let localStorage: UserDefaults
     private let badgeDataProvider = MyBadgeDataProvider() // FIXME: protocolize later
     private let articleDataProvider = ArticleDataProvider() // FIXME: protocolize later
+    private let myMorningDataProvider = MyMorningDataProvider()
     
     func state() -> State {
         let data = State(nickname: "니나노", oneLiner: "갓생사는 멋진 사람 되기!")
@@ -25,20 +26,7 @@ class HomeViewDataProvider {
     }
     
     func recentMorning() -> [RecentMorning] {
-        let data: [RecentMorning] = [
-            .init(image: UIColor.random.image(), title: "concept아이템(title1)", desc: "concept아이템(desc1)"),
-            .init(image: UIColor.random.image(), title: "concept아이템(title2)", desc: "concept아이템(desc2)"),
-            .init(image: UIColor.random.image(), title: "concept아이템(title3)", desc: "concept아이템(desc3)"),
-            .init(image: UIColor.random.image(), title: "concept아이템(title4)", desc: "concept아이템(desc4)"),
-            .init(image: UIColor.random.image(), title: "concept아이템(title5)", desc: "concept아이템(desc5)"),
-            .init(image: UIColor.random.image(), title: "concept아이템(title6)", desc: "concept아이템(desc6)"),
-            .init(image: UIColor.random.image(), title: "concept아이템(title7)", desc: "concept아이템(desc7)"),
-            .init(image: UIColor.random.image(), title: "concept아이템(title8)", desc: "concept아이템(desc8)"),
-            .init(image: UIColor.random.image(), title: "concept아이템(title9)", desc: "concept아이템(desc9)"),
-            .init(image: UIColor.random.image(), title: "concept아이템(title10)", desc: "concept아이템(desc10)"),
-        ]
-        
-        return data
+        return myMorningDataProvider.fetch()
     }
     
     func badges() -> [Badge] {
