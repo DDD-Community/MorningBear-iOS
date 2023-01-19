@@ -32,5 +32,6 @@ let project = Project.app(name: "MorningBear",
                                               "MorningBearStorage",
                                               "MorningBearImage",
                                               "MorningBearData",
-                                              "MorningBearDataProvider"
+                                              "MorningBearDataProvider",
+                                              "MorningBearDataFetcher"
                                              ))

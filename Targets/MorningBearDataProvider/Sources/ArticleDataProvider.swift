@@ -11,12 +11,12 @@ import UIKit
 
 import RxSwift
 
-import MorningBearData
+@_exported import MorningBearData
 import MorningBearNetwork
 import MorningBearAPI
 
-struct ArticleDataProvider {
-    func fetch(size: Int = 10) -> Single<[Article]> {
+public struct ArticleDataProvider {
+    public func fetch(size: Int = 10) -> Single<[Article]> {
         let singleTrait = Network.shared.apollo.rx
             .fetch(query: SearchArticleQuery(input: GraphQLNullable<Int>(integerLiteral: size)))
             .map { data -> [SearchArticleQuery.Data.SearchArticle] in
@@ -34,7 +34,7 @@ struct ArticleDataProvider {
         return singleTrait
     }
     
-    func articles() -> [Article] {
+    public func articles() -> [Article] {
         let data: [Article] = [
             .init(image: UIColor.random.image(), title: "아티클 제목", description: "아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!"),
             .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
@@ -51,6 +51,8 @@ struct ArticleDataProvider {
         
         return data
     }
+    
+    public init() {}
 }
 
 extension MorningBearAPI.SearchArticleQuery.Data.SearchArticle  {
