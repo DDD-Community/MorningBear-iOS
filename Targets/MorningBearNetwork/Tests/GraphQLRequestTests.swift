@@ -11,9 +11,6 @@ import XCTest
 import Apollo
 import RxSwift
 
-import StarWarsAPI
-import StarWarsAPITestMocks
-
 import MorningBearAPI
 import MorningBearAPITestMocks
 

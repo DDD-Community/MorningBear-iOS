@@ -1,7 +1,0 @@
-query Query {
-  allFilms {
-    films {
-      title
-    }
-  }
-}

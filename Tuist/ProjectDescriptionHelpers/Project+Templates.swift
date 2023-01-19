@@ -115,11 +115,7 @@ extension Project {
                              sources: ["Targets/\(name)/Sources/**"],
                              resources: [],
                              dependencies: [
-                                .external(name: "Moya"),
-                                .external(name: "RxMoya"),
                                 .external(name: "Apollo"),
-                                .external(name: "StarWarsAPI"),
-                                .external(name: "StarWarsAPITestMocks"),
                                 .external(name: "MorningBearAPITestMocks"),
                                 .external(name: "MorningBearAPI"),
                                 .external(name: "Alamofire")
