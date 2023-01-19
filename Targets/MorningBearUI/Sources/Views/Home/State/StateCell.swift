@@ -8,6 +8,8 @@
 
 import UIKit
 
+import MorningBearData
+
 public class StateCell: UICollectionViewCell {
     @IBOutlet weak var oneLinerWrapperView: UIView! {
         didSet {

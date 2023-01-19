@@ -10,9 +10,9 @@ import UIKit
 
 /// 나의 배지 정보
 public struct Badge {
-    let image: UIImage
-    let title: String
-    let desc: String
+    public let image: UIImage
+    public let title: String
+    public let desc: String
     
     public init(image: UIImage, title: String, desc: String) {
         self.image = image

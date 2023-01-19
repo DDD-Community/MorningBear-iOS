@@ -13,9 +13,9 @@ import UIKit
 /// 네이밍이에서 recent가 빠지고 `MyMorning`등으로 개명될 가능성 농후함
 public struct RecentMorning: Hashable, Identifiable {
     public let id: UUID
-    let image: UIImage
-    let title: String
-    let desc: String
+    public let image: UIImage
+    public let title: String
+    public let desc: String
     
     public init(image: UIImage, title: String, desc: String) {
         self.id = UUID()

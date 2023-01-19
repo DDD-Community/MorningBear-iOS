@@ -8,6 +8,8 @@
 
 import UIKit
 
+import MorningBearData
+
 public final class RecentMorningCell: UICollectionViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView! {
