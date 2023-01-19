@@ -1,8 +1,8 @@
 //
-//  RegisterMorningRequestService.swift
-//  MorningBear
+//  MyMorningDataEditor.swift
+//  MorningBearDataEditor
 //
-//  Created by 이영빈 on 2023/01/18.
+//  Created by 이영빈 on 2023/01/19.
 //  Copyright © 2023 com.dache. All rights reserved.
 //
 
@@ -10,12 +10,14 @@ import Foundation
 
 import RxSwift
 
-import MorningBearAPI
+@_exported import MorningBearData
+
 import MorningBearUI
+import MorningBearAPI
 import MorningBearNetwork
 
-struct RegisterMorningRequestService {
-    func request() {
+public struct MyMorningDataEditor {
+    public func request() {
         
     }
 }
