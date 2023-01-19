@@ -16,9 +16,11 @@ import MorningBearKit
 /// 현재 mock으로 대체했으나 나중에 네트워크 통신 결과로 교체하면 될
 class HomeViewDataProvider {
     private let localStorage: UserDefaults
+    private let badgeDataProvider = MyBadgeDataProvider() // FIXME: protocolize later
+    private let articleDataProvider = ArticleDataProvider() // FIXME: protocolize later
     
     func state() -> State {
-        let data = State(nickname: "Mock Nickname")
+        let data = State(nickname: "니나노", oneLiner: "갓생사는 멋진 사람 되기!")
         return data
     }
     
@@ -40,38 +42,11 @@ class HomeViewDataProvider {
     }
     
     func badges() -> [Badge] {
-        let data: [Badge] = [
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", desc: "music아이템(desc1)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title2)", desc: "music아이템(desc2)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title3)", desc: "music아이템(desc3)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title4)", desc: "music아이템(desc4)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title5)", desc: "music아이템(desc5)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title6)", desc: "music아이템(desc6)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title7)", desc: "music아이템(desc7)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title8)", desc: "music아이템(desc8)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title9)", desc: "music아이템(desc9)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title10)", desc: "music아이템(desc10)"),
-        ]
-        
-        return data
+        return badgeDataProvider.fetchBadges()
     }
     
     func articles() -> [Article] {
-        let data: [Article] = [
-            .init(image: UIColor.random.image(), title: "아티클 제목", description: "아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!"),
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
-        ]
-        
-        return data
+        return articleDataProvider.articles()
     }
     
     init(_ localStorage: UserDefaults = .standard) {

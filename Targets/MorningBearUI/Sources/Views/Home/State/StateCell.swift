@@ -9,6 +9,17 @@
 import UIKit
 
 public class StateCell: UICollectionViewCell {
+    @IBOutlet weak var oneLinerWrapperView: UIView! {
+        didSet {
+            oneLinerWrapperView.backgroundColor = MorningBearUIAsset.Colors.gray800.color
+            oneLinerWrapperView.layer.cornerRadius = 8
+        }
+    }
+    @IBOutlet weak var oneLinerLabel: UILabel! {
+        didSet {
+            oneLinerLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 16)
+        }
+    }
     @IBOutlet weak var stateWrapperView: UIView! {
         didSet {
             stateWrapperView.layer.cornerRadius = 12
@@ -80,6 +91,14 @@ public class StateCell: UICollectionViewCell {
     }
     
     public func prepare(state: State?) {
-        self.titleLabel.text = state?.nickname
+        let titleLabelText: String?
+        if let state {
+            titleLabelText = "안녕하세요, \(state.nickname)님"
+        } else {
+            titleLabelText = nil
+        }
+        
+        titleLabel.text = titleLabelText
+        oneLinerLabel.text = state?.oneLiner
     }
 }
