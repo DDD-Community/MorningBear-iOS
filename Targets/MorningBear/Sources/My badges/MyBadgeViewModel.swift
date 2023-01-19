@@ -9,6 +9,7 @@
 import Foundation
 
 import MorningBearUI
+import MorningBearData
 
 class MyBadgeViewModel {
     private let dateProvider: MyBadgeDataProvider
