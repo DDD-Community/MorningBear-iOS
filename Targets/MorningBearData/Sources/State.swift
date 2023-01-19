@@ -9,8 +9,8 @@
 import Foundation
 
 public struct State {
-    let nickname: String
-    let oneLiner: String
+    public let nickname: String
+    public let oneLiner: String
     
     public init(nickname: String, oneLiner: String) {
         self.nickname = nickname

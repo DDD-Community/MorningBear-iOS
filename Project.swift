@@ -30,5 +30,7 @@ let project = Project.app(name: "MorningBear",
                                               "MorningBearUI",
                                               "MorningBearNetwork",
                                               "MorningBearStorage",
-                                              "MorningBearImage"
+                                              "MorningBearImage",
+                                              "MorningBearData",
+                                              "MorningBearDataProvider"
                                              ))

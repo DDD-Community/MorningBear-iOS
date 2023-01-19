@@ -8,6 +8,8 @@
 
 import UIKit
 
+import MorningBearData
+
 public class ArticleCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView! {
         didSet {

@@ -47,7 +47,7 @@ extension RecentMorning {
                 }
                 
                 let updatedBadges = receivedBadges.compactMap { $0?.toNativeType }
-
+                
                 return (photoLink, updatedBadges)
             }
         
