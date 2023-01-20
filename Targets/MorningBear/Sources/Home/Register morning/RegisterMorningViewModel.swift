@@ -8,6 +8,9 @@
 
 import UIKit
 
+import RxSwift
+
+import MorningBearDataEditor
 import MorningBearData
 import MorningBearKit
 
@@ -18,34 +21,36 @@ class RegisterMorningViewModel {
     let timeFormatter = MorningBearDateFormatter.timeFormatter
     private let shorttimeFormatter = MorningBearDateFormatter.shortimeFormatter
     private let dayFormatter = MorningBearDateFormatter.dayFormatter
+    
+    private let myMorningDataEditor: MyMorningDataEditor
+        
+    init(myMorningDataEditor: MyMorningDataEditor = MyMorningDataEditor()) {
+        self.myMorningDataEditor = myMorningDataEditor
+    }
 }
 
 // MARK: - Public tools
 extension RegisterMorningViewModel {
-    private func sendRegisterRequest(info: MorningRegistrationInfo) {
-        print(info)
-    }
-    
     func registerMorningInformation(_ image: UIImage,
                                     _ category: String,
                                     _ startText: String,
                                     _ endText: String,
-                                    _ commentText: String) throws {
+                                    _ commentText: String) -> Single<Void> {
         let formatter = self.timeFormatter
         
         guard let startTimeDate = formatter.date(from: startText),
               let endTimeDate = formatter.date(from: endText)
         else {
-            throw MorningBearDateFormatterError.invalidString
+            return .error(MorningBearDateFormatterError.invalidString)
         }
         
         guard let fullStartDate = startTimeDate.changeYearMonthDayValue(to: currentDate, is24Hour: false),
               let fullEndDate = endTimeDate.changeYearMonthDayValue(to: currentDate, is24Hour: false) else {
-            throw DataError.invalidDate
+            return .error(DataError.invalidDate)
         }
         
         guard fullStartDate < fullEndDate else {
-            throw DataError.invalidDate
+            return .error(DataError.invalidDate)
         }
 
         let comment = commentText
@@ -54,7 +59,7 @@ extension RegisterMorningViewModel {
                                            startTime: fullStartDate, endTime: fullEndDate,
                                            comment: comment)
         
-        sendRegisterRequest(info: info)
+        return sendRegisterRequest(info: info)
     }
     
     var currentTimeString: String {
@@ -63,6 +68,18 @@ extension RegisterMorningViewModel {
     
     var currdntDayString: String {
         return dayFormatter.string(from: currentDate)
+    }
+}
+
+private extension RegisterMorningViewModel {
+    func sendRegisterRequest(info: MorningRegistrationInfo) -> Single<Void> {
+        return myMorningDataEditor.request(info)
+            .do(onSuccess: { photoLink, updatedBadges in
+                return
+            }, onError: { error in
+                throw error
+            })
+            .map { _ in } //  map to void
     }
 }
 

@@ -17,15 +17,17 @@ import MorningBearAPI
 import MorningBearNetwork
 
 public struct MyMorningDataEditor {
-    public func request() {
-        
+    public typealias ReturnType = (photoLink: String, updateBadges: [Badge])
+
+    public func request(_ data: MorningRegistrationInfo) -> Single<ReturnType> {
+        requestMutation(data)
     }
+    
+    public init() {}
 }
 
-extension RecentMorning {
-    typealias ReturnType = (photoLink: String, updateBadges: [Badge])
-    
-    func request(_ info: MorningRegistrationInfo) -> Single<ReturnType> {
+extension MyMorningDataEditor {
+    func requestMutation(_ info: MorningRegistrationInfo) -> Single<ReturnType> {
         let photoInput = info.toApolloMuataionType
         
         let singleTrait = Network.shared.apollo.rx
@@ -42,7 +44,7 @@ extension RecentMorning {
                     throw URLError(.badURL)
                 }
                 
-                guard var receivedBadges = mutationResult.updatedBadge,
+                guard let receivedBadges = mutationResult.updatedBadge,
                       receivedBadges.contains(nil)
                 else {
                     throw URLError(.cannotDecodeRawData)

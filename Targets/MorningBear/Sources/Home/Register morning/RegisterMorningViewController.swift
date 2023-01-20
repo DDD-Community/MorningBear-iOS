@@ -189,11 +189,14 @@ private extension RegisterMorningViewController {
                 let commentText = self.commentTextView.text ?? ""
                 
                 // 정보 등록
-                try self.viewModel.registerMorningInformation(image,
-                                                              category,
-                                                              startTimeText,
-                                                              endTimeText,
-                                                              commentText)
+                self.viewModel
+                    .registerMorningInformation(image, category, startTimeText, endTimeText, commentText)
+                    .subscribe(onFailure: { [weak self] error in
+                        guard let self else { return }
+                        self.showAlert(error)
+                    })
+                    .disposed(by: self.bag)
+                
             } catch let error {
                 self.showAlert(error)
             }
