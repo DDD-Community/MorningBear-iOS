@@ -22,17 +22,16 @@ extension Project {
                                                DataProvider: String,
                                                DataEditor: String
                            )) -> Project {
+        
         var targets = makeAppTargets(name: name,
                                      platform: platform,
                                      dependencies: [
-                                        TargetDependency.target(name: additionalTargets.kit),
-                                        TargetDependency.target(name: additionalTargets.UI),
-                                        TargetDependency.target(name: additionalTargets.Network),
-                                        TargetDependency.target(name: additionalTargets.Storage),
-                                        TargetDependency.target(name: additionalTargets.Image),
-                                        TargetDependency.target(name: additionalTargets.Data),
-                                        TargetDependency.target(name: additionalTargets.DataProvider),
-                                        TargetDependency.target(name: additionalTargets.DataEditor)
+                                        .target(name: additionalTargets.kit),
+                                        .target(name: additionalTargets.UI),
+                                        .target(name: additionalTargets.Network),
+                                        .target(name: additionalTargets.Image),
+                                        .target(name: additionalTargets.DataProvider),
+                                        .target(name: additionalTargets.DataEditor)
                                      ])
         
         targets += makeToolKitFrameworkTargets(name: additionalTargets.kit, platform: platform)
@@ -68,6 +67,7 @@ extension Project {
                                 .external(name: "RxCocoa"),
                                 .external(name: "Quick"),
                                 .external(name: "Nimble"),
+                                .target(name: "MorningBearData"),
                                 .target(name: "MorningBearKit")
                              ])
         
@@ -97,7 +97,8 @@ extension Project {
                              dependencies: [
                                 .external(name: "RxSwift"),
                                 .external(name: "RxKakaoSDK"),
-                                .external(name: "Alamofire")
+                                .external(name: "MorningBearAPI"),
+                                .target(name: "MorningBearNetwork")
                              ])
         
         let tests = Target(name: "\(name)Tests",
@@ -127,7 +128,7 @@ extension Project {
                                 .external(name: "Apollo"),
                                 .external(name: "MorningBearAPITestMocks"),
                                 .external(name: "MorningBearAPI"),
-                                .external(name: "Alamofire")
+                                .external(name: "Alamofire"),
                              ])
         
         let tests = Target(name: "\(name)Tests",
@@ -238,7 +239,9 @@ extension Project {
                              sources: ["Targets/\(name)/Sources/**"],
                              resources: [],
                              dependencies: [
-                                .target(name: "MorningBearKit")
+                                .target(name: "MorningBearData"),
+                                .target(name: "MorningBearUI"),
+                                .target(name: "MorningBearNetwork")
                              ])
         
         let tests = Target(name: "\(name)Tests",
@@ -264,7 +267,11 @@ extension Project {
                              infoPlist: .default,
                              sources: ["Targets/\(name)/Sources/**"],
                              resources: [],
-                             dependencies: [])
+                             dependencies: [
+                                .target(name: "MorningBearData"),
+                                .target(name: "MorningBearUI"),
+                                .target(name: "MorningBearNetwork")
+                             ])
         
         let tests = Target(name: "\(name)Tests",
                            platform: platform,
