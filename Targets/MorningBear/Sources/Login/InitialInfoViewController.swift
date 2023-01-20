@@ -9,14 +9,20 @@
 import UIKit
 import MorningBearUI
 
+import RxSwift
+import RxCocoa
+
 class InitialInfoViewController: UIViewController {
+    
+    private let bag = DisposeBag()
+    private let viewModel = InitialInfoViewModel.shared
     
     private lazy var pageViewController: UIPageViewController = {
         let pageVC = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
         return pageVC
     }()
     
-    private var infoSettingViewControllers: [UIViewController] = {
+    private var infoInputViewControllers: [UIViewController] = {
         let storyboard = UIStoryboard(name: "InitialInfo", bundle: nil)
         return [
             storyboard.instantiateViewController(withIdentifier: "SetWakeupTime"),
@@ -26,25 +32,44 @@ class InitialInfoViewController: UIViewController {
         ]
     }()
     
+    @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var nextButton: UIButton! {
         didSet {
-            nextButton.backgroundColor = MorningBearUIAsset.Colors.primaryDefault.color
+            nextButton.layer.cornerRadius = 12
             nextButton.titleLabel?.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 16)
+            nextButton.setTitle("다음", for: .normal)
+        }
+    }
+    
+    @IBOutlet weak var titleLabel: UILabel! {
+        didSet {
+            titleLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 20)
+            titleLabel.text = "회원가입"
+        }
+    }
+    
+    @IBOutlet weak var backButton: UIButton! {
+        didSet {
+            backButton.setImage(MorningBearUIAsset.Images.backArrow.image, for: .normal)
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setPageView()
+        setPageViewController()
         setDelegate()
+        
+        bindButton()
+        bindCurrentIndexWithView()
     }
     
-    private func setPageView() {
-        view.addSubview(pageViewController.view)
-        view.sendSubviewToBack(pageViewController.view)
-        pageViewController.view.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
-        if let firstVC = infoSettingViewControllers.first {
+    private func setPageViewController() {
+        containerView.addSubview(pageViewController.view)
+        view.sendSubviewToBack(containerView)
+        navigationController?.isNavigationBarHidden = true
+        
+        if let firstVC = infoInputViewControllers.first {
             pageViewController.setViewControllers([firstVC], direction: .forward, animated: true)
         }
     }
@@ -53,25 +78,71 @@ class InitialInfoViewController: UIViewController {
         pageViewController.dataSource = self
         pageViewController.delegate = self
     }
-}
-
-extension InitialInfoViewController: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     
-    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        guard let index = infoSettingViewControllers.firstIndex(of: viewController) else { return nil }
-        let previousIndex = index - 1
-        if previousIndex < 0 {
-            return nil
-        }
-        return infoSettingViewControllers[previousIndex]
+    private func bindButton() {
+        nextButton.rx.tap
+            .withUnretained(self)
+            .bind { owner, _ in
+                let currentValue = owner.viewModel.currentIndex.value
+                owner.viewModel.currentIndex.accept(currentValue + 1)
+            }
+            .disposed(by: bag)
+        
+        backButton.rx.tap
+            .withUnretained(self)
+            .bind { owner, _ in
+                let currentValue = owner.viewModel.currentIndex.value
+                if currentValue == 0 {
+                    self.navigationController?.popViewController(animated: true)
+                } else {
+                    owner.viewModel.currentIndex.accept(currentValue - 1)
+                }
+            }
+            .disposed(by: bag)
     }
     
+    private func bindCurrentIndexWithView() {
+        viewModel.currentIndex.withUnretained(self)
+            .bind { owner, index in
+                guard index >= 0 else { return }
+                guard index + 1 <= owner.infoInputViewControllers.count else {
+                    owner.viewModel.completeInitialStep()
+                    return
+                }
+                
+                let nextView = owner.infoInputViewControllers[index]
+                owner.pageViewController.setViewControllers(
+                    [nextView],
+                    direction: owner.viewModel.oldIndex < index ? .forward : .reverse,
+                    animated: true
+                )
+                owner.viewModel.oldIndex = index
+            }
+            .disposed(by: bag)
+        
+        viewModel.canGoNext.withUnretained(self)
+            .observe(on: MainScheduler.instance)
+            .bind { owner, canGoNext in
+                owner.nextButton.isEnabled = canGoNext ? true : false
+                owner.nextButton.backgroundColor = canGoNext ? MorningBearUIAsset.Colors.primaryDefault.color : MorningBearUIAsset.Colors.gray800.color
+                owner.nextButton.setTitleColor(canGoNext ? .white : MorningBearUIAsset.Colors.captionText.color, for: .normal)
+            }
+            .disposed(by: bag)
+    }
+}
+
+/// just return nil to disable swipe gesture
+extension InitialInfoViewController: UIPageViewControllerDataSource {
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        return nil
+    }
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        guard let index = infoSettingViewControllers.firstIndex(of: viewController) else { return nil }
-        let nextIndex = index + 1
-        if nextIndex == infoSettingViewControllers.count {
-            return nil
-        }
-        return infoSettingViewControllers[nextIndex]
+        return nil
+    }
+}
+
+extension InitialInfoViewController: UIPageViewControllerDelegate {
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        
     }
 }
