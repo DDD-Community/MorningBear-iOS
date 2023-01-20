@@ -13,20 +13,21 @@ extension Project {
     /// Helper function to create the Project for this ExampleApp
     public static func app(name: String,
                            platform: Platform,
-                           additionalTargets: (kit: String,
-                                               UI: String,
-                                               Network: String,
-                                               Storage: String,
-                                               Image: String,
-                                               Data: String,
-                                               DataProvider: String,
-                                               DataEditor: String
-                           )) -> Project {
+                           additionalTargets: (
+                            Data: String,
+                            Toolkit: String,
+                            UI: String,
+                            Network: String,
+                            Storage: String,
+                            Image: String,
+                            DataProvider: String,
+                            DataEditor: String)) -> Project {
         
+        // MARK: - App level
         var targets = makeAppTargets(name: name,
                                      platform: platform,
                                      dependencies: [
-                                        .target(name: additionalTargets.kit),
+                                        .target(name: additionalTargets.Toolkit),
                                         .target(name: additionalTargets.UI),
                                         .target(name: additionalTargets.Network),
                                         .target(name: additionalTargets.Image),
@@ -34,22 +35,99 @@ extension Project {
                                         .target(name: additionalTargets.DataEditor)
                                      ])
         
-        targets += makeToolKitFrameworkTargets(name: additionalTargets.kit, platform: platform)
-        targets += makeUIFrameworkTargets(name: additionalTargets.UI, platform: platform)
-        targets += makeNetworkFrameworkTargets(name: additionalTargets.Network, platform: platform)
-        targets += makeStorageFrameworkTargets(name: additionalTargets.Storage, platform: platform)
-        targets += makeImageFrameworkTargets(name: additionalTargets.Image, platform: platform)
-        targets += makeDataFrameworkTargets(name: additionalTargets.Data, platform: platform)
-        targets += makeDataProviderFrameworkTargets(name: additionalTargets.DataProvider, platform: platform)
-        targets += makeDataEditorFrameworkTargets(name: additionalTargets.DataEditor, platform: platform)
-
+        targets += [
+            // MARK: - WARNING - 상위 레벨 프레임워크에 하위 레벨 프레임워크를 Dependency로 넣지 말 것
+            // MARK: - Data level
+            makeTarget(name: additionalTargets.Storage, platform: platform,
+                       dependencies: [
+                        .sdk(name: "c++", type: .library, status: .required),
+                        .external(name: "FirebaseStorage"),
+                        .external(name: "RxSwift"),
+                       ],
+                       settings: .settings(
+                        base: [
+                            "OTHER_LDFLAGS": ["$(inherited)", "-ObjC"],
+                        ]
+                       )),
+            makeTarget(name: additionalTargets.Data, platform: platform,
+                       dependencies: []),
+            
+            // MARK: - General level
+            makeTarget(name: additionalTargets.Toolkit, platform: platform,
+                       dependencies: [
+                        .external(name: "RxSwift"),
+                        .external(name: "RxKakaoSDK"),
+                        .external(name: "MorningBearAPI"),
+                        .target(name: "MorningBearNetwork")
+                       ]),
+            makeTarget(name: additionalTargets.UI, platform: platform, needsResource: true,
+                       dependencies: [
+                        .external(name: "RxSwift"),
+                        .external(name: "RxCocoa"),
+                        .external(name: "Quick"),
+                        .external(name: "Nimble"),
+                        .target(name: "MorningBearData"),
+                        .target(name: "MorningBearKit")
+                       ]),
+            makeTarget(name: additionalTargets.Network, platform: platform,
+                       dependencies: [
+                        .external(name: "Apollo"),
+                        .external(name: "MorningBearAPI"),
+                        .external(name: "MorningBearAPITestMocks"),
+                       ]),
+            makeTarget(name: additionalTargets.Image, platform: platform,
+                       dependencies: []),
+            
+            // MARK: - Function level
+            makeTarget(name: additionalTargets.DataProvider, platform: platform,
+                       dependencies: [
+                        .target(name: "MorningBearData"),
+                        .target(name: "MorningBearUI"),
+                        .target(name: "MorningBearNetwork")
+                       ]),
+            makeTarget(name: additionalTargets.DataEditor, platform: platform,
+                       dependencies: [
+                        .target(name: "MorningBearData"),
+                        .target(name: "MorningBearUI"),
+                        .target(name: "MorningBearNetwork")
+                       ])
+        ].flatMap { $0 }
         
-        return Project(name: name,
-                       organizationName: organizationName,
-                       targets: targets)
+        return Project(
+            name: name,
+            organizationName: organizationName,
+            targets: targets
+        )
     }
     
     // MARK: - Private
+    private static func makeTarget(name: String,
+                                   platform: Platform,
+                                   needsResource: Bool = false,
+                                   dependencies: [TargetDependency],
+                                   settings: Settings? = nil) -> [Target] {
+        let sources = Target(name: name,
+                             platform: platform,
+                             product: .framework,
+                             bundleId: "\(organizationName).\(name)",
+                             deploymentTarget: .iOS(targetVersion: "14.0", devices: .iphone),
+                             infoPlist: .default,
+                             sources: ["Targets/\(name)/Sources/**"],
+                             resources: needsResource ? ["Targets/\(name)/Resources/**"] : [],
+                             dependencies: dependencies,
+                             settings: settings)
+        
+        let tests = Target(name: "\(name)Tests",
+                           platform: platform,
+                           product: .unitTests,
+                           bundleId: "\(organizationName).\(name)Tests",
+                           infoPlist: .default,
+                           sources: ["Targets/\(name)/Tests/**"],
+                           resources: [],
+                           dependencies: [.target(name: name)])
+        
+        return [sources, tests]
+    }
     
     /// Helper function to create a framework target and an associated unit test target
     private static func makeUIFrameworkTargets(name: String, platform: Platform) -> [Target] {
