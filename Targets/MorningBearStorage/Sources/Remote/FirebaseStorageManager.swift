@@ -46,7 +46,7 @@ public struct FirebaseStorageManager: RemoteStorageType {
         return downloadTask
     }
     
-    public init(_ remoteStorageService: some StorageType = FirebaseStorageService()) {
+    public init(_ remoteStorageService: some StorageType = FirebaseStorageService.shared) {
         self.remoteStorageService = remoteStorageService as! FirebaseStorageService
     }
 }

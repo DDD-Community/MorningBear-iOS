@@ -31,18 +31,20 @@ public struct MyMorningDataEditor {
 
 public extension MyMorningDataEditor {
     func request(_ data: MorningRegistrationInfo) -> Single<ReturnType> {
-        return requestMutation(data)
+        let singleTrait = remoteStorageManager
+            .saveImage(data.image)
+            .map { photoUrl -> PhotoInput in
+                return data.toApolloMuataionType(photoLink: photoUrl)
+            }
+            .map { requestMutation($0) }
+            .flatMap { $0 }
+
+        return singleTrait
     }
 }
 
 private extension MyMorningDataEditor {
-    func saveImagetoRemoteStorate(_ image: UIImage) {
-        
-    }
-    
-    func requestMutation(_ info: MorningRegistrationInfo) -> Single<ReturnType> {
-        let photoInput = info.toApolloMuataionType
-        
+    func requestMutation(_ photoInput: PhotoInput) -> Single<ReturnType> {
         let singleTrait = Network.shared.apollo.rx
             .perform(mutation: SaveMyPhotoMutation(input: .some(photoInput)))
             .map { data -> SaveMyPhotoMutation.Data.SaveMyPhoto in
@@ -72,20 +74,20 @@ private extension MyMorningDataEditor {
     }
 }
 
-extension MorningRegistrationInfo {
-    var toApolloMuataionType: PhotoInput {
+fileprivate extension MorningRegistrationInfo {
+    func toApolloMuataionType(photoLink: URL) -> PhotoInput {
         return PhotoInput(
             photoId: .some("?"),
-            photoLink: .some("?"),
+            photoLink: .some(photoLink.absoluteString),
             photoDesc: .some(self.comment),
-            categoryId: .some("?"),
+            categoryId: .some("0"),
             startAt: .some(self.startTime.toString()),
             endAt: .some(self.endTime.toString())
         )
     }
 }
 
-extension SaveMyPhotoMutation.Data.SaveMyPhoto.UpdatedBadge {
+fileprivate extension SaveMyPhotoMutation.Data.SaveMyPhoto.UpdatedBadge {
     var toNativeType: Badge {
         // TODO: Get badge id
         Badge(image: MorningBearUIAsset.Images.streakTen.image,
