@@ -83,13 +83,15 @@ extension Project {
                        dependencies: [
                         .target(name: "MorningBearData"),
                         .target(name: "MorningBearUI"),
-                        .target(name: "MorningBearNetwork")
+                        .target(name: "MorningBearNetwork"),
+                        .target(name: "MorningBearStorage")
                        ]),
             makeTarget(name: additionalTargets.DataEditor, platform: platform,
                        dependencies: [
                         .target(name: "MorningBearData"),
                         .target(name: "MorningBearUI"),
-                        .target(name: "MorningBearNetwork")
+                        .target(name: "MorningBearNetwork"),
+                        .target(name: "MorningBearStorage")
                        ])
         ].flatMap { $0 }
         

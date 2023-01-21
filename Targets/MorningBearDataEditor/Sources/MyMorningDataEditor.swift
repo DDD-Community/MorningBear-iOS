@@ -12,21 +12,34 @@ import RxSwift
 
 @_exported import MorningBearData
 
+import UIKit
+
 import MorningBearUI
 import MorningBearAPI
 import MorningBearNetwork
+import MorningBearStorage
 
 public struct MyMorningDataEditor {
     public typealias ReturnType = (photoLink: String, updateBadges: [Badge])
-
-    public func request(_ data: MorningRegistrationInfo) -> Single<ReturnType> {
-        requestMutation(data)
-    }
     
-    public init() {}
+    private let remoteStorageManager: FirebaseStorageManager
+
+    public init(_ remoteStorageManager: FirebaseStorageManager = FirebaseStorageManager()) {
+        self.remoteStorageManager = remoteStorageManager
+    }
 }
 
-extension MyMorningDataEditor {
+public extension MyMorningDataEditor {
+    func request(_ data: MorningRegistrationInfo) -> Single<ReturnType> {
+        return requestMutation(data)
+    }
+}
+
+private extension MyMorningDataEditor {
+    func saveImagetoRemoteStorate(_ image: UIImage) {
+        
+    }
+    
     func requestMutation(_ info: MorningRegistrationInfo) -> Single<ReturnType> {
         let photoInput = info.toApolloMuataionType
         
