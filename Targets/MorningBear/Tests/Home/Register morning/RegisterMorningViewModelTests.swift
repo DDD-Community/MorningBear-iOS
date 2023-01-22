@@ -8,15 +8,29 @@
 
 import XCTest
 
+import RxBlocking
+
 @testable import MorningBear
+@testable import MorningBearStorage
+@testable import MorningBearDataEditor
 
 final class RegisterMorningViewModelTests: XCTestCase {
-    private var viewModel: RegisterMorningViewModel!
-
+    private var mockDataEditor: MyMorningDataEditing.Mock!
+    private var viewModel: RegisterMorningViewModel<MyMorningDataEditing.Mock>!
+    
     override func setUpWithError() throws {
-        viewModel = RegisterMorningViewModel()
+        mockDataEditor = MyMorningDataEditor.Mock()
+        
+        mockDataEditor.requestMock.stub = { input in
+            return .just((
+                photoLink: self.expectedURL.absoluteString,
+                updateBadges: [self.badge]
+            ))
+        }
+        
+        viewModel = RegisterMorningViewModel(mockDataEditor)
     }
-
+    
     override func tearDownWithError() throws {
         viewModel = nil
     }
@@ -28,9 +42,17 @@ final class RegisterMorningViewModelTests: XCTestCase {
         let endText = "오후 9시 30분"
         let comment = "fake comments"
         
-        XCTAssertNoThrow(try viewModel.convertViewContentToInformation(image, category, startText, endText, comment))
+        let result = viewModel.registerMorningInformation(image, category, startText, endText, comment)
+            .toBlocking()
+            .materialize()
+        
+        switch result {
+        case .failed:
+            XCTFail("에러가 발생해서는 안 됨")
+        default:
+            break
+        }
     }
-    
     
     func test__convertTextFieldContentToInformation_fail() throws {
         // early end time
@@ -39,11 +61,41 @@ final class RegisterMorningViewModelTests: XCTestCase {
         var startText = "오후 9시 30분"
         var endText = "오전 8시 30분"
         let comment = "fake comments"
-        XCTAssertThrowsError(try viewModel.convertViewContentToInformation(image, category, startText, endText, comment))
         
+        var result = viewModel.registerMorningInformation(image, category, startText, endText, comment)
+            .toBlocking()
+            .materialize()
+        
+        switch result {
+        case .failed:
+            break
+        default:
+            XCTFail("에러가 발생해야 함")
+        }
+            
         // false date string
         startText = "오후 9시 "
         endText = "오후 8시 90분"
-        XCTAssertThrowsError(try viewModel.convertViewContentToInformation(image, category, startText, endText, comment))
+        
+        result = viewModel.registerMorningInformation(image, category, startText, endText, comment)
+            .toBlocking()
+            .materialize()
+        
+        switch result {
+        case .failed:
+            break
+        default:
+            XCTFail("에러가 발생해야 함")
+        }
+    }
+}
+
+extension RegisterMorningViewModelTests {
+    var expectedURL: URL {
+        URL(string: "www.naver.com")!
+    }
+    
+    var badge: Badge {
+        Badge(image: UIImage(systemName: "person")!, title: "title", desc: "desc")
     }
 }

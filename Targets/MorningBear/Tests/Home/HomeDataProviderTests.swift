@@ -9,7 +9,9 @@
 import XCTest
 
 import Nimble
+
 @testable import MorningBear
+@testable import MorningBearDataProvider
 
 final class HomeDataProviderTests: XCTestCase {
     private var homeDataProvider: HomeViewDataProvider!

@@ -28,3 +28,20 @@ public protocol StorageType {
     /// `UserDefault`같이 URL이 필요헚는 저장소를 사용하게 될 경우 메서드를 추가해서 사용할 것
     func download(with url: URL) -> Single<Data>
 }
+
+extension StorageType {
+    typealias Mock = MockStorage
+}
+
+final class MockStorage: StorageType {
+    lazy var save = MockFunction(save)
+    lazy var download = MockFunction(download)
+    
+    func save(data: Data, name: String?) -> RxSwift.Single<URL> {
+        save((data, name))
+    }
+    
+    func download(with url: URL) -> RxSwift.Single<Data> {
+        download(url)
+    }
+}

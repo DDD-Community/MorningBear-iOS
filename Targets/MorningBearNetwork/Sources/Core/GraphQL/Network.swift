@@ -22,7 +22,7 @@ public class Network {
         
         // FIXME: 토큰 숨기기
         let authPayloads = [
-            "Authorization": "Bearer UXve76eMe1aZXd/oMJgKCfeSHvoj5ZrSPrzMljqxK3NKQkwq/24Yj8pec9t3mlRQnWI4gCw8d37I19er1Xwr9Q=="
+            "Authorization": "Bearer 643onMRubB4vfZ8K0GiSMhOrPFvotBeDwYOqvrLaTce8yfRFTelUa+40VF5KqM14JCSlakrsEo/tKt9bZ3+3PQ=="
         ]
         let configuration = URLSessionConfiguration.default
         configuration.httpAdditionalHeaders = authPayloads
