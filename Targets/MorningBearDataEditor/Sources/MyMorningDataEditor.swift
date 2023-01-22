@@ -19,18 +19,24 @@ import MorningBearAPI
 import MorningBearNetwork
 import MorningBearStorage
 
-public struct MyMorningDataEditor {
-    public typealias ReturnType = (photoLink: String, updateBadges: [Badge])
-    
-    private let remoteStorageManager: FirebaseStorageManager
+public protocol MyMorningDataEditing: DataEditing where InputType == MorningRegistrationInfo,
+                                                       ReturnType == (photoLink: String, updateBadges: [Badge]) {
+    func request(_ data: InputType) -> Single<ReturnType>
+}
 
-    public init(_ remoteStorageManager: FirebaseStorageManager = FirebaseStorageManager()) {
+public struct MyMorningDataEditor: MyMorningDataEditing {
+    public typealias ReturnType = (photoLink: String, updateBadges: [Badge])
+    public typealias Firebase = FirebaseStorageService
+
+    private let remoteStorageManager: RemoteStorageManager<Firebase>
+
+    public init(_ remoteStorageManager: RemoteStorageManager<Firebase> = RemoteStorageManager<Firebase>()) {
         self.remoteStorageManager = remoteStorageManager
     }
 }
 
-public extension MyMorningDataEditor {
-    func request(_ data: MorningRegistrationInfo) -> Single<ReturnType> {
+extension MyMorningDataEditor {
+    public func request(_ data: MorningRegistrationInfo) -> Single<ReturnType> {
         let singleTrait = remoteStorageManager
             .saveImage(data.image)
             .map { photoUrl -> PhotoInput in

@@ -178,12 +178,14 @@ private extension RegisterMorningViewController {
                 guard let startTimeText = self.startTimeTextField.text,
                       let endTimeText = self.endTimeTextField.text
                 else {
-                    throw RegisterMorningViewModel.DataError.emptyData
+                    return
+//                    throw RegisterMorningViewModel.DataError.emptyData
                 }
                 
                 // 이미지 정상인지 체크
                 guard let image = self.imageWrapperView.toUIImage else {
-                    throw RegisterMorningViewModel.DataError.emptyData
+                    return
+//                    throw RegisterMorningViewModel.DataError.emptyData
                 }
                 
                 let commentText = self.commentTextView.text ?? ""
@@ -210,7 +212,8 @@ private extension RegisterMorningViewController {
         }
         
         guard let selectedCategoryIndexPath = categoryCollectionViewProvider.currentSelectedIndexPath else {
-            throw RegisterMorningViewModel.DataError.emptyCategory
+            return ""
+//            throw RegisterMorningViewModel.DataError.emptyCategory
         }
         
         guard let cell = categoryCollectionView.cellForItem(at: selectedCategoryIndexPath) as? CapsuleCell else {

@@ -14,7 +14,9 @@ import MorningBearDataEditor
 import MorningBearData
 import MorningBearKit
 
-class RegisterMorningViewModel {
+class RegisterMorningViewModel<Editor: MyMorningDataEditing> {
+    private let myMorningDataEditor: Editor
+
     let currentDate = Date()
     let categories: [String] = ["운동", "공부", "생활", "정서", "취미"]
 
@@ -22,15 +24,16 @@ class RegisterMorningViewModel {
     private let shorttimeFormatter = MorningBearDateFormatter.shortimeFormatter
     private let dayFormatter = MorningBearDateFormatter.dayFormatter
     
-    private let myMorningDataEditor: MyMorningDataEditor
-        
-    init(myMorningDataEditor: MyMorningDataEditor = MyMorningDataEditor()) {
+    init(_ myMorningDataEditor: Editor = MyMorningDataEditor()) {
         self.myMorningDataEditor = myMorningDataEditor
     }
 }
 
 // MARK: - Public tools
 extension RegisterMorningViewModel {
+    typealias RegistrationInfo = Editor.InputType
+    typealias ReturnType = Editor.ReturnType
+    
     func registerMorningInformation(_ image: UIImage,
                                     _ category: String,
                                     _ startText: String,
@@ -59,7 +62,7 @@ extension RegisterMorningViewModel {
                                            startTime: fullStartDate, endTime: fullEndDate,
                                            comment: comment)
         
-        return sendRegisterRequest(info: info)
+        return handleRegisterRequest(info: info) //  map to void
     }
     
     var currentTimeString: String {
@@ -72,14 +75,20 @@ extension RegisterMorningViewModel {
 }
 
 private extension RegisterMorningViewModel {
-    func sendRegisterRequest(info: MorningRegistrationInfo) -> Single<Void> {
+    func handleRegisterRequest(info: MorningRegistrationInfo) -> Single<Void> {
         return myMorningDataEditor.request(info)
-            .do(onSuccess: { photoLink, updatedBadges in
-                return
+            .do(onSuccess: { [weak self] (photoLink: String, updateBadges: [Badge]) in
+                guard let self else { return }
+                
+                self.handleResponse(photoLink, updateBadges)
             }, onError: { error in
                 throw error
             })
-            .map { _ in } //  map to void
+            .map { _ in }
+    }
+    
+    func handleResponse(_ photoLink: String, _ updatedBadges: [Badge]) {
+        
     }
 }
 

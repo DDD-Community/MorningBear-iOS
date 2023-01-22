@@ -44,6 +44,9 @@ extension Project {
                         .external(name: "FirebaseStorage"),
                         .external(name: "RxSwift"),
                        ],
+                       additionalTestTarget: [
+                        .external(name: "RxBlocking")
+                       ],
                        settings: .settings(
                         base: [
                             "OTHER_LDFLAGS": ["$(inherited)", "-ObjC"],
@@ -107,7 +110,9 @@ extension Project {
                                    platform: Platform,
                                    needsResource: Bool = false,
                                    dependencies: [TargetDependency],
-                                   settings: Settings? = nil) -> [Target] {
+                                   additionalTestTarget: [TargetDependency] = [],
+                                   settings: Settings? = nil)
+    -> [Target] {
         let sources = Target(name: name,
                              platform: platform,
                              product: .framework,
@@ -119,6 +124,7 @@ extension Project {
                              dependencies: dependencies,
                              settings: settings)
         
+        let testDependencies = [.target(name: name)] + additionalTestTarget
         let tests = Target(name: "\(name)Tests",
                            platform: platform,
                            product: .unitTests,
@@ -126,7 +132,7 @@ extension Project {
                            infoPlist: .default,
                            sources: ["Targets/\(name)/Tests/**"],
                            resources: [],
-                           dependencies: [.target(name: name)])
+                           dependencies: testDependencies)
         
         return [sources, tests]
     }

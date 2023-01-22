@@ -10,17 +10,7 @@ import UIKit
 
 import RxSwift
 
-protocol RemoteStorageType {
-    associatedtype Storage: StorageType
-
-    var remoteStorageService: Storage { get }
-    func saveImage(_ image: UIImage) -> Single<URL>
-    func loadImage(_ url: URL) -> Single<UIImage>
-}
-
-public struct FirebaseStorageManager: RemoteStorageType {
-    typealias Storage = FirebaseStorageService
-    
+public struct RemoteStorageManager<Storage>: RemoteStorageType where Storage: StorageType {
     let remoteStorageService: Storage
     
     public func saveImage(_ image: UIImage) -> Single<URL> {
@@ -46,7 +36,7 @@ public struct FirebaseStorageManager: RemoteStorageType {
         return downloadTask
     }
     
-    public init(_ remoteStorageService: some StorageType = FirebaseStorageService.shared) {
-        self.remoteStorageService = remoteStorageService as! FirebaseStorageService
+    public init(_ remoteStorageService: Storage = FirebaseStorageService.shared) {
+        self.remoteStorageService = remoteStorageService
     }
 }

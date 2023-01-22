@@ -12,6 +12,7 @@ import Quick
 import Nimble
 
 @testable import MorningBear
+@testable import MorningBearDataProvider
 
 final class HomeViewModelSpec: QuickSpec {
     override func spec() {

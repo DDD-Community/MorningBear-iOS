@@ -20,7 +20,7 @@ public class HomeViewDataProvider {
     private let articleDataProvider = ArticleDataProvider() // FIXME: protocolize later
     private let myMorningDataProvider = MyMorningDataProvider()
     
-    public init(localStorage: UserDefaults = .standard) {
+    public init(_ localStorage: UserDefaults = .standard) {
         self.localStorage = localStorage
     }
 }
