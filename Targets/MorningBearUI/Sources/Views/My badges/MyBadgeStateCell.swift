@@ -8,6 +8,8 @@
 
 import UIKit
 
+import MorningBearData
+
 public class MyBadgeStateCell: UICollectionViewCell {
     @IBOutlet weak var titleLabel: UILabel! {
         didSet {
@@ -25,7 +27,7 @@ public class MyBadgeStateCell: UICollectionViewCell {
         }
     }
     
-    public func prepare(_ state: MyBadgeState) {
+    public func prepare(_ state: BadgeState) {
         prepareCell(state)
     }
     
@@ -52,7 +54,7 @@ extension MyBadgeStateCell {
         }
     }
     
-    private func prepareCell(_ state: MyBadgeState?) {
+    private func prepareCell(_ state: BadgeState?) {
         guard let state else {
             titleLabel.text = nil
             subtitleLabel.text = nil

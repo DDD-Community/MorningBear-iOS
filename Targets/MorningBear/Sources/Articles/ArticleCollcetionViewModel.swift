@@ -11,7 +11,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-import MorningBearUI
+import MorningBearDataProvider
 
 class ArticleCollectionViewModel {
     private let dataProvider: ArticleDataProvider

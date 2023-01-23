@@ -10,10 +10,10 @@ import UIKit
 
 public struct Article: Hashable, Identifiable {
     public let id: UUID = .init()
-    let image: UIImage
-    let title: String
-    let description: String
-    let weblink: URL?
+    public let image: UIImage
+    public let title: String
+    public let description: String
+    public let weblink: URL?
     
     // FIXME: Fix default url
     public init(image: UIImage, title: String, description: String, weblink: URL? = nil) {

@@ -8,6 +8,8 @@
 
 import UIKit
 
+import MorningBearData
+
 public class BadgeCell: UICollectionViewCell {
     @IBOutlet weak var imageWrapperView: UIView! {
         didSet {

@@ -6,9 +6,9 @@
 //  Copyright © 2023 com.dache. All rights reserved.
 //
 
-public struct MyBadgeState {
-    let nickname: String
-    let badgeCount: Int
+public struct BadgeState {
+    public let nickname: String
+    public let badgeCount: Int
     
     public init(nickname: String, badgeCount: Int) {
         self.nickname = nickname

@@ -9,9 +9,9 @@
 import Foundation
 
 public struct OnboardingData {
-    let image: String
-    let title: String
-    let description: String
+    public let image: String
+    public let title: String
+    public let description: String
     
     public init(image: String, title: String, description: String) {
         self.image = image
