@@ -71,13 +71,13 @@ private extension MyMorningDataEditor {
             }
             .map { mutationResult -> ReturnType in
                 guard let photoLink = mutationResult.photoLink else {
-                    throw DataEditorError.invalidPhotoLink
+                    throw DataEditorError.invalidPayloadData
                 }
                 
                 guard let receivedBadges = mutationResult.updatedBadge,
                       receivedBadges.contains(nil)
                 else {
-                    throw DataEditorError.invalidBadgeValues
+                    throw DataEditorError.invalidPayloadData
                 }
                 
                 let updatedBadges = receivedBadges.compactMap { $0?.toNativeType }

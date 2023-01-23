@@ -8,6 +8,8 @@
 
 import UIKit
 
+import RxSwift
+
 @_exported import MorningBearData
 import MorningBearKit
 
@@ -19,6 +21,7 @@ public class HomeViewDataProvider {
     private let badgeDataProvider = BadgeStateDataProvider() // FIXME: protocolize later
     private let articleDataProvider = ArticleDataProvider() // FIXME: protocolize later
     private let myMorningDataProvider = MyMorningDataProvider()
+    private let myInfoDataProvider = MyInfoDataProvider()
     
     public init(_ localStorage: UserDefaults = .standard) {
         self.localStorage = localStorage
@@ -29,6 +32,10 @@ public extension HomeViewDataProvider {
     func state() -> State {
         let data = State(nickname: "니나노", oneLiner: "갓생사는 멋진 사람 되기!")
         return data
+    }
+    
+    func myInfo() -> Single<MyInfo> {
+        return myInfoDataProvider.request()
     }
     
     func recentMorning() -> [RecentMorning] {
