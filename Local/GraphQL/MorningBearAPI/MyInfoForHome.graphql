@@ -1,0 +1,9 @@
+
+query MyInfoForHome {
+  findMyInfo {
+    reportInfo {
+      totalTime
+      countSucc
+    }
+  }
+}

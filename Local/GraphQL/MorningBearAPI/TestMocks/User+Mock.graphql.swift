@@ -14,6 +14,7 @@ public class User: MockObject {
     @Field<String>("memo") public var memo
     @Field<String>("nickName") public var nickName
     @Field<String>("photoLink") public var photoLink
+    @Field<Report>("reportInfo") public var reportInfo
     @Field<String>("wakeUpAt") public var wakeUpAt
   }
 }
@@ -24,6 +25,7 @@ public extension Mock where O == User {
     memo: String? = nil,
     nickName: String? = nil,
     photoLink: String? = nil,
+    reportInfo: Mock<Report>? = nil,
     wakeUpAt: String? = nil
   ) {
     self.init()
@@ -31,6 +33,7 @@ public extension Mock where O == User {
     self.memo = memo
     self.nickName = nickName
     self.photoLink = photoLink
+    self.reportInfo = reportInfo
     self.wakeUpAt = wakeUpAt
   }
 }
