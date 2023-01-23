@@ -17,7 +17,6 @@ public class Network {
     public private(set) lazy var apollo = setClient()
     
     private func setClient() -> ApolloClient {
-        let client = URLSessionClient()
         let cache = InMemoryNormalizedCache()
         let store = ApolloStore(cache: cache)
         
