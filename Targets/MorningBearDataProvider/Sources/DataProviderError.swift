@@ -1,6 +1,6 @@
 //
-//  DataEditorError.swift
-//  MorningBearDataEditor
+//  DataProviderError.swift
+//  MorningBearDataProvider
 //
 //  Created by Young Bin on 2023/01/23.
 //  Copyright © 2023 com.dache. All rights reserved.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum DataEditorError: LocalizedError {
+enum DataProviderError: LocalizedError {
     case cannotGetResponseFromServer
     case emptyResponse
     case invalidPayloadData
