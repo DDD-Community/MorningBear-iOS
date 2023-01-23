@@ -54,6 +54,10 @@ final class RegisterMorningViewModelTests: XCTestCase {
         }
     }
     
+    func test__over_24hour_case() throws {
+        // TODO: todo
+    }
+    
     func test__convertTextFieldContentToInformation_fail() throws {
         // early end time
         let image = UIImage()

@@ -21,7 +21,9 @@ extension Project {
                             Storage: String,
                             Image: String,
                             DataProvider: String,
-                            DataEditor: String)) -> Project {
+                            DataEditor: String,
+                            Test: String
+                           )) -> Project {
         
         // MARK: - App level
         var targets = makeAppTargets(name: name,
@@ -95,7 +97,13 @@ extension Project {
                         .target(name: "MorningBearUI"),
                         .target(name: "MorningBearNetwork"),
                         .target(name: "MorningBearStorage")
-                       ])
+                       ],
+                       additionalTestTarget: [
+                        .external(name: "RxBlocking")
+                       ]),
+            makeTarget(name: additionalTargets.Test, platform: platform,
+                       dependencies: []
+                      )
         ].flatMap { $0 }
         
         return Project(

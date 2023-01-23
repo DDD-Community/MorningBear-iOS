@@ -9,12 +9,18 @@
 import UIKit
 
 import RxSwift
+import RxRelay
 
 import MorningBearDataEditor
 import MorningBearData
 import MorningBearKit
 
 class RegisterMorningViewModel<Editor: MyMorningDataEditing> {
+    private let isNetworkingRelay = BehaviorRelay<Bool>(value: false)
+    var isNetworking: Observable<Bool> {
+        isNetworkingRelay.asObservable()
+    }
+    
     private let myMorningDataEditor: Editor
 
     let currentDate = Date()
@@ -52,9 +58,9 @@ extension RegisterMorningViewModel {
             return .error(DataError.invalidDate)
         }
         
-        guard fullStartDate < fullEndDate else {
-            return .error(DataError.invalidDate)
-        }
+//        guard fullStartDate < fullEndDate else {
+//            return .error(DataError.invalidDate)
+//        }
 
         let comment = commentText
         
@@ -62,6 +68,7 @@ extension RegisterMorningViewModel {
                                            startTime: fullStartDate, endTime: fullEndDate,
                                            comment: comment)
         
+        isNetworkingRelay.accept(true)
         return handleRegisterRequest(info: info) //  map to void
     }
     
@@ -82,7 +89,12 @@ private extension RegisterMorningViewModel {
                 
                 self.handleResponse(photoLink, updateBadges)
             }, onError: { error in
+                print("Morner ERROR: \(error)")
                 throw error
+            }, onDispose: { [weak self] in
+                guard let self else { return }
+                
+                self.isNetworkingRelay.accept(false)
             })
             .map { _ in }
     }
@@ -93,22 +105,21 @@ private extension RegisterMorningViewModel {
 }
 
 // MARK: - Error
-extension RegisterMorningViewModel {
-    // FIXME: 전역 에러로 바꾸는 것도 괜찮을 듯
-    enum DataError: LocalizedError {
-        case emptyData
-        case emptyCategory
-        case invalidDate
-        
-        var errorDescription: String? {
-            switch self {
-            case .emptyData:
-                return "데이터 처리 중 오류가 발생했습니다"
-            case .emptyCategory:
-                return "카테고리 정보가 선택되지 않았습니다"
-            case .invalidDate:
-                return "날짜 데이터가 바르지 않습니다"
-            }
+// FIXME: 전역 에러로 바꾸는 것도 괜찮을 듯
+enum DataError: LocalizedError {
+    case emptyData
+    case emptyCategory
+    case invalidDate
+    
+    var errorDescription: String? {
+        switch self {
+        case .emptyData:
+            return "데이터 처리 중 오류가 발생했습니다"
+        case .emptyCategory:
+            return "카테고리 정보가 선택되지 않았습니다"
+        case .invalidDate:
+            return "날짜 데이터가 바르지 않습니다"
         }
     }
 }
+

@@ -38,7 +38,7 @@ public extension FirebaseStorageService {
         // Create a root reference
         // !!!: child가 생략되면 crash
         let storageRef = storage.reference()
-        let fileRef = storageRef.child(name ?? UUID().uuidString)
+        let fileRef = storageRef.child(name ?? UUID().uuidString + ".jpg")
         
         // Make a Rx disposable
         let singleTrait = Single<URL>.create { observer in

@@ -11,7 +11,7 @@ import UIKit
 import RxSwift
 
 public struct RemoteStorageManager<Storage>: RemoteStorageType where Storage: StorageType {
-    let remoteStorageService: Storage
+    public let remoteStorageService: Storage
     
     public func saveImage(_ image: UIImage) -> Single<URL> {
         // 이미지를 jpeg 데이터로 압축. 압축률 의사결정 필요함.
