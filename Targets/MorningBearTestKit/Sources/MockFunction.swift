@@ -1,8 +1,8 @@
 //
-//  MockImplementation.swift
-//  MorningBearStorage
+//  UIImagePicker+Extension.swift
+//  MorningBearUI
 //
-//  Created by Young Bin on 2023/01/21.
+//  Created by Young Bin on 2023/01/07.
 //  Copyright © 2023 com.dache. All rights reserved.
 //
 
@@ -34,3 +34,4 @@ public struct MockFunctionCall<Argument, Result> {
     public let argument: Argument
     public let result: Result
 }
+

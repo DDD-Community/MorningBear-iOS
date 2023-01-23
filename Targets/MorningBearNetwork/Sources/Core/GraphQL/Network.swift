@@ -10,6 +10,7 @@ import Foundation
 
 import Apollo
 import ApolloAPI
+import ApolloTestSupport
 
 public class Network {
     public static let shared = Network()
@@ -22,7 +23,7 @@ public class Network {
         
         // FIXME: 토큰 숨기기
         let authPayloads = [
-            "Authorization": "Bearer 643onMRubB4vfZ8K0GiSMhOrPFvotBeDwYOqvrLaTce8yfRFTelUa+40VF5KqM14JCSlakrsEo/tKt9bZ3+3PQ=="
+            "Authorization": "Bearer JuqYy0ScmYq4NDRe0mD2o9XxXZ8bkG1X4h66zu3lt/tWJZylGBtLUuZD5mGEFrWD7rhCJGUn78a/Q+h55ec8TQ=="
         ]
         let configuration = URLSessionConfiguration.default
         configuration.httpAdditionalHeaders = authPayloads

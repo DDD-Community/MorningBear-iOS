@@ -45,4 +45,18 @@ final class GraphQLRequestTests: XCTestCase {
         
         wait(for: [expectation], timeout: 5)
     }
+    
+    func test__Mock_transport_layer() {
+        let mockTransport = MockNetworkTransport(body: Mock(bloggerlink: "kk")._data)
+        let mockClient = ApolloClient(networkTransport: mockTransport, store: ApolloStore())
+        
+        let expect = XCTestExpectation()
+        mockClient.fetch(query: SearchArticleQuery(input: .some(10))) { result in
+            print("@@", result)
+            print("@@", result.map { $0.data?.searchArticle } )
+            expect.fulfill()
+        }
+        
+        wait(for: [expect], timeout: 3)
+    }
 }

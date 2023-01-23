@@ -146,6 +146,7 @@ class RegisterMorningViewController: UIViewController {
         }
         
         bindButtons()
+        bindObservables()
     }
 }
 
@@ -166,6 +167,18 @@ private extension RegisterMorningViewController {
         navigationItem.title = "오늘의 미라클모닝"
     }
     
+    func bindObservables() {
+        viewModel.isNetworking
+            .asDriver(onErrorJustReturn: false)
+            .drive(onNext: { [weak self] value in
+                guard let self else { return }
+                
+                self.registerButton.isEnabled = value ? false : true
+                self.registerButton.alpha = value ? 0.5 : 1.0
+            })
+            .disposed(by: bag)
+    }
+    
     func bindButtons() {
         registerButton.rx.tap.bind { [weak self] in
             guard let self else { return }
@@ -178,14 +191,12 @@ private extension RegisterMorningViewController {
                 guard let startTimeText = self.startTimeTextField.text,
                       let endTimeText = self.endTimeTextField.text
                 else {
-                    return
-//                    throw RegisterMorningViewModel.DataError.emptyData
+                    throw DataError.emptyData
                 }
                 
                 // 이미지 정상인지 체크
                 guard let image = self.imageWrapperView.toUIImage else {
-                    return
-//                    throw RegisterMorningViewModel.DataError.emptyData
+                    throw DataError.emptyData
                 }
                 
                 let commentText = self.commentTextView.text ?? ""
@@ -212,8 +223,7 @@ private extension RegisterMorningViewController {
         }
         
         guard let selectedCategoryIndexPath = categoryCollectionViewProvider.currentSelectedIndexPath else {
-            return ""
-//            throw RegisterMorningViewModel.DataError.emptyCategory
+            throw DataError.emptyCategory
         }
         
         guard let cell = categoryCollectionView.cellForItem(at: selectedCategoryIndexPath) as? CapsuleCell else {

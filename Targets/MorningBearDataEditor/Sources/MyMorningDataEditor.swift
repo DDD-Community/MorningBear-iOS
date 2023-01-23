@@ -28,15 +28,20 @@ public struct MyMorningDataEditor: MyMorningDataEditing {
     public typealias ReturnType = (photoLink: String, updateBadges: [Badge])
     public typealias Firebase = FirebaseStorageService
 
-    private let remoteStorageManager: RemoteStorageManager<Firebase>
+    private let remoteStorageManager: any RemoteStorageType
+//    private let networkClient: ApolloClient
 
-    public init(_ remoteStorageManager: RemoteStorageManager<Firebase> = RemoteStorageManager<Firebase>()) {
+    public init(
+        _ remoteStorageManager: any RemoteStorageType = RemoteStorageManager<Firebase>()
+//        _ networkClient: ApolloClientProtocol = Network.shared.apollo
+    ) {
         self.remoteStorageManager = remoteStorageManager
+//        self.networkClient = networkClient
     }
 }
 
-extension MyMorningDataEditor {
-    public func request(_ data: MorningRegistrationInfo) -> Single<ReturnType> {
+public extension MyMorningDataEditor {
+    func request(_ data: MorningRegistrationInfo) -> Single<ReturnType> {
         let singleTrait = remoteStorageManager
             .saveImage(data.image)
             .map { photoUrl -> PhotoInput in
@@ -54,21 +59,25 @@ private extension MyMorningDataEditor {
         let singleTrait = Network.shared.apollo.rx
             .perform(mutation: SaveMyPhotoMutation(input: .some(photoInput)))
             .map { data -> SaveMyPhotoMutation.Data.SaveMyPhoto in
-                guard let mutationResult = data.data?.saveMyPhoto else {
-                    throw URLError(.cannotDecodeRawData)
+                guard let mutationResult = data.data else {
+                    throw DataEditorError.cannotGetResponseFromServer
                 }
                 
-                return mutationResult
+                guard let valueInResult = mutationResult.saveMyPhoto else {
+                    throw DataEditorError.emptyResponse
+                }
+                
+                return valueInResult
             }
             .map { mutationResult -> ReturnType in
                 guard let photoLink = mutationResult.photoLink else {
-                    throw URLError(.badURL)
+                    throw DataEditorError.invalidPhotoLink
                 }
                 
                 guard let receivedBadges = mutationResult.updatedBadge,
                       receivedBadges.contains(nil)
                 else {
-                    throw URLError(.cannotDecodeRawData)
+                    throw DataEditorError.invalidBadgeValues
                 }
                 
                 let updatedBadges = receivedBadges.compactMap { $0?.toNativeType }
