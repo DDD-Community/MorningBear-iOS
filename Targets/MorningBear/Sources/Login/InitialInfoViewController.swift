@@ -32,7 +32,7 @@ class InitialInfoViewController: UIViewController {
         ]
     }()
     
-    @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var navigationBar: UIView!
     @IBOutlet weak var nextButton: UIButton! {
         didSet {
             nextButton.layer.cornerRadius = 12
@@ -57,20 +57,31 @@ class InitialInfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setView()
         setPageViewController()
         setDelegate()
-        
+
         bindButton()
         bindCurrentIndexWithView()
     }
     
-    private func setPageViewController() {
-        containerView.addSubview(pageViewController.view)
-        view.sendSubviewToBack(containerView)
+    private func setView() {
+        view.addSubview(pageViewController.view)
+        view.sendSubviewToBack(pageViewController.view)
         navigationController?.isNavigationBarHidden = true
+    }
+    
+    private func setPageViewController() {
+        pageViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            navigationBar.bottomAnchor.constraint(equalTo: pageViewController.view.topAnchor),
+            pageViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            pageViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            pageViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
         
         if let firstVC = infoInputViewControllers.first {
-            pageViewController.setViewControllers([firstVC], direction: .forward, animated: true)
+            pageViewController.setViewControllers([firstVC], direction: .forward, animated: false)
         }
     }
     
