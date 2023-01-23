@@ -9,12 +9,15 @@
 import Foundation
 
 enum DataProviderError: LocalizedError {
+    case invalidInput
     case cannotGetResponseFromServer
     case emptyResponse
     case invalidPayloadData
     
     var errorDescription: String? {
         switch self {
+        case .invalidInput:
+            return "잘못된 입력입니다"
         case .cannotGetResponseFromServer:
             return "서버에서 응답을 수신할 수 없습니다"
         case .emptyResponse:
