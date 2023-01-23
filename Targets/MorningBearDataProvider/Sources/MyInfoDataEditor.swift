@@ -23,8 +23,8 @@ public struct MyInfoDataProvider {
     public init() {}
 }
 
-public extension MyInfoDataProvider {
-    func request() -> Single<MyInfo> {
+extension MyInfoDataProvider: DataProviding {
+    public func fetch(_ model: Query) -> Single<MyInfo> {
         let singleTrait = Network.shared.apollo.rx.fetch(query: MyInfoForHomeQuery())
             .map { data -> MyInfoForHomeQuery.Data.FindMyInfo.ReportInfo in
                 guard let data = data.data else {
@@ -42,6 +42,10 @@ public extension MyInfoDataProvider {
             }
         
         return singleTrait
+    }
+    
+    public enum Query: Queryable {
+        case myInfo
     }
 }
 

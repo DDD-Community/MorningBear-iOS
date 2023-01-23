@@ -35,7 +35,7 @@ public extension HomeViewDataProvider {
     }
     
     func myInfo() -> Single<MyInfo> {
-        return myInfoDataProvider.request()
+        return myInfoDataProvider.fetch(.myInfo)
     }
     
     func recentMorning() -> [RecentMorning] {

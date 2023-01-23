@@ -17,24 +17,6 @@ import MorningBearNetwork
 import MorningBearAPI
 
 public struct ArticleDataProvider {
-    public func fetch(size: Int = 10) -> Single<[Article]> {
-        let singleTrait = Network.shared.apollo.rx
-            .fetch(query: SearchArticleQuery(input: GraphQLNullable<Int>(integerLiteral: size)))
-            .map { data -> [SearchArticleQuery.Data.SearchArticle] in
-                let queryResults = data.data?.searchArticle?.compactMap { $0 }
-                print(data)
-                
-                return queryResults ?? []
-            }
-            .map { queryResults -> [Article] in
-                let articles = queryResults.map { $0.toNativeType }
-                
-                return articles
-            }
-        
-        return singleTrait
-    }
-    
     public func articles() -> [Article] {
         let data: [Article] = [
             .init(image: UIColor.random.image(), title: "아티클 제목", description: "아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!"),
@@ -54,6 +36,32 @@ public struct ArticleDataProvider {
     }
     
     public init() {}
+}
+
+extension ArticleDataProvider: DataProviding {
+    public func fetch(_ model: Query) -> Single<[Article]> {
+        guard case .article(let size) = model else { return .error(DataProviderError.invalidInput) }
+        
+        let singleTrait = Network.shared.apollo.rx
+            .fetch(query: SearchArticleQuery(input: GraphQLNullable<Int>(integerLiteral: size)))
+            .map { data -> [SearchArticleQuery.Data.SearchArticle] in
+                let queryResults = data.data?.searchArticle?.compactMap { $0 }
+                print(data)
+                
+                return queryResults ?? []
+            }
+            .map { queryResults -> [Article] in
+                let articles = queryResults.map { $0.toNativeType }
+                
+                return articles
+            }
+        
+        return singleTrait
+    }
+    
+    public enum Query: Queryable {
+        case article(size: Int)
+    }
 }
 
 extension MorningBearAPI.SearchArticleQuery.Data.SearchArticle  {

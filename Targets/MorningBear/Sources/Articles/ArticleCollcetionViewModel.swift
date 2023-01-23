@@ -19,7 +19,7 @@ class ArticleCollectionViewModel {
     private(set) var articles = [Article]()
     
     func fetchArticle() -> Observable<[Article]> {
-        return dataProvider.fetch()
+        return dataProvider.fetch(.article(size: 10))
             .do(onSuccess: {[weak self] newArticles in
                 guard let self else { return }
                 
