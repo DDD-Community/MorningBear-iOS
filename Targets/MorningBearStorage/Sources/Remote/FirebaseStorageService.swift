@@ -8,16 +8,32 @@
 
 import Foundation
 
+import FirebaseCore
 import FirebaseStorage
 import RxSwift
 
+/// 파이어베이스 스토리지와 관련된 작업을 처리함
+///
+/// - Warning: 초기화 시 파이어베이스가 configure 되므로  무조건 한 번만 초기화할 것
 struct FirebaseStorageService: StorageType {
-    private let storage: Storage
+    static let shared = FirebaseStorageService()
     
-    init(_ storage: Storage = Storage.storage()) {
-        self.storage = storage
+    private var storage: Storage!
+    
+    private init() {
+        configure()
     }
-    
+}
+
+private extension FirebaseStorageService {
+    mutating func configure() {
+        FirebaseApp.configure()
+        
+        self.storage = Storage.storage()
+    }
+}
+
+extension FirebaseStorageService {
     func save(data: Data, name: String? = nil) -> Single<URL> {
         // Create a root reference
         // !!!: child가 생략되면 crash
@@ -65,7 +81,7 @@ struct FirebaseStorageService: StorageType {
         // Create a reference to the file you want to download
         let storageRef = storage.reference()
         let fileRef = storageRef.child(url.relativeString)
-
+        
         // Make a Rx disposable
         let singleTrait = Single<Data>.create { observer in
             // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)

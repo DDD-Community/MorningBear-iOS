@@ -12,22 +12,39 @@ import RxSwift
 
 @_exported import MorningBearData
 
+import UIKit
+
 import MorningBearUI
 import MorningBearAPI
 import MorningBearNetwork
+import MorningBearStorage
 
 public struct MyMorningDataEditor {
-    public func request() {
-        
+    public typealias ReturnType = (photoLink: String, updateBadges: [Badge])
+    
+    private let remoteStorageManager: FirebaseStorageManager
+
+    public init(_ remoteStorageManager: FirebaseStorageManager = FirebaseStorageManager()) {
+        self.remoteStorageManager = remoteStorageManager
     }
 }
 
-extension RecentMorning {
-    typealias ReturnType = (photoLink: String, updateBadges: [Badge])
-    
-    func request(_ info: MorningRegistrationInfo) -> Single<ReturnType> {
-        let photoInput = info.toApolloMuataionType
-        
+public extension MyMorningDataEditor {
+    func request(_ data: MorningRegistrationInfo) -> Single<ReturnType> {
+        let singleTrait = remoteStorageManager
+            .saveImage(data.image)
+            .map { photoUrl -> PhotoInput in
+                return data.toApolloMuataionType(photoLink: photoUrl)
+            }
+            .map { requestMutation($0) }
+            .flatMap { $0 }
+
+        return singleTrait
+    }
+}
+
+private extension MyMorningDataEditor {
+    func requestMutation(_ photoInput: PhotoInput) -> Single<ReturnType> {
         let singleTrait = Network.shared.apollo.rx
             .perform(mutation: SaveMyPhotoMutation(input: .some(photoInput)))
             .map { data -> SaveMyPhotoMutation.Data.SaveMyPhoto in
@@ -42,7 +59,7 @@ extension RecentMorning {
                     throw URLError(.badURL)
                 }
                 
-                guard var receivedBadges = mutationResult.updatedBadge,
+                guard let receivedBadges = mutationResult.updatedBadge,
                       receivedBadges.contains(nil)
                 else {
                     throw URLError(.cannotDecodeRawData)
@@ -57,20 +74,20 @@ extension RecentMorning {
     }
 }
 
-extension MorningRegistrationInfo {
-    var toApolloMuataionType: PhotoInput {
+fileprivate extension MorningRegistrationInfo {
+    func toApolloMuataionType(photoLink: URL) -> PhotoInput {
         return PhotoInput(
             photoId: .some("?"),
-            photoLink: .some("?"),
+            photoLink: .some(photoLink.absoluteString),
             photoDesc: .some(self.comment),
-            categoryId: .some("?"),
+            categoryId: .some("0"),
             startAt: .some(self.startTime.toString()),
             endAt: .some(self.endTime.toString())
         )
     }
 }
 
-extension SaveMyPhotoMutation.Data.SaveMyPhoto.UpdatedBadge {
+fileprivate extension SaveMyPhotoMutation.Data.SaveMyPhoto.UpdatedBadge {
     var toNativeType: Badge {
         // TODO: Get badge id
         Badge(image: MorningBearUIAsset.Images.streakTen.image,

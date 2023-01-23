@@ -1,8 +1,7 @@
 import UIKit
-import MorningBearKit
-import MorningBearUI
-
-import FirebaseCore
+//import MorningBearKit
+//import MorningBearUI
+//
 
 import RxKakaoSDKCommon
 import RxKakaoSDKAuth
@@ -16,11 +15,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
         // Configure SDKs
-        FirebaseApp.configure()
-        
-        // FIXME: 수정 필요!
-        let KAKAO_APP_KEY: String = "338eeb478a5cce01fe713b9100d0f42e"
-        RxKakaoSDK.initSDK(appKey: KAKAO_APP_KEY)
         
         return true
     }
