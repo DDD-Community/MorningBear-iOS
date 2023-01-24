@@ -29,15 +29,9 @@ class MyMorningsViewController: UIViewController {
         navigationItem.title = "나의 미라클모닝"
         
         diffableDataSource = configureDiffableDataSource(with: collectionView)
-        diffableDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
-            switch kind {
-            case UICollectionView.elementKindSectionHeader:
-                return self.properHeaderCell(for: indexPath)
-            default:
-                return UICollectionReusableView()
-            }
-        }
+        addSupplementaryView(diffableDataSource)
         
+        diffableDataSource.initDataSource(allSection: Section.allCases)
         diffableDataSource.updateDataSource(in: .main, with: viewModel.myMornings)
     }
 }
@@ -103,7 +97,18 @@ extension MyMorningsViewController: DiffableDataSourcing {
         return dataSource
     }
     
-    enum Section {
+    func addSupplementaryView(_ diffableDataSource: DiffableDataSource) {
+        diffableDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+            switch kind {
+            case UICollectionView.elementKindSectionHeader:
+                return self.properHeaderCell(for: indexPath)
+            default:
+                return UICollectionReusableView()
+            }
+        }
+    }
+    
+    enum Section: CaseIterable {
         case main
     }
 }
