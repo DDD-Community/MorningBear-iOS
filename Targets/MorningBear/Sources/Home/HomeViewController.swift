@@ -13,13 +13,11 @@ import RxSwift
 import RxCocoa
 
 class HomeViewController: UIViewController {
-//    typealias DiffableDataSource = UICollectionViewDiffableDataSource<HomeSection, Article>
-//    private var diffableDataSource: DiffableDataSource!
+    typealias DiffableDataSource = UICollectionViewDiffableDataSource<HomeSection, AnyHashable>
+    var diffableDataSource: DiffableDataSource!
 
     private let bag = DisposeBag()
     private let viewModel = HomeViewModel()
-    
-
     
     /// 카메라 뷰: 미리 로딩하기 위해서 처음부터 만들어 놓기
     private let cameraViewController = UIImagePickerController()
@@ -48,45 +46,137 @@ class HomeViewController: UIViewController {
         
         designNavigationBar()
         
-        bindButtons()
-        bindBehaviorAccordingToRecordStatus()
-
+        diffableDataSource = configureDiffableDataSource(with: collectionView)
+        addSupplementaryView(self.diffableDataSource)
+        diffableDataSource.initDataSource(allSection: HomeSection.allCases)
+        
         self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
+        
+        bindButtons()
+        bindDataSourceWithObservable()
+        bindBehaviorAccordingToRecordStatus()
     }
 }
 
-//extension HomeViewController: DiffableDataSourcing {
-//    typealias Section = HomeSection
-//    typealias Model = AnyHashable
-//
-//    func configureDiffableDataSource(with collectionView: UICollectionView) -> UICollectionViewDiffableDataSource<HomeSection, AnyHashable> {
-//        let dataSource = makeDiffableDataSource(with: collectionView) { [weak self] collectionView, indexPath, model in
-//            guard let self else { return UICollectionViewCell() }
-//
-//            switch indexPath.section as! HomeSection {
-//            case .articles:
-//                break
-//            case .badges:
-//                break
-//            case .recentMornings:
-//                break
-//            case .state:
-//                break
-//            }
-//
-//            let cell = collectionView.dequeueReusableCell(
-//                withReuseIdentifier: "ArticleCell", for: indexPath
-//            ) as! ArticleCell
-//
-//            let article = self.viewModel.articles[indexPath.row]
-//            cell.prepare(article: article)
-//
-//            return cell
-//        }
-//
-//        return dataSource
-//    }
-//}
+extension HomeViewController: DiffableDataSourcing {
+    typealias Section = HomeSection
+    typealias Model = AnyHashable
+
+    func configureDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
+        let dataSource = makeDiffableDataSource(with: collectionView) { [weak self] collectionView, indexPath, model in
+            guard let self else { return UICollectionViewCell() }
+            
+            switch HomeSection.getSection(index: indexPath.section) {
+            case .state:
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: "StateCell", for: indexPath
+                ) as! StateCell
+                
+                let state = State(nickname: "임시", oneLiner: "임시")
+                let myInfo = self.viewModel.myInfo
+                cell.prepare(state: state, myInfo: myInfo)
+                
+                return cell
+                
+            case .recentMornings:
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: "RecentMorningCell", for: indexPath
+                ) as! RecentMorningCell
+                
+                if !self.viewModel.recentMornings.isEmpty {
+                    let item = self.viewModel.recentMornings.prefix(4)[indexPath.item] // 최근 미라클 모닝은 상위 4개만 표시; MARK: 정렬 필수
+                    cell.prepare(item)
+                }
+                
+                return cell
+                
+            case .badges:
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: "BadgeCell", for: indexPath
+                ) as! BadgeCell
+                
+                if !self.viewModel.badges.isEmpty {
+                    let item = self.viewModel.badges[indexPath.item]
+                    cell.prepare(badge: item)
+                }
+                
+                return cell
+                
+            case .articles:
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: "ArticleCell", for: indexPath
+                ) as! ArticleCell
+                
+                if !self.viewModel.articles.isEmpty {
+                    let item = self.viewModel.articles[indexPath.item]
+                    cell.prepare(article: item)
+                }
+                
+                return cell
+            
+            case .none:
+                return UICollectionViewCell()
+            }
+        }
+
+        return dataSource
+    }
+    
+    func bindDataSourceWithObservable() {
+        viewModel.$myInfo
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            .asDriver(onErrorJustReturn: MyInfo())
+            .drive { [weak self] info in
+                guard let self else { return }
+                
+                self.diffableDataSource.updateDataSource(in: .state, with: [info])
+            }
+            .disposed(by: bag)
+        
+        viewModel.$articles
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            .asDriver(onErrorJustReturn: [])
+            .drive { [weak self] articles in
+                guard let self else { return }
+                
+                self.diffableDataSource.updateDataSource(in: .articles, with: articles)
+            }
+            .disposed(by: bag)
+        
+        viewModel.$badges
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            .asDriver(onErrorJustReturn: [])
+            .drive { [weak self] badges in
+                guard let self else { return }
+                
+                self.diffableDataSource.updateDataSource(in: .badges, with: badges)
+            }
+            .disposed(by: bag)
+        
+        viewModel.$recentMornings
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            .asDriver(onErrorJustReturn: [])
+            .drive { [weak self] mornings in
+                guard let self else { return }
+                
+                self.diffableDataSource.updateDataSource(in: .recentMornings, with: mornings)
+            }
+            .disposed(by: bag)
+    }
+    
+    func addSupplementaryView<Section, Model>(_ diffableDataSource: UICollectionViewDiffableDataSource<Section, Model>) {
+        diffableDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+            switch kind {
+            case UICollectionView.elementKindSectionHeader:
+                return self.properHeaderCell(for: indexPath)
+            case UICollectionView.elementKindSectionFooter:
+                return self.properFooterCell(for: indexPath)
+            default:
+                return UICollectionReusableView()
+            }
+        }
+    }
+}
 
 // MARK: - Configure design components
 private extension HomeViewController {
@@ -236,7 +326,7 @@ extension HomeViewController: CollectionViewCompositionable {
     
     func connectCollectionViewWithDelegates() {
         collectionView.delegate = self
-        collectionView.dataSource = self
+        collectionView.dataSource = self.diffableDataSource
     }
     
     func registerCells() {
@@ -301,99 +391,99 @@ extension HomeViewController: UIImagePickerControllerDelegate, UINavigationContr
 }
 
 // MARK: - Delegate methods
-extension HomeViewController: UICollectionViewDelegate {}
-
-extension HomeViewController: UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        HomeSection.allCases.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch HomeSection.getSection(index: section) {
-        case .state:
-            return 1 // 내 상태는 단일 셀 섹션임
-        case .recentMornings:
-            return min(4, viewModel.recentMorningList.count) // 최근 미라클 모닝은 상위 4개만 표시
-        case .badges:
-            return viewModel.badgeList.count
-        case .articles:
-            return viewModel.articleList.count
-        case .none:
-            return 0
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch HomeSection.getSection(index: indexPath.section) {
-        case .state:
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "StateCell", for: indexPath
-            ) as! StateCell
-            
-            let item = viewModel.state
-            cell.prepare(state: item)
-            
-            return cell
-            
-        case .recentMornings:
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "RecentMorningCell", for: indexPath
-            ) as! RecentMorningCell
-            
-            let item = viewModel.recentMorningList.prefix(4)[indexPath.item] // 최근 미라클 모닝은 상위 4개만 표시; MARK: 정렬 필수
-            cell.prepare(item)
-            
-            return cell
-            
-        case .badges:
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "BadgeCell", for: indexPath
-            ) as! BadgeCell
-            
-            let item = viewModel.badgeList[indexPath.item]
-            cell.prepare(badge: item)
-            
-            return cell
-            
-        case .articles:
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "ArticleCell", for: indexPath
-            ) as! ArticleCell
-            
-            let item = viewModel.articleList[indexPath.item]
-            cell.prepare(article: item)
-            
-            return cell
-        
-        case .none:
-            return UICollectionViewCell()
-        }
-    }
-    
+extension HomeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch HomeSection.getSection(index: indexPath.section) {
         case .articles:
-            let article = viewModel.articleList[indexPath.row]
+            let article = viewModel.articles[indexPath.row]
             article.openURL(context: UIApplication.shared)
         default:
             // TODO: 언젠간..
             break
         }
     }
-    
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        // 헤더 & 푸터 설정
-        switch kind {
-        case UICollectionView.elementKindSectionHeader:
-            return properHeaderCell(for: indexPath)
-            
-        case UICollectionView.elementKindSectionFooter:
-            return properFooterCell(for: indexPath)
-        default:
-            return UICollectionReusableView()
-        }
-    }
 }
+//
+//extension HomeViewController: UICollectionViewDataSource {
+//    func numberOfSections(in collectionView: UICollectionView) -> Int {
+//        HomeSection.allCases.count
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        switch HomeSection.getSection(index: section) {
+//        case .state:
+//            return 1 // 내 상태는 단일 셀 섹션임
+//        case .recentMornings:
+//            return min(4, viewModel.recentMorningList.count) // 최근 미라클 모닝은 상위 4개만 표시
+//        case .badges:
+//            return viewModel.badgeList.count
+//        case .articles:
+//            return viewModel.articleList.count
+//        case .none:
+//            return 0
+//        }
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        switch HomeSection.getSection(index: indexPath.section) {
+//        case .state:
+//            let cell = collectionView.dequeueReusableCell(
+//                withReuseIdentifier: "StateCell", for: indexPath
+//            ) as! StateCell
+//
+//            let item = viewModel.state
+//            cell.prepare(state: item)
+//
+//            return cell
+//
+//        case .recentMornings:
+//            let cell = collectionView.dequeueReusableCell(
+//                withReuseIdentifier: "RecentMorningCell", for: indexPath
+//            ) as! RecentMorningCell
+//
+//            let item = viewModel.recentMorningList.prefix(4)[indexPath.item] // 최근 미라클 모닝은 상위 4개만 표시; MARK: 정렬 필수
+//            cell.prepare(item)
+//
+//            return cell
+//
+//        case .badges:
+//            let cell = collectionView.dequeueReusableCell(
+//                withReuseIdentifier: "BadgeCell", for: indexPath
+//            ) as! BadgeCell
+//
+//            let item = viewModel.badgeList[indexPath.item]
+//            cell.prepare(badge: item)
+//
+//            return cell
+//
+//        case .articles:
+//            let cell = collectionView.dequeueReusableCell(
+//                withReuseIdentifier: "ArticleCell", for: indexPath
+//            ) as! ArticleCell
+//
+//            let item = viewModel.articleList[indexPath.item]
+//            cell.prepare(article: item)
+//
+//            return cell
+//
+//        case .none:
+//            return UICollectionViewCell()
+//        }
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+//        // 헤더 & 푸터 설정
+//        switch kind {
+//        case UICollectionView.elementKindSectionHeader:
+//            return properHeaderCell(for: indexPath)
+//
+//        case UICollectionView.elementKindSectionFooter:
+//            return properFooterCell(for: indexPath)
+//        default:
+//            return UICollectionReusableView()
+//        }
+//    }
+//}
 
 // MARK: - Internal tools
 extension HomeViewController {

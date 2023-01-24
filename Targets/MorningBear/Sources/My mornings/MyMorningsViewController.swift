@@ -88,6 +88,8 @@ extension MyMorningsViewController: UICollectionViewDelegate {
 }
 
 extension MyMorningsViewController: DiffableDataSourcing {
+    func bindDataSourceWithObservable() {}
+        
     func configureDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
         let dataSource = makeDiffableDataSource(with: collectionView) { collectionView, indexPath, model in
             let cell = collectionView.dequeueReusableCell(

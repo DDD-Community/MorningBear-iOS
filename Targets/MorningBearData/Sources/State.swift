@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct State {
+public struct State: Hashable {
     public let nickname: String
     public let oneLiner: String
     

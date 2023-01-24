@@ -89,18 +89,23 @@ public class StateCell: UICollectionViewCell {
     public override func prepareForReuse() {
         super.prepareForReuse()
         
-        self.prepare(state: nil)
+        self.prepare(state: nil, myInfo: nil)
     }
     
-    public func prepare(state: State?) {
+    public func prepare(state: State?, myInfo: MyInfo?) {
         let titleLabelText: String?
         if let state {
             titleLabelText = "안녕하세요, \(state.nickname)님"
         } else {
-            titleLabelText = nil
+            titleLabelText = "안녕하세요!"
         }
         
         titleLabel.text = titleLabelText
         oneLinerLabel.text = state?.oneLiner
+        
+        let myInfo = myInfo ?? MyInfo()
+        countLabel.text = String(myInfo.totalCount)
+        timeLabel.text = String(myInfo.estimatedTime)
+        badgeLabel.text = String(myInfo.badgeCount)
     }
 }

@@ -98,6 +98,8 @@ extension ArticleCollectionViewController: UICollectionViewDataSourcePrefetching
 
 // MARK: - Related to diffable datasource
 extension ArticleCollectionViewController: DiffableDataSourcing {
+    func bindDataSourceWithObservable() {}
+    
     func configureDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
         let dataSource = makeDiffableDataSource(with: collectionView) { [weak self] collectionView, indexPath, model in
             guard let self else { return UICollectionViewCell() }
