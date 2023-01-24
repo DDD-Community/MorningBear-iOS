@@ -13,6 +13,8 @@ import RxSwift
 @_exported import MorningBearData
 
 public struct MyMorningQuery: Queryable {
+    let size: Int
+    
     public let singleTrait: Single<[RecentMorning]> = Observable.of(
         [
             .init(image: UIColor.random.image(), title: "concept아이템(title1)", desc: "concept아이템(desc1)"),
@@ -26,7 +28,14 @@ public struct MyMorningQuery: Queryable {
             .init(image: UIColor.random.image(), title: "concept아이템(title9)", desc: "concept아이템(desc9)"),
             .init(image: UIColor.random.image(), title: "concept아이템(title10)", desc: "concept아이템(desc10)"),
         ]
-    ).asSingle()
+    )
+        .asSingle()
     
-    public init() {}
+    public init() {
+        self.size = 4
+    }
+    
+    public init(size: Int) {
+        self.size = size
+    }
 }
