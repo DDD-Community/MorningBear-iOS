@@ -31,6 +31,8 @@ class ArticleCollectionViewController: UIViewController {
         designNavigationBar()
         
         diffableDataSource = configureDiffableDataSource(with: collectionView)
+        diffableDataSource.initDataSource(allSection: ArticleSection.allCases)
+        
         fetchNewArticles()
     }
 }
@@ -117,7 +119,7 @@ extension ArticleCollectionViewController: DiffableDataSourcing {
         return dataSource
     }
     
-    enum ArticleSection {
+    enum ArticleSection: CaseIterable {
         case main
     }
 }
