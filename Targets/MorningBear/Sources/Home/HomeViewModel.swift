@@ -14,20 +14,31 @@ import RxRelay
 import MorningBearDataProvider
 import MorningBearKit
 
-class HomeViewModel {
-    private let dataProvider: HomeViewDataProvider
+class HomeViewModel<Provider: DataProviding> {
+    private var dataProvider: HomeViewDataProvider // FIXME: 로컬 저장소 관련 분리할 것
+    
     private var bag = DisposeBag()
     
     // MARK: Public stored properties
     var state: State?
-    var recentMorningList: [RecentMorning]
-    var badgeList: [Badge]
-    var articleList: [Article]
+    var recentMorningList: [RecentMorning] = []
+    var badgeList: [Badge] = []
+    var articleList: [Article] = []
 
     // MARK: Observables
     /// `accept`로 인한 수정을 막기 위해 Relay를 `observable`로 변환해서 씀
     /// - warning: `Observable`의 상태는 직접 수정되어서는 안됨.
     ///     반드시 `startRecording`, `stopRecording`에 의해서만 수정될 수 있도록 유의할 것
+    @Bound(MyInfo()) var myInfo: MyInfo
+    @Bound([]) var recentMornings: [RecentMorning]
+    @Bound([]) var badges: [Badge]
+    @Bound([]) var articles: [Article]
+    
+    private var myInfoRelay: BehaviorRelay<MyInfo>
+    var myInfoObservable: Observable<MyInfo> {
+        myInfoRelay.asObservable()
+    }
+    
     private var elapsedTimeRelay: BehaviorRelay<String>
     var elapsedTimeObservable: Observable<String> {
         elapsedTimeRelay.asObservable()
@@ -38,25 +49,43 @@ class HomeViewModel {
         recordingStateRelay.asObservable()
     }
     
-    
-    init(_ dataProvider: HomeViewDataProvider = HomeViewDataProvider()) {
-        self.dataProvider = dataProvider
+    func fetchRemoteData() {
+        dataProvider.fetch(BadgeQuery())
+            .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            .subscribe(onSuccess: { data in
+                print("@@ badge", data)
+                self.badges = data
+            }, onFailure: { print("@@", $0) })
+            .disposed(by: bag)
         
-        self.state = dataProvider.state()
-        self.recentMorningList = dataProvider.recentMorning()
-        self.badgeList = dataProvider.badges()
-        self.articleList = dataProvider.articles()
+        dataProvider.fetch(HomeQuery())
+            .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            .subscribe(onSuccess: { [weak self] badges, myInfo, mornings, articles in
+                guard let self else { return }
+                
+                print("@@", badges, myInfo, mornings, articles)
+                
+                self.myInfo = myInfo
+                self.recentMornings = mornings
+                self.badges = badges
+                self.articles = articles
+            }, onFailure: { print("@@", $0) })
+            .disposed(by: bag)
+    }
+    
+    init(_ dataProvider: Provider = HomeViewDataProvider()) {
+        self.dataProvider = dataProvider as! HomeViewDataProvider
         
         self.elapsedTimeRelay = BehaviorRelay<String>(value: "00:00:00")
-        
         self.recordingStateRelay = BehaviorRelay<MyMorningRecordingState>(value: .waiting)
-        
-        configureBindings()
-
+        self.myInfoRelay = BehaviorRelay<MyInfo>(value: MyInfo())
+    
         // 리코딩 기록 있으면 녹화 재개
         if case .recording(let startDate) = fetchMyMorningRecordingState {
             startRecording(with: startDate)
         }
+        
+        fetchRemoteData()
     }
 }
 

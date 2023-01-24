@@ -13,13 +13,12 @@ import RxCocoa
 
 import MorningBearDataProvider
 
-class ArticleCollectionViewModel {
-    private let dataProvider: ArticleDataProvider
-    
+class ArticleCollectionViewModel<Provider: DataProviding> {
+    private let dataProvider: Provider
     private(set) var articles = [Article]()
     
     func fetchArticle() -> Observable<[Article]> {
-        return dataProvider.fetch(.article(size: 10))
+        return dataProvider.fetch(ArticleQuery(size: 10))
             .do(onSuccess: {[weak self] newArticles in
                 guard let self else { return }
                 
@@ -28,7 +27,7 @@ class ArticleCollectionViewModel {
             .asObservable()
     }
     
-    init(_ dataProvider: ArticleDataProvider = ArticleDataProvider()) {
+    init(_ dataProvider: Provider = DefaultProvider.shared) {
         self.dataProvider = dataProvider
     }
 }

@@ -108,6 +108,7 @@ extension ArticleCollectionViewController: DiffableDataSourcing {
             
             let article = self.viewModel.articles[indexPath.row]
             cell.prepare(article: article)
+            
             return cell
         }
         
