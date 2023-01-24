@@ -23,16 +23,13 @@ class HomeViewModel<Provider: DataProviding> {
     /// `accept`로 인한 수정을 막기 위해 Relay를 `observable`로 변환해서 씀
     /// - warning: `Observable`의 상태는 직접 수정되어서는 안됨.
     ///     반드시 `startRecording`, `stopRecording`에 의해서만 수정될 수 있도록 유의할 것
-    @Bound(MyInfo()) private(set) var myInfo: MyInfo
-    @Bound([]) private(set) var recentMornings: [RecentMorning]
-    @Bound([]) private(set) var badges: [Badge]
-    @Bound([]) private(set) var articles: [Article]
+    @Bound(initValue: MyInfo()) private(set) var myInfo: MyInfo
+    @Bound(initValue: []) private(set) var recentMornings: [RecentMorning]
+    @Bound(initValue: []) private(set) var badges: [Badge]
+    @Bound(initValue: []) private(set) var articles: [Article]
     
-    private var myInfoRelay: BehaviorRelay<MyInfo>
-    var myInfoObservable: Observable<MyInfo> {
-        myInfoRelay.asObservable()
-    }
-    
+    @Bound(initValue: "00:00:00") private(set) var elapsedTime: String
+    @Bound(initValue: .waiting) private(set) var recordingState: MyMorningRecordingState
     private var elapsedTimeRelay: BehaviorRelay<String>
     var elapsedTimeObservable: Observable<String> {
         elapsedTimeRelay.asObservable()
@@ -46,18 +43,33 @@ class HomeViewModel<Provider: DataProviding> {
     func fetchRemoteData() {
         dataProvider.fetch(BadgeQuery())
             .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
-            .subscribe(onSuccess: { data in
-                print("@@ badge", data)
-                self.badges = data
-            }, onFailure: { print("@@", $0) })
+            .subscribe(
+                onSuccess: { data in
+                    self.badges = data
+                },
+                onFailure: {
+                    print($0)
+                }
+            )
+            .disposed(by: bag)
+        
+        
+        dataProvider.fetch(MyMorningQuery())
+            .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            .subscribe(
+                onSuccess: { data in
+                    self.recentMornings = Array(data.prefix(4)) // 상위 4개만 표시하는게 정책임
+                },
+                onFailure: {
+                    print($0)
+                }
+            )
             .disposed(by: bag)
         
         dataProvider.fetch(HomeQuery())
             .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
             .subscribe(onSuccess: { [weak self] badges, myInfo, mornings, articles in
                 guard let self else { return }
-                
-                print("@@", badges, myInfo, mornings, articles)
                 
                 self.myInfo = myInfo
                 self.recentMornings = mornings
@@ -72,7 +84,6 @@ class HomeViewModel<Provider: DataProviding> {
         
         self.elapsedTimeRelay = BehaviorRelay<String>(value: "00:00:00")
         self.recordingStateRelay = BehaviorRelay<MyMorningRecordingState>(value: .waiting)
-        self.myInfoRelay = BehaviorRelay<MyInfo>(value: MyInfo())
     
         // 리코딩 기록 있으면 녹화 재개
         if case .recording(let startDate) = fetchMyMorningRecordingState {

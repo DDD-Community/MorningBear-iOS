@@ -26,10 +26,10 @@ public struct Bound<Value> {
         return relay.asObservable()
     }
     
-    public init(_ initialValue: Value) {
-        self.relay = BehaviorRelay<Value>(value: initialValue)
-        wrappedValue = initialValue
+    public init(initValue: Value) {
+        self.relay = BehaviorRelay<Value>(value: initValue)
+        wrappedValue = initValue
         
-        relay.accept(initialValue)
+        relay.accept(initValue)
     }
 }

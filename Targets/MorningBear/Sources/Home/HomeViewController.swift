@@ -73,8 +73,7 @@ extension HomeViewController: DiffableDataSourcing {
                 ) as! StateCell
                 
                 let state = State(nickname: "임시", oneLiner: "임시")
-                let myInfo = self.viewModel.myInfo
-                cell.prepare(state: state, myInfo: myInfo)
+                cell.prepare(state: state, myInfo: model as? MyInfo)
                 
                 return cell
                 
@@ -84,12 +83,12 @@ extension HomeViewController: DiffableDataSourcing {
                 ) as! RecentMorningCell
                 
                 if !self.viewModel.recentMornings.isEmpty {
-                    let item = self.viewModel.recentMornings.prefix(4)[indexPath.item] // 최근 미라클 모닝은 상위 4개만 표시; MARK: 정렬 필수
-                    cell.prepare(item)
+                    let item = model // 최근 미라클 모닝은 상위 4개만 표시; MARK: 정렬 필수
+                    cell.prepare(item as! RecentMorning)
                 }
                 
                 return cell
-                
+
             case .badges:
                 let cell = collectionView.dequeueReusableCell(
                     withReuseIdentifier: "BadgeCell", for: indexPath
