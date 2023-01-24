@@ -9,7 +9,9 @@
 import UIKit
 
 /// 나의 배지 정보
-public struct Badge {
+///
+/// Diffable datasource에 사용하기 위해 `Hashable` 채택
+public struct Badge: Hashable {
     public let image: UIImage
     public let title: String
     public let desc: String

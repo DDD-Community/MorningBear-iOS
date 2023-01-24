@@ -8,10 +8,10 @@
 
 import Foundation
 
-public struct MyInfo {
-    let estimatedTime: Int
-    let totalCount: Int
-    let badgeCount: String
+public struct MyInfo: Hashable {
+    public let estimatedTime: Int
+    public let totalCount: Int
+    public let badgeCount: String
     
     public init(estimatedTime: Int = 0,
                 totalCount: Int = 0,

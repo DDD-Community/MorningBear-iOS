@@ -19,20 +19,14 @@ class HomeViewModel<Provider: DataProviding> {
     
     private var bag = DisposeBag()
     
-    // MARK: Public stored properties
-    var state: State?
-    var recentMorningList: [RecentMorning] = []
-    var badgeList: [Badge] = []
-    var articleList: [Article] = []
-
     // MARK: Observables
     /// `accept`로 인한 수정을 막기 위해 Relay를 `observable`로 변환해서 씀
     /// - warning: `Observable`의 상태는 직접 수정되어서는 안됨.
     ///     반드시 `startRecording`, `stopRecording`에 의해서만 수정될 수 있도록 유의할 것
-    @Bound(MyInfo()) var myInfo: MyInfo
-    @Bound([]) var recentMornings: [RecentMorning]
-    @Bound([]) var badges: [Badge]
-    @Bound([]) var articles: [Article]
+    @Bound(MyInfo()) private(set) var myInfo: MyInfo
+    @Bound([]) private(set) var recentMornings: [RecentMorning]
+    @Bound([]) private(set) var badges: [Badge]
+    @Bound([]) private(set) var articles: [Article]
     
     private var myInfoRelay: BehaviorRelay<MyInfo>
     var myInfoObservable: Observable<MyInfo> {
