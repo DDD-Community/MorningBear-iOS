@@ -10,20 +10,18 @@ import Foundation
 
 import MorningBearDataProvider
 
-class MyMorningsViewModel {
-    private let dataProvider: MyMorningDataProvider
-    var myMornings: [RecentMorning]
+class MyMorningsViewModel<Provider: DataProviding> {
+    private let dataProvider: Provider
+    private(set) var myMornings = [RecentMorning]()
     
     func fetchNewMorning() -> [RecentMorning] {
-        let newData = dataProvider.fetch()
-        
-        myMornings.append(contentsOf: newData)
-        return newData
+//        let newData = dataProvider.fetch()
+//        dataProvider.fetch(MyMorningQuery())
+//        myMornings.append(contentsOf: newData)
+        return []
     }
     
-    init(_ dataProvider: MyMorningDataProvider = MyMorningDataProvider()) {
+    init(_ dataProvider: Provider = DefaultProvider.shared) {
         self.dataProvider = dataProvider
-        
-        self.myMornings = dataProvider.fetch()
     }
 }

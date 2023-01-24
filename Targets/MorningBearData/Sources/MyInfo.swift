@@ -13,7 +13,9 @@ public struct MyInfo {
     let totalCount: Int
     let badgeCount: String
     
-    public init(estimatedTime: Int, totalCount: Int, badgeCount: String) {
+    public init(estimatedTime: Int = 0,
+                totalCount: Int = 0,
+                badgeCount: String = "") {
         self.estimatedTime = estimatedTime
         self.totalCount = totalCount
         self.badgeCount = badgeCount

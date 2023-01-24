@@ -13,8 +13,13 @@ import RxSwift
 import RxCocoa
 
 class HomeViewController: UIViewController {
+//    typealias DiffableDataSource = UICollectionViewDiffableDataSource<HomeSection, Article>
+//    private var diffableDataSource: DiffableDataSource!
+
     private let bag = DisposeBag()
     private let viewModel = HomeViewModel()
+    
+
     
     /// 카메라 뷰: 미리 로딩하기 위해서 처음부터 만들어 놓기
     private let cameraViewController = UIImagePickerController()
@@ -49,6 +54,39 @@ class HomeViewController: UIViewController {
         self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
     }
 }
+
+//extension HomeViewController: DiffableDataSourcing {
+//    typealias Section = HomeSection
+//    typealias Model = AnyHashable
+//
+//    func configureDiffableDataSource(with collectionView: UICollectionView) -> UICollectionViewDiffableDataSource<HomeSection, AnyHashable> {
+//        let dataSource = makeDiffableDataSource(with: collectionView) { [weak self] collectionView, indexPath, model in
+//            guard let self else { return UICollectionViewCell() }
+//
+//            switch indexPath.section as! HomeSection {
+//            case .articles:
+//                break
+//            case .badges:
+//                break
+//            case .recentMornings:
+//                break
+//            case .state:
+//                break
+//            }
+//
+//            let cell = collectionView.dequeueReusableCell(
+//                withReuseIdentifier: "ArticleCell", for: indexPath
+//            ) as! ArticleCell
+//
+//            let article = self.viewModel.articles[indexPath.row]
+//            cell.prepare(article: article)
+//
+//            return cell
+//        }
+//
+//        return dataSource
+//    }
+//}
 
 // MARK: - Configure design components
 private extension HomeViewController {

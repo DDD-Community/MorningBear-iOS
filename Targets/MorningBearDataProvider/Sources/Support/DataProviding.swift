@@ -8,12 +8,18 @@
 
 import RxSwift
 
-protocol DataProviding {
-    associatedtype QueryType: Queryable
-    associatedtype ResultType
-    
-    /// Recommend to be declared as an `enum`
-    func fetch(_ model: QueryType) -> Single<ResultType>
+public protocol DataProviding {
+    func fetch<Query: Queryable>(_ model: Query) -> Single<Query.ResultType>
 }
 
-public protocol Queryable {}
+extension DataProviding {
+    public func fetch<Query>(_ model: Query) -> Single<Query.ResultType> where Query : Queryable {
+        return model.singleTrait
+    }
+}
+
+public protocol Queryable {
+    associatedtype ResultType
+    
+    var singleTrait: Single<ResultType> { get }
+}
