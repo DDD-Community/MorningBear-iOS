@@ -28,8 +28,6 @@ class HomeViewModel<Provider: DataProviding> {
     @Bound(initValue: []) private(set) var badges: [Badge]
     @Bound(initValue: []) private(set) var articles: [Article]
     
-    @Bound(initValue: "00:00:00") private(set) var elapsedTime: String
-    @Bound(initValue: .waiting) private(set) var recordingState: MyMorningRecordingState
     private var elapsedTimeRelay: BehaviorRelay<String>
     var elapsedTimeObservable: Observable<String> {
         elapsedTimeRelay.asObservable()
