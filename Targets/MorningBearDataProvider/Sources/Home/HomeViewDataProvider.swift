@@ -29,6 +29,10 @@ public class HomeViewDataProvider {
 }
 
 public extension HomeViewDataProvider {
+    func fetch() {
+        
+    }
+    
     func state() -> State {
         let data = State(nickname: "니나노", oneLiner: "갓생사는 멋진 사람 되기!")
         return data
@@ -38,12 +42,12 @@ public extension HomeViewDataProvider {
         return myInfoDataProvider.fetch(.myInfo)
     }
     
-    func recentMorning() -> [RecentMorning] {
+    func recentMorning() -> Single<[RecentMorning]> {
         return myMorningDataProvider.fetch()
     }
     
-    func badges() -> [Badge] {
-        return badgeDataProvider.fetchBadges()
+    func badges() -> Single<[Badge]> {
+        return badgeDataProvider.fetch()
     }
     
     func articles() -> [Article] {
