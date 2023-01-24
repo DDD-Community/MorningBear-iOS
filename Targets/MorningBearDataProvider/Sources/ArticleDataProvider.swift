@@ -39,14 +39,19 @@ public struct ArticleDataProvider {
 }
 
 extension ArticleDataProvider: DataProviding {
-    public func fetch(_ model: Query) -> Single<[Article]> {
-        guard case .article(let size) = model else { return .error(DataProviderError.invalidInput) }
+    public func fetch(_ query: Queries) -> Single<[Article]> {
+        guard case .article(let size) = query else {
+            return .error(DataProviderError.invalidInput)
+        }
         
+        return fetch(ArticleQuery(size: size))
+    }
+    
+    public func fetch(_ model: ArticleQuery) -> Single<[Article]> {
         let singleTrait = Network.shared.apollo.rx
-            .fetch(query: SearchArticleQuery(input: GraphQLNullable<Int>(integerLiteral: size)))
+            .fetch(query: SearchArticleQuery(input: .some(model.size)))
             .map { data -> [SearchArticleQuery.Data.SearchArticle] in
                 let queryResults = data.data?.searchArticle?.compactMap { $0 }
-                print(data)
                 
                 return queryResults ?? []
             }
@@ -59,8 +64,13 @@ extension ArticleDataProvider: DataProviding {
         return singleTrait
     }
     
-    public enum Query: Queryable {
+    /// 사용 편의를 위해 만든 `enum` 없어도 프로토콜은 준수할 수 있음
+    public enum Queries {
         case article(size: Int)
+    }
+    
+    public struct ArticleQuery: Queryable {
+        let size: Int
     }
 }
 
