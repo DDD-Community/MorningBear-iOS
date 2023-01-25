@@ -15,11 +15,34 @@ public struct MorningRegistrationInfo {
     public let endTime: Date
     public let comment: String
     
-    public init(image: UIImage, category: String, startTime: Date, endTime: Date, comment: String) {
+    public init(image: UIImage, category: Category, startTime: Date, endTime: Date, comment: String) {
         self.image = image
-        self.category = category
+        self.category = category.id
         self.startTime = startTime
         self.endTime = endTime
         self.comment = comment
+    }
+    
+    public enum Category: String {
+        case exercies
+        case study
+        case living
+        case emotion
+        case hobby
+        
+        var id: String {
+            switch self {
+            case .exercies:
+                return "C1"
+            case .study:
+                return "C2"
+            case .living:
+                return "C3"
+            case .emotion:
+                return "C4"
+            case .hobby:
+                return "C5"
+            }
+        }
     }
 }
