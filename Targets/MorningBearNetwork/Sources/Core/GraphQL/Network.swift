@@ -23,7 +23,7 @@ public class Network {
         
         // FIXME: 토큰 숨기기
         let authPayloads = [
-            "Authorization": "Bearer JuqYy0ScmYq4NDRe0mD2o9XxXZ8bkG1X4h66zu3lt/tWJZylGBtLUuZD5mGEFrWD7rhCJGUn78a/Q+h55ec8TQ=="
+            "Authorization": "Bearer cJBURfM5nHJe0fyOTkGz8Kmz/vrsayoC6gOHVWZZXsQtiI3nGyLXA/fO9qWCs9QvEtJL7bJRO1csDnk2lhF8XA=="
         ]
         let configuration = URLSessionConfiguration.default
         configuration.httpAdditionalHeaders = authPayloads
@@ -43,28 +43,61 @@ public class Network {
     }
 }
 
-class NetworkInterceptorProvider: DefaultInterceptorProvider {
+/// 인터셉터들을 아폴로 클라이언트에 전달한다
+fileprivate final class NetworkInterceptorProvider: DefaultInterceptorProvider {
     override func interceptors<Operation: GraphQLOperation>(for operation: Operation) -> [ApolloInterceptor] {
         var interceptors = super.interceptors(for: operation)
-        interceptors.insert(CustomInterceptor(), at: 0)
+        
+        interceptors += [HeaderInterceptor()]
+        interceptors += [RequestLoggingInterceptor()]
+        
         return interceptors
     }
 }
 
-class CustomInterceptor: ApolloInterceptor {
+/// 리퀘스트를 스니핑하면서 로깅한다
+fileprivate final class RequestLoggingInterceptor: ApolloInterceptor {
+    let showResponseBody = false
+    
+    func interceptAsync<Operation: GraphQLOperation>(
+        chain: RequestChain,
+        request: HTTPRequest<Operation>,
+        response: HTTPResponse<Operation>?,
+        completion: @escaping (Result<GraphQLResult<Operation.Data>, Error>) -> Void) {
+            
+            if let url = try? request.toURLRequest().url?.absoluteString.removingPercentEncoding {
+                if let variables = request.operation.__variables {
+                    print("[🛰️ Apollo 🛰️] REQUEST 📤: " + "\(Operation.operationName) \n" +
+                          "↪️ Parameters: \(variables), to: \(url)")
+                } else {
+                    print("[🛰️ Apollo 🛰️] REQUEST 📤: " + "\(Operation.operationName) \n" +
+                          "↪️ To: \(url)")
+                }
+            }
+            
+            if let response {
+                print("[🛰️ Apollo 🛰️] RESPONSE 📨 of \(Operation.operationName): \n" +
+                      "↪️ Http response: \(response.httpResponse)\n" +
+                      "↪️ Body: \(String(describing: response.rawData))\n" +
+                      (showResponseBody ? "↪️ Legacy: \(String(describing: response.parsedResponse))" : "")
+                )
+            }
+            
+            chain.proceedAsync(request: request, response: response, completion: completion)
+        }
+}
+
+/// 헤더에 필요한 정보를 더한다
+fileprivate final class HeaderInterceptor: ApolloInterceptor {
     func interceptAsync<Operation: GraphQLOperation>(
         chain: RequestChain,
         request: HTTPRequest<Operation>,
         response: HTTPResponse<Operation>?,
         completion: @escaping (Swift.Result<GraphQLResult<Operation.Data>, Error>) -> Void) {
-        request.addHeader(name: "Authorization",
-                          value: "Bearer UXve76eMe1aZXd/oMJgKCfeSHvoj5ZrSPrzMljqxK3NKQkwq/24Yj8pec9t3mlRQnWI4gCw8d37I19er1Xwr9Q==")
-        
-        print("request :\(request)")
-        print("response :\(String(describing: response))")
-        
-        chain.proceedAsync(request: request,
-                           response: response,
-                           completion: completion)
-    }
+            
+            request.addHeader(name: "Authorization",
+                              value: "Bearer UXve76eMe1aZXd/oMJgKCfeSHvoj5ZrSPrzMljqxK3NKQkwq/24Yj8pec9t3mlRQnWI4gCw8d37I19er1Xwr9Q==")
+            
+            chain.proceedAsync(request: request, response: response,completion: completion)
+        }
 }
