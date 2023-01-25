@@ -13,11 +13,11 @@ import RxBlocking
 @testable import MorningBearDataEditor
 
 final class MyMorningDateEditorTests: XCTestCase {
-    private var mockStorageManager: (any RemoteStorageType)!
+    private var mockStorageManager: (any RemoteStoraging)!
     private var myMorningDataEditor: MyMorningDataEditor!
 
     override func setUpWithError() throws {
-        mockStorageManager = RemoteStorageType.Mock(saveAction: {
+        mockStorageManager = RemoteStoraging.Mock(saveAction: {
             .just(self.expectedURL)
         }, loadAction: {
             .just(self.expectedImage)

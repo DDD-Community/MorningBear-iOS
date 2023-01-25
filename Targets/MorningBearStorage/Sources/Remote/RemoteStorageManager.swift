@@ -10,7 +10,7 @@ import UIKit
 
 import RxSwift
 
-public struct RemoteStorageManager<Storage>: RemoteStorageType where Storage: StorageType {
+public struct RemoteStorageManager<Storage>: RemoteStoraging where Storage: StorageType {
     public let remoteStorageService: Storage
     
     public func saveImage(_ image: UIImage) -> Single<URL> {

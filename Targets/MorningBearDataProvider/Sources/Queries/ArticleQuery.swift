@@ -39,7 +39,7 @@ public struct ArticleQuery: Queryable {
     }
 }
 
-extension MorningBearAPI.SearchArticleQuery.Data.SearchArticle  {
+fileprivate extension MorningBearAPI.SearchArticleQuery.Data.SearchArticle  {
     var toNativeType: Article {
         var weblink: URL? = nil // self.link가 없으면 URL == nil
         if let link = self.link {
@@ -51,26 +51,4 @@ extension MorningBearAPI.SearchArticleQuery.Data.SearchArticle  {
                        description: self.description ?? "",
                        weblink: weblink)
     }
-}
-
-public struct ArticleDataProvider {
-    public func articles() -> [Article] {
-        let data: [Article] = [
-            .init(image: UIColor.random.image(), title: "아티클 제목", description: "아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!아주아주 긴 내용!"),
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
-            .init(image: UIColor.random.image(), title: "music아이템(title1)", description: "music아이템(desc1)"),
-        ]
-        
-        return data
-    }
-    
-    public init() {}
 }

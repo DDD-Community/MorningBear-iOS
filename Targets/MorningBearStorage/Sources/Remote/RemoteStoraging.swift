@@ -10,7 +10,7 @@ import UIKit
 
 import RxSwift
 
-public protocol RemoteStorageType {
+public protocol RemoteStoraging {
     associatedtype Storage: StorageType
 
     var remoteStorageService: Storage { get }
@@ -18,11 +18,11 @@ public protocol RemoteStorageType {
     func loadImage(_ url: URL) -> Single<UIImage>
 }
 
-extension RemoteStorageType {
+extension RemoteStoraging {
     typealias Mock = MockRemoteStorageManager
 }
 
-struct MockRemoteStorageManager: RemoteStorageType {
+struct MockRemoteStorageManager: RemoteStoraging {
     let saveAction: () -> Single<URL>
     let loadAction: () -> Single<UIImage>
     
