@@ -89,7 +89,7 @@ private extension RegisterMorningViewModel {
                 
                 self.handleResponse(photoLink, updateBadges)
             }, onError: { error in
-                print("Morner ERROR: \(error)")
+                MorningBearLogger.track(error)
                 throw error
             }, onDispose: { [weak self] in
                 guard let self else { return }

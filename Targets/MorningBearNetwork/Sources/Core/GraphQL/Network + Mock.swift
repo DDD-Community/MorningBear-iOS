@@ -30,9 +30,7 @@ public final class MockNetworkTransport: NetworkTransport {
                 completionHandler(.failure(URLError(.badServerResponse)))
                 return
             }
-            
-            print("@@", result, self.body)
-            
+                        
             completionHandler(.success(result.0))
         }
         
