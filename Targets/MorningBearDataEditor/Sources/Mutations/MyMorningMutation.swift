@@ -1,8 +1,8 @@
 //
-//  MyMorningDataEditor.swift
+//  MyMorningDataMutation.swift
 //  MorningBearDataEditor
 //
-//  Created by 이영빈 on 2023/01/19.
+//  Created by Young Bin on 2023/01/25.
 //  Copyright © 2023 com.dache. All rights reserved.
 //
 
@@ -11,52 +11,17 @@ import Foundation
 import RxSwift
 
 @_exported import MorningBearData
-
-import UIKit
-
-import MorningBearUI
 import MorningBearAPI
 import MorningBearNetwork
-import MorningBearStorage
+import MorningBearUI
 
-public protocol MyMorningDataEditing: DataEditing where InputType == MorningRegistrationInfo,
-                                                       ReturnType == (photoLink: String, updateBadges: [Badge]) {
-    func request(_ data: InputType) -> Single<ReturnType>
-}
-
-public struct MyMorningDataEditor: MyMorningDataEditing {
-    public typealias ReturnType = (photoLink: String, updateBadges: [Badge])
-    public typealias Firebase = FirebaseStorageService
-
-    private let remoteStorageManager: any RemoteStorageType
-//    private let networkClient: ApolloClient
-
-    public init(
-        _ remoteStorageManager: any RemoteStorageType = RemoteStorageManager<Firebase>()
-//        _ networkClient: ApolloClientProtocol = Network.shared.apollo
-    ) {
-        self.remoteStorageManager = remoteStorageManager
-//        self.networkClient = networkClient
-    }
-}
-
-public extension MyMorningDataEditor {
-    func request(_ data: MorningRegistrationInfo) -> Single<ReturnType> {
-        let singleTrait = remoteStorageManager
-            .saveImage(data.image)
-            .map { photoUrl -> PhotoInput in
-                return data.toApolloMuataionType(photoLink: photoUrl)
-            }
-            .map { requestMutation($0) }
-            .flatMap { $0 }
-
-        return singleTrait
-    }
-}
-
-private extension MyMorningDataEditor {
-    func requestMutation(_ photoInput: PhotoInput) -> Single<ReturnType> {
-        let singleTrait = Network.shared.apollo.rx
+public struct MyMorningMutation: Mutable {
+    public typealias ResultType = (photoLink: String, updateBadges: [Badge])
+    
+    private let photoInput: PhotoInput
+    
+    public var singleTrait: Single<ResultType> {
+        Network.shared.apollo.rx
             .perform(mutation: SaveMyPhotoMutation(input: .some(photoInput)))
             .map { data -> SaveMyPhotoMutation.Data.SaveMyPhoto in
                 guard let mutationResult = data.data else {
@@ -69,7 +34,7 @@ private extension MyMorningDataEditor {
                 
                 return valueInResult
             }
-            .map { mutationResult -> ReturnType in
+            .map { mutationResult -> ResultType in
                 guard let photoLink = mutationResult.photoLink else {
                     throw DataEditorError.invalidPayloadData
                 }
@@ -84,18 +49,19 @@ private extension MyMorningDataEditor {
                 
                 return (photoLink, updatedBadges)
             }
-        
-        return singleTrait
+    }
+    
+    public init(photoInput: PhotoInput) {
+        self.photoInput = photoInput
     }
 }
 
 fileprivate extension MorningRegistrationInfo {
     func toApolloMuataionType(photoLink: URL) -> PhotoInput {
         return PhotoInput(
-            photoId: .some("?"),
             photoLink: .some(photoLink.absoluteString),
             photoDesc: .some(self.comment),
-            categoryId: .some("0"),
+            categoryId: .some("C1"),
             startAt: .some(self.startTime.toString()),
             endAt: .some(self.endTime.toString())
         )

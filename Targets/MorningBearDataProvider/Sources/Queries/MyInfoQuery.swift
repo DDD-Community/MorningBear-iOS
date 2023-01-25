@@ -8,16 +8,15 @@
 
 import Foundation
 
-@_exported import MorningBearData
 
 import UIKit
 
 import RxSwift
 
+@_exported import MorningBearData
 import MorningBearUI
 import MorningBearAPI
 import MorningBearNetwork
-import MorningBearStorage
 
 public struct MyInfoQuery: Queryable {
     public let singleTrait = Network.shared.apollo.rx.fetch(query: MyInfoForHomeQuery())
