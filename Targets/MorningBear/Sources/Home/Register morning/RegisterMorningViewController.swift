@@ -217,7 +217,7 @@ private extension RegisterMorningViewController {
         .disposed(by: bag)
     }
     
-    func getCategoryTextInsideCell() throws -> String {
+    func getCategoryTextInsideCell() throws -> Int {
         guard let categoryCollectionViewProvider else {
             fatalError("카테고리 콜렉션 뷰가 설정되지 않음")
         }
@@ -226,15 +226,7 @@ private extension RegisterMorningViewController {
             throw DataError.emptyCategory
         }
         
-        guard let cell = categoryCollectionView.cellForItem(at: selectedCategoryIndexPath) as? CapsuleCell else {
-            fatalError("셀을 불러올 수 없음")
-        }
-        
-        guard let categoryText = cell.contentText, !categoryText.isEmpty else {
-            fatalError("비어있는 셀 텍스트")
-        }
-        
-        return categoryText
+        return selectedCategoryIndexPath.row
     }
 }
 

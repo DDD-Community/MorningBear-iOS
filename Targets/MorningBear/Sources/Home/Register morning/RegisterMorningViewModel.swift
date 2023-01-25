@@ -37,11 +37,8 @@ class RegisterMorningViewModel<Editor: MyMorningDataEditing> {
 
 // MARK: - Public tools
 extension RegisterMorningViewModel {
-    typealias RegistrationInfo = Editor.InputType
-    typealias ReturnType = Editor.ReturnType
-    
     func registerMorningInformation(_ image: UIImage,
-                                    _ category: String,
+                                    _ category: Int,
                                     _ startText: String,
                                     _ endText: String,
                                     _ commentText: String) -> Single<Void> {
@@ -64,7 +61,11 @@ extension RegisterMorningViewModel {
 
         let comment = commentText
         
-        let info = MorningRegistrationInfo(image: image, category: category,
+        guard let intParsedCategory = MorningRegistrationInfo.Category(rawValue: category) else {
+            return .error(DataError.emptyCategory)
+        }
+        
+        let info = MorningRegistrationInfo(image: image, category: intParsedCategory,
                                            startTime: fullStartDate, endTime: fullEndDate,
                                            comment: comment)
         
@@ -83,7 +84,7 @@ extension RegisterMorningViewModel {
 
 private extension RegisterMorningViewModel {
     func handleRegisterRequest(info: MorningRegistrationInfo) -> Single<Void> {
-        return myMorningDataEditor.request(info)
+        return myMorningDataEditor.request(info: info)
             .do(onSuccess: { [weak self] (photoLink: String, updateBadges: [Badge]) in
                 guard let self else { return }
                 

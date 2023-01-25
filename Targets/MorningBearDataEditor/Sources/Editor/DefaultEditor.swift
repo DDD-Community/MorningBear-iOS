@@ -8,6 +8,6 @@
 
 import Foundation
 
-public final class DefaultEditor: DataEdit {
+public final class DefaultEditor: DataEditing {
     public static let shared = DefaultEditor()
 }
