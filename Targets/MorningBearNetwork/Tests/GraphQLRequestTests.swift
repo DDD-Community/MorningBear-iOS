@@ -52,8 +52,6 @@ final class GraphQLRequestTests: XCTestCase {
         
         let expect = XCTestExpectation()
         mockClient.fetch(query: SearchArticleQuery(input: .some(10))) { result in
-            print("@@", result)
-            print("@@", result.map { $0.data?.searchArticle } )
             expect.fulfill()
         }
         

@@ -42,11 +42,13 @@ class HomeViewModel<Provider: DataProviding> {
         dataProvider.fetch(BadgeQuery())
             .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
             .subscribe(
-                onSuccess: { data in
+                onSuccess: { [weak self] data in
+                    guard let self else { return }
+                    
                     self.badges = data
                 },
                 onFailure: {
-                    print($0)
+                    MorningBearLogger.track($0)
                 }
             )
             .disposed(by: bag)
@@ -55,25 +57,25 @@ class HomeViewModel<Provider: DataProviding> {
         dataProvider.fetch(MyMorningQuery())
             .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
             .subscribe(
-                onSuccess: { data in
+                onSuccess: { [weak self] data in
+                    guard let self else { return }
                     self.recentMornings = Array(data.prefix(4)) // 상위 4개만 표시하는게 정책임
                 },
                 onFailure: {
-                    print($0)
+                    MorningBearLogger.track($0)
                 }
             )
             .disposed(by: bag)
         
-        dataProvider.fetch(HomeQuery())
+        dataProvider.fetch(ArticleQuery(size: 10))
             .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
-            .subscribe(onSuccess: { [weak self] badges, myInfo, mornings, articles in
+            .subscribe(onSuccess: { [weak self] articles in
                 guard let self else { return }
                 
-                self.myInfo = myInfo
-                self.recentMornings = mornings
-                self.badges = badges
                 self.articles = articles
-            }, onFailure: { print("@@", $0) })
+            }, onFailure: {
+                MorningBearLogger.track($0)
+            })
             .disposed(by: bag)
     }
     

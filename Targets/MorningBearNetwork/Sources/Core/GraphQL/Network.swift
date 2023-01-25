@@ -57,7 +57,7 @@ fileprivate final class NetworkInterceptorProvider: DefaultInterceptorProvider {
 
 /// 리퀘스트를 스니핑하면서 로깅한다
 fileprivate final class RequestLoggingInterceptor: ApolloInterceptor {
-    let showResponseBody = false
+    private let showResponseBody = true
     
     func interceptAsync<Operation: GraphQLOperation>(
         chain: RequestChain,
@@ -78,8 +78,7 @@ fileprivate final class RequestLoggingInterceptor: ApolloInterceptor {
             if let response {
                 print("[🛰️ Apollo 🛰️] RESPONSE 📨 of \(Operation.operationName): \n" +
                       "↪️ Http response: \(response.httpResponse)\n" +
-                      "↪️ Body: \(String(describing: response.rawData))\n" +
-                      (showResponseBody ? "↪️ Legacy: \(String(describing: response.parsedResponse))" : "")
+                      (showResponseBody ? "↪️ Body: \(String(data: response.rawData, encoding: .utf8) ?? "")\n" : "")
                 )
             }
             
