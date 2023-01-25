@@ -19,32 +19,26 @@ import MorningBearAPI
 import MorningBearNetwork
 import MorningBearStorage
 
-public protocol MyMorningDataEdit: DataEdit {
-    func perform<Mutation: MyMorningMutable>(_ mutation: Mutation) -> Single<Mutation.ResultType>
-}
-
-public protocol MyMorningMutable: Mutable {}
-extension NewMorningMutation: MyMorningMutable {}
-
-public struct MorningDataEdit<Remote: RemoteStoraging, Storage: StorageType>: MyMorningDataEdit {
+// MARK: - Editor body
+public struct MyMorningDataEditor: MyMorningDataEditing {
     public typealias ResultType = (photoLink: String, updateBadges: [Badge])
     public typealias Firebase = FirebaseStorageService
 
-    private let remoteStorageManager: Remote
+    private let remoteStorageManager: RemoteStorageManager<Firebase>
 
     public func perform<Mutation: MyMorningMutable>(_ mutation: Mutation) -> Single<Mutation.ResultType> {
         return mutation.singleTrait
     }
     
-    public init(_ remoteStorageManager: Remote = RemoteStorageManager<Firebase>()) {
+    public init(_ remoteStorageManager: RemoteStorageManager<Firebase> = RemoteStorageManager<Firebase>()) {
         self.remoteStorageManager = remoteStorageManager
     }
 }
 
-public extension MorningDataEdit where Storage == Firebase {
+public extension MyMorningDataEditor {
     func request(info: MorningRegistrationInfo) -> Single<ResultType> {
         let mutation = NewMorningMutation(info: info, self.remoteStorageManager)
-        
+                
         return self.perform(mutation)
     }
 }

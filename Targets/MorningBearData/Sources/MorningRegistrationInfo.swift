@@ -23,7 +23,7 @@ public struct MorningRegistrationInfo {
         self.comment = comment
     }
     
-    public enum Category: String {
+    public enum Category: Int {
         case exercies
         case study
         case living
