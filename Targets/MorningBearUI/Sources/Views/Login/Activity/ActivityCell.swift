@@ -29,7 +29,7 @@ public class ActivityCell: UICollectionViewCell {
         designCell()
     }
     
-    public func configure(data: Activity) {
+    public func prepate(_ data: Activity) {
         imageView.image = data.image
         activityName.text = data.name
     }

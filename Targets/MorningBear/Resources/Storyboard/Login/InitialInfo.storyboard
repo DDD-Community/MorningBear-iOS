@@ -17,10 +17,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EQE-8p-N0D">
-                                <rect key="frame" x="0.0" y="59" width="393" height="759"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y5z-Pw-2TQ">
                                 <rect key="frame" x="20" y="732" width="353" height="56"/>
                                 <constraints>
@@ -63,20 +59,11 @@
                         <constraints>
                             <constraint firstItem="y5z-Pw-2TQ" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="BO3-ml-CAI"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="y5z-Pw-2TQ" secondAttribute="trailing" constant="20" id="Cg4-u2-DyD"/>
-                            <constraint firstItem="EQE-8p-N0D" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="L2u-cz-2O1"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="y5z-Pw-2TQ" secondAttribute="bottom" constant="30" id="LfP-0H-H9q"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="zwG-Fq-sAZ" secondAttribute="trailing" id="Qpu-4E-yub"/>
-                            <constraint firstItem="EQE-8p-N0D" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="UJ7-4j-xPH"/>
                             <constraint firstItem="zwG-Fq-sAZ" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="ald-MV-WBs"/>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="EQE-8p-N0D" secondAttribute="bottom" id="cXo-dz-1QF"/>
                             <constraint firstItem="zwG-Fq-sAZ" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="fI1-iD-oge"/>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="EQE-8p-N0D" secondAttribute="trailing" id="nnz-bG-cjE"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="subviews">
-                                <exclude reference="EQE-8p-N0D"/>
-                            </mask>
-                        </variation>
                     </view>
                     <connections>
                         <outlet property="backButton" destination="kzd-Hq-m68" id="95v-fp-rfJ"/>
@@ -178,17 +165,33 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2Cd-FT-bVH">
+                                <rect key="frame" x="0.0" y="147" width="393" height="671"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="0.0" minimumInteritemSpacing="10" id="LgH-Q8-Del">
+                                    <size key="itemSize" width="128" height="140"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells/>
+                            </collectionView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="ZWI-XL-u4z"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="iWQ-vo-jA2" firstAttribute="top" secondItem="ZWI-XL-u4z" secondAttribute="top" constant="12" id="2cH-cm-hFy"/>
+                            <constraint firstItem="2Cd-FT-bVH" firstAttribute="leading" secondItem="ZWI-XL-u4z" secondAttribute="leading" id="3XL-8h-2Q0"/>
                             <constraint firstItem="iWQ-vo-jA2" firstAttribute="leading" secondItem="ZWI-XL-u4z" secondAttribute="leading" constant="20" id="4O0-o1-ioq"/>
                             <constraint firstItem="PPk-5c-evp" firstAttribute="leading" secondItem="ZWI-XL-u4z" secondAttribute="leading" constant="20" id="EOd-QX-Wnz"/>
+                            <constraint firstItem="ZWI-XL-u4z" firstAttribute="bottom" secondItem="2Cd-FT-bVH" secondAttribute="bottom" id="Em4-jO-5D7"/>
                             <constraint firstItem="PPk-5c-evp" firstAttribute="top" secondItem="iWQ-vo-jA2" secondAttribute="bottom" constant="4" id="Jzk-vQ-2E7"/>
+                            <constraint firstItem="2Cd-FT-bVH" firstAttribute="top" secondItem="PPk-5c-evp" secondAttribute="bottom" constant="30" id="hzf-ij-DcE"/>
+                            <constraint firstItem="ZWI-XL-u4z" firstAttribute="trailing" secondItem="2Cd-FT-bVH" secondAttribute="trailing" id="oW0-Py-Bh5"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="collectionView" destination="2Cd-FT-bVH" id="G7Q-D8-zs9"/>
                         <outlet property="descriptionLabel" destination="PPk-5c-evp" id="l6e-0U-S3I"/>
                         <outlet property="titleLabel" destination="iWQ-vo-jA2" id="F2e-4X-uJf"/>
                     </connections>
