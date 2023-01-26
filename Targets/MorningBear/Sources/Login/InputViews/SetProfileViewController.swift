@@ -106,14 +106,22 @@ class SetProfileViewController: UIViewController {
             .disposed(by: bag)
     }
     
+    private func checkStateAndAvailiableNextButton() {
+        if imageIsSelected && nicknameTextField.text != "" {
+            viewModel.canGoNext.accept(true)
+        } else {
+            viewModel.canGoNext.accept(false)
+        }
+    }
+    
     @objc func textFieldIsEditing(_ sender: Any?) {
         if nicknameTextField.text == "" {
             cancelButton.isHidden = true
-            viewModel.canGoNext.accept(false)
         } else {
             cancelButton.isHidden = false
-            if imageIsSelected { viewModel.canGoNext.accept(true) }
         }
+        
+        checkStateAndAvailiableNextButton()
     }
 }
 
@@ -132,6 +140,7 @@ extension SetProfileViewController: PHPickerViewControllerDelegate {
                     self.profileImageView.image = image as? UIImage
                     self.imageIsSelected = true
                 }
+                self.checkStateAndAvailiableNextButton()
             }
         } else {
             fatalError("empty results or item provider not being able load UIImage")
