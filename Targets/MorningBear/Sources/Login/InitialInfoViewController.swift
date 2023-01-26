@@ -96,6 +96,7 @@ class InitialInfoViewController: UIViewController {
             .bind { owner, _ in
                 let currentValue = owner.viewModel.currentIndex.value
                 owner.viewModel.currentIndex.accept(currentValue + 1)
+                owner.viewModel.canGoNext.accept(false)
             }
             .disposed(by: bag)
         
@@ -142,6 +143,7 @@ class InitialInfoViewController: UIViewController {
     }
 }
 
+
 /// just return nil to disable swipe gesture
 extension InitialInfoViewController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
@@ -151,9 +153,4 @@ extension InitialInfoViewController: UIPageViewControllerDataSource {
         return nil
     }
 }
-
-extension InitialInfoViewController: UIPageViewControllerDelegate {
-    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-        
-    }
-}
+extension InitialInfoViewController: UIPageViewControllerDelegate {}

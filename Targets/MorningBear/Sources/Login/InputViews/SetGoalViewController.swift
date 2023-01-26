@@ -16,7 +16,6 @@ class SetGoalViewController: UIViewController {
     
     private let bag = DisposeBag()
     private let viewModel = InitialInfoViewModel.shared
-    private let maxLength = 12
     
     @IBOutlet weak var titleLabel: UILabel! {
         didSet {
@@ -35,6 +34,7 @@ class SetGoalViewController: UIViewController {
     @IBOutlet weak var goalTextField: MorningBearUITextField! {
         didSet {
             goalTextField.placeholder = "이루고자 하는 결심을 입력해 주세요"
+            goalTextField.addTarget(self, action: #selector(self.textFieldIsEditing(_:)), for: .editingChanged)
         }
     }
     
@@ -51,6 +51,14 @@ class SetGoalViewController: UIViewController {
     private func setDelegate() {
         goalTextField.delegate = self
     }
+    
+    @objc func textFieldIsEditing(_ sender: Any?) {
+        if goalTextField.text == "" {
+            viewModel.canGoNext.accept(false)
+        } else {
+            viewModel.canGoNext.accept(true)
+        }
+    }
 }
 
 extension SetGoalViewController: UITextFieldDelegate {
@@ -59,6 +67,8 @@ extension SetGoalViewController: UITextFieldDelegate {
         shouldChangeCharactersIn range: NSRange,
         replacementString string: String
     ) -> Bool {
+        let maxLength = 12
+        
         if let char = string.cString(using: String.Encoding.utf8) {
             let isBackSpace = strcmp(char, "\\b")
             if isBackSpace == -92 {

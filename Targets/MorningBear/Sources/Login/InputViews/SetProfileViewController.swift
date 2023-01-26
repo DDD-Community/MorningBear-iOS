@@ -17,6 +17,7 @@ class SetProfileViewController: UIViewController {
     
     private let bag = DisposeBag()
     private let viewModel = InitialInfoViewModel.shared
+    private var imageIsSelected: Bool = false
     
     private lazy var photoPicker: PHPickerViewController = {
         var configuration = PHPickerConfiguration()
@@ -61,12 +62,13 @@ class SetProfileViewController: UIViewController {
             nicknameTextField.tintColor = .white
             nicknameTextField.font = MorningBearUIFontFamily.Pretendard.Typography.bodyLarge.font
             nicknameTextField.placeholder = "닉네임을 입력해주세요"
+            nicknameTextField.addTarget(self, action: #selector(self.textFieldIsEditing(_:)), for: .editingChanged)
         }
     }
     @IBOutlet weak var cancelButton: UIButton! {
         didSet {
             cameraImageView.contentMode = .scaleAspectFit
-            cancelButton.imageView?.image = MorningBearUIAsset.Images.cancelCircle.image
+            cancelButton.setImage(MorningBearUIAsset.Images.cancelCircle.image, for: .normal)
             cancelButton.isHidden = true
         }
     }
@@ -99,8 +101,19 @@ class SetProfileViewController: UIViewController {
             .withUnretained(self)
             .bind { owner, _ in
                 owner.nicknameTextField.text?.removeAll()
+                owner.cancelButton.isHidden = true
             }
             .disposed(by: bag)
+    }
+    
+    @objc func textFieldIsEditing(_ sender: Any?) {
+        if nicknameTextField.text == "" {
+            cancelButton.isHidden = true
+            viewModel.canGoNext.accept(false)
+        } else {
+            cancelButton.isHidden = false
+            if imageIsSelected { viewModel.canGoNext.accept(true) }
+        }
     }
 }
 
@@ -117,6 +130,7 @@ extension SetProfileViewController: PHPickerViewControllerDelegate {
                 }
                 DispatchQueue.main.async {
                     self.profileImageView.image = image as? UIImage
+                    self.imageIsSelected = true
                 }
             }
         } else {
