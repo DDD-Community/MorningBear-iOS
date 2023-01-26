@@ -8,6 +8,7 @@
 
 import UIKit
 
+import Kingfisher
 import MorningBearData
 
 public final class RecentMorningCell: UICollectionViewCell {
@@ -35,7 +36,8 @@ public final class RecentMorningCell: UICollectionViewCell {
 
 extension RecentMorningCell {
     private func prepareCell(_ data: RecentMorning?) {
-        self.imageView.image = data?.image
+        self.imageView.kf.setImage(with: data?.imageURL)
+//        self.imageView.image = data?.image
         self.titleLabel.text = data?.desc
     }
 }

@@ -49,8 +49,10 @@ public struct MyMorningPhotoQuery: Queryable {
 
 fileprivate extension GetMyMorningPhotosQuery.Data.FindMyInfo.PhotoInfo {
     var toNativeType: RecentMorning {
+        
         return RecentMorning(id: self.photoId ?? UUID().uuidString,
                              image: UIColor.random.image(),
+                             imageURL: URL(string: self.photoLink ?? ""),
                              desc: self.photoDesc ?? "")
     }
 }
