@@ -1,0 +1,12 @@
+query GetMyMorningPhotos($photoSize: Int = 4, $categorySize: Int = 5) {
+  findMyInfo(sizeInput: {
+    totalSize: $photoSize, 
+    categorySize: $categorySize 
+  }) {
+  	photoInfo {
+      photoLink
+      photoDesc
+      photoId
+    }
+  }
+}

@@ -13,6 +13,7 @@ public class User: MockObject {
     @Field<String>("accountId") public var accountId
     @Field<String>("memo") public var memo
     @Field<String>("nickName") public var nickName
+    @Field<[Photo?]>("photoInfo") public var photoInfo
     @Field<String>("photoLink") public var photoLink
     @Field<Report>("reportInfo") public var reportInfo
     @Field<String>("wakeUpAt") public var wakeUpAt
@@ -24,6 +25,7 @@ public extension Mock where O == User {
     accountId: String? = nil,
     memo: String? = nil,
     nickName: String? = nil,
+    photoInfo: [Mock<Photo>?]? = nil,
     photoLink: String? = nil,
     reportInfo: Mock<Report>? = nil,
     wakeUpAt: String? = nil
@@ -32,6 +34,7 @@ public extension Mock where O == User {
     self.accountId = accountId
     self.memo = memo
     self.nickName = nickName
+    self.photoInfo = photoInfo
     self.photoLink = photoLink
     self.reportInfo = reportInfo
     self.wakeUpAt = wakeUpAt
