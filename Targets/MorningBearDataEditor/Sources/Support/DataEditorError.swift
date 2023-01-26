@@ -11,7 +11,7 @@ import Foundation
 enum DataEditorError: LocalizedError {
     case cannotGetResponseFromServer
     case emptyResponse
-    case invalidPayloadData
+    case invalidPayloadData(message: String)
     
     var errorDescription: String? {
         switch self {

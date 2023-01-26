@@ -15,7 +15,7 @@ import MorningBearAPI
 import MorningBearNetwork
 import MorningBearUI
 
-public struct MyMorningMutation: Mutable {
+public struct MorningInfoRegisterMutation: Mutable {
     public typealias ResultType = (photoLink: String, updateBadges: [Badge])
     
     private let photoInput: PhotoInput
@@ -36,13 +36,13 @@ public struct MyMorningMutation: Mutable {
             }
             .map { mutationResult -> ResultType in
                 guard let photoLink = mutationResult.photoLink else {
-                    throw DataEditorError.invalidPayloadData
+                    throw DataEditorError.invalidPayloadData(message: "사진 링크 정보를 파싱할 수 없음")
                 }
                 
                 guard let receivedBadges = mutationResult.updatedBadge,
-                      receivedBadges.contains(nil)
+                      receivedBadges.contains(nil) == false
                 else {
-                    throw DataEditorError.invalidPayloadData
+                    throw DataEditorError.invalidPayloadData(message: "배지 정보를 파싱할 수 없음")
                 }
                 
                 let updatedBadges = receivedBadges.compactMap { $0?.toNativeType }
@@ -53,18 +53,6 @@ public struct MyMorningMutation: Mutable {
     
     public init(photoInput: PhotoInput) {
         self.photoInput = photoInput
-    }
-}
-
-fileprivate extension MorningRegistrationInfo {
-    func toApolloMuataionType(photoLink: URL) -> PhotoInput {
-        return PhotoInput(
-            photoLink: .some(photoLink.absoluteString),
-            photoDesc: .some(self.comment),
-            categoryId: .some("C1"),
-            startAt: .some(self.startTime.toString()),
-            endAt: .some(self.endTime.toString())
-        )
     }
 }
 

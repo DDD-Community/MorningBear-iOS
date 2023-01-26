@@ -187,16 +187,16 @@ private extension RegisterMorningViewController {
                 // 고른 카테고리 텍스트 가져오고(선택 안하면 에러)
                 let category = try self.getCategoryTextInsideCell()
                 
-                // 시간 정상적으로 있는지 체크
+                // 시간 파싱 가능한지 체크
                 guard let startTimeText = self.startTimeTextField.text,
                       let endTimeText = self.endTimeTextField.text
                 else {
-                    throw DataError.emptyData
+                    throw RegisterMorningViewError.emptyData
                 }
                 
                 // 이미지 정상인지 체크
                 guard let image = self.imageWrapperView.toUIImage else {
-                    throw DataError.emptyData
+                    throw RegisterMorningViewError.emptyData
                 }
                 
                 let commentText = self.commentTextView.text ?? ""
@@ -204,10 +204,13 @@ private extension RegisterMorningViewController {
                 // 정보 등록
                 self.viewModel
                     .registerMorningInformation(image, category, startTimeText, endTimeText, commentText)
-                    .subscribe(onFailure: { [weak self] error in
-                        guard let self else { return }
-                        self.showAlert(error)
-                    })
+                    .subscribe(
+                        onSuccess: { _ in
+                            self.navigationController?.popViewController(animated: true)
+                        },
+                        onFailure: { error in
+                            self.showAlert(error)
+                        })
                     .disposed(by: self.bag)
                 
             } catch let error {
@@ -223,7 +226,7 @@ private extension RegisterMorningViewController {
         }
         
         guard let selectedCategoryIndexPath = categoryCollectionViewProvider.currentSelectedIndexPath else {
-            throw DataError.emptyCategory
+            throw RegisterMorningViewError.emptyCategory
         }
         
         return selectedCategoryIndexPath.row
