@@ -55,8 +55,8 @@ private extension MorningBearUITextField {
         self.backgroundColor = .clear
         
         // Set content configs
-        self.textColor = MorningBearUIAsset.Colors.gray500.color
-        self.font = MorningBearUIFontFamily.Pretendard.regular.font(size: 14)
+        self.textColor = MorningBearUIAsset.Colors.gray50.color
+        self.font = MorningBearUIFontFamily.Pretendard.regular.font(size: 16)
         self.addLeftPadding()
     }
 }

@@ -14,6 +14,10 @@ import RxCocoa
 
 class SetGoalViewController: UIViewController {
     
+    private let bag = DisposeBag()
+    private let viewModel = InitialInfoViewModel.shared
+    private let maxLength = 12
+    
     @IBOutlet weak var titleLabel: UILabel! {
         didSet {
             titleLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 24)
@@ -28,8 +32,40 @@ class SetGoalViewController: UIViewController {
             descriptionLabel.text = "미라클 모닝 시작하기 전, 짧은 목표를 설정해 주세요"
         }
     }
+    @IBOutlet weak var goalTextField: MorningBearUITextField! {
+        didSet {
+            goalTextField.placeholder = "이루고자 하는 결심을 입력해 주세요"
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+      
+        setDelegate()
+    }
+    
+    private func setDelegate() {
+        goalTextField.delegate = self
+    }
+}
+
+extension SetGoalViewController: UITextFieldDelegate {
+    func textField(
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
+        replacementString string: String
+    ) -> Bool {
+        if let char = string.cString(using: String.Encoding.utf8) {
+            let isBackSpace = strcmp(char, "\\b")
+            if isBackSpace == -92 {
+                return true
+            }
+        }
+        guard textField.text!.count < maxLength else { return false }
+        return true
     }
 }

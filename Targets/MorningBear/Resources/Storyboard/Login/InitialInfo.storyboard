@@ -220,18 +220,30 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dfn-6u-6rU" customClass="MorningBearUITextField" customModule="MorningBearUI">
+                                <rect key="frame" x="20" y="147" width="353" height="56"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="56" id="bcd-G4-QwI"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="azX-wW-VUP"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="bDc-z0-23z" firstAttribute="leading" secondItem="azX-wW-VUP" secondAttribute="leading" constant="20" id="529-24-SbI"/>
+                            <constraint firstItem="dfn-6u-6rU" firstAttribute="top" secondItem="hMD-Jt-A43" secondAttribute="bottom" constant="30" id="62o-cv-IAO"/>
                             <constraint firstItem="hMD-Jt-A43" firstAttribute="leading" secondItem="azX-wW-VUP" secondAttribute="leading" constant="20" id="7Jr-xu-lRo"/>
                             <constraint firstItem="hMD-Jt-A43" firstAttribute="top" secondItem="bDc-z0-23z" secondAttribute="bottom" constant="4" id="Ahm-zy-efl"/>
                             <constraint firstItem="bDc-z0-23z" firstAttribute="top" secondItem="azX-wW-VUP" secondAttribute="top" constant="12" id="cwI-eB-qpi"/>
+                            <constraint firstItem="dfn-6u-6rU" firstAttribute="leading" secondItem="azX-wW-VUP" secondAttribute="leading" constant="20" id="h0b-vq-gv6"/>
+                            <constraint firstItem="azX-wW-VUP" firstAttribute="trailing" secondItem="dfn-6u-6rU" secondAttribute="trailing" constant="20" id="pc8-mY-aJt"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="descriptionLabel" destination="hMD-Jt-A43" id="3x2-gj-xps"/>
+                        <outlet property="goalTextField" destination="dfn-6u-6rU" id="YQ8-8b-pau"/>
                         <outlet property="titleLabel" destination="bDc-z0-23z" id="vaF-df-KQH"/>
                     </connections>
                 </viewController>
