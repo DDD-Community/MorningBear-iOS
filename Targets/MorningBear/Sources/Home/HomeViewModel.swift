@@ -54,7 +54,7 @@ class HomeViewModel<Provider: DataProviding> {
             .disposed(by: bag)
         
         
-        dataProvider.fetch(MyMorningQuery())
+        dataProvider.fetch(MyMorningPhotoQuery())
             .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
             .subscribe(
                 onSuccess: { [weak self] data in

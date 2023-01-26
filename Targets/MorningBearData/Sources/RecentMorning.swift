@@ -14,13 +14,11 @@ import UIKit
 public struct RecentMorning: Hashable, Identifiable {
     public let id: UUID
     public let image: UIImage
-    public let title: String
     public let desc: String
     
-    public init(image: UIImage, title: String, desc: String) {
+    public init(id: String, image: UIImage, desc: String) {
         self.id = UUID()
         self.image = image
-        self.title = title
         self.desc = desc
     }
 }
