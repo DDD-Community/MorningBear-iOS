@@ -36,6 +36,6 @@ public final class RecentMorningCell: UICollectionViewCell {
 extension RecentMorningCell {
     private func prepareCell(_ data: RecentMorning?) {
         self.imageView.image = data?.image
-        self.titleLabel.text = data?.title
+        self.titleLabel.text = data?.desc
     }
 }

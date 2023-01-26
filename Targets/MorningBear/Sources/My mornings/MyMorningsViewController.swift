@@ -90,7 +90,7 @@ extension MyMorningsViewController: DiffableDataSourcing {
                 withReuseIdentifier: "RecentMorningCell", for: indexPath
             ) as! RecentMorningCell
             
-            cell.prepare(RecentMorning(image: UIColor.random.image(), title: "kkk", desc: "kkk"))
+            cell.prepare(RecentMorning(id: UUID().uuidString, image: UIColor.random.image(), desc: "kkk"))
             return cell
         }
         

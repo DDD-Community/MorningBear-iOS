@@ -12,7 +12,7 @@ enum DataProviderError: LocalizedError {
     case invalidInput
     case cannotGetResponseFromServer
     case emptyResponse
-    case invalidPayloadData
+    case invalidPayloadData(message: String)
     
     var errorDescription: String? {
         switch self {

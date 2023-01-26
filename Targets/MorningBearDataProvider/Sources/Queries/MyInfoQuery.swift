@@ -26,7 +26,7 @@ public struct MyInfoQuery: Queryable {
             }
             
             guard let info = data.findMyInfo?.reportInfo else {
-                throw DataProviderError.invalidPayloadData
+                throw DataProviderError.invalidPayloadData(message: "나의 상태 정보를 불러올 수 없습니다")
             }
             
             return info
@@ -41,7 +41,7 @@ public struct MyInfoQuery: Queryable {
 fileprivate extension MyInfoForHomeQuery.Data.FindMyInfo.ReportInfo {
     func toNativeType() throws -> MyInfo {
         guard let totalTime, let countSucc else {
-            throw DataProviderError.invalidPayloadData
+            throw DataProviderError.invalidPayloadData(message: "나의 상태 정보 형식이 올바르지 않습니다(501)")
         }
         
         return MyInfo(estimatedTime: totalTime,
