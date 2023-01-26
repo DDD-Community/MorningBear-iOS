@@ -21,14 +21,7 @@ public class Network {
         let cache = InMemoryNormalizedCache()
         let store = ApolloStore(cache: cache)
         
-        // FIXME: 토큰 숨기기
-        let authPayloads = [
-            "Authorization": "Bearer cJBURfM5nHJe0fyOTkGz8Kmz/vrsayoC6gOHVWZZXsQtiI3nGyLXA/fO9qWCs9QvEtJL7bJRO1csDnk2lhF8XA=="
-        ]
-        let configuration = URLSessionConfiguration.default
-        configuration.httpAdditionalHeaders = authPayloads
-        
-        let sessionClient = URLSessionClient(sessionConfiguration: configuration, callbackQueue: nil)
+        let sessionClient = URLSessionClient(sessionConfiguration: .default, callbackQueue: nil)
         let provider = NetworkInterceptorProvider(client: sessionClient, shouldInvalidateClientOnDeinit: true, store: store)
         
         let url = URL(string: "http://138.2.126.76:8080/graphql")!
@@ -95,7 +88,7 @@ fileprivate final class HeaderInterceptor: ApolloInterceptor {
         completion: @escaping (Swift.Result<GraphQLResult<Operation.Data>, Error>) -> Void) {
             
             request.addHeader(name: "Authorization",
-                              value: "Bearer UXve76eMe1aZXd/oMJgKCfeSHvoj5ZrSPrzMljqxK3NKQkwq/24Yj8pec9t3mlRQnWI4gCw8d37I19er1Xwr9Q==")
+                              value: "Bearer cJBURfM5nHJe0fyOTkGz8Kmz/vrsayoC6gOHVWZZXsQtiI3nGyLXA/fO9qWCs9QvEtJL7bJRO1csDnk2lhF8XA==")
             
             chain.proceedAsync(request: request, response: response,completion: completion)
         }

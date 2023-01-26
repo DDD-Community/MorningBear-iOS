@@ -20,7 +20,3 @@ public protocol MyMorningDataEditing: DataEditing {
 }
 
 public protocol MyMorningMutable: Mutable {}
-
-
-// MARK: = Narrow the input mutation type
-extension NewMorningMutation: MyMorningMutable {}
