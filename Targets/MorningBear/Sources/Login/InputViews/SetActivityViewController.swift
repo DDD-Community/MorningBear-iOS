@@ -57,6 +57,7 @@ extension SetActivityViewController: CollectionViewCompositionable {
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.showsVerticalScrollIndicator = true
         collectionView.backgroundColor = .clear
+        collectionView.allowsMultipleSelection = true
     }
     
     func connectCollectionViewWithDelegates() {
@@ -86,5 +87,21 @@ extension SetActivityViewController: UICollectionViewDataSource {
         cell.prepate(item)
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath) as! ActivityCell
+        
+        cell.isSelected = true
+        viewModel.selectedActivities.append(indexPath.row.description)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath) as! ActivityCell
+        
+        cell.isSelected = false
+        if let index = viewModel.selectedActivities.firstIndex(of: indexPath.row.description) {
+            viewModel.selectedActivities.remove(at: index)
+        }
     }
 }

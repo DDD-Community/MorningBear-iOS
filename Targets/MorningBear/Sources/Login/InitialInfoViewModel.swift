@@ -22,15 +22,20 @@ class InitialInfoViewModel {
     var canGoNext: BehaviorRelay<Bool>
     var oldIndex: Int = 0
     
+    // Wake up
+    
+    // Activities
     // entity
     let activities: [Activity] = [
-        Activity(image: MorningBearUIAsset.Images.exercise.image, name: "운동"),
-        Activity(image: MorningBearUIAsset.Images.study.image, name: "공부"),
-        Activity(image: MorningBearUIAsset.Images.life.image, name: "생활"),
-        Activity(image: MorningBearUIAsset.Images.emotion.image, name: "정서"),
-        Activity(image: MorningBearUIAsset.Images.hobby.image, name: "취미"),
-        Activity(image: MorningBearUIAsset.Images.etc.image, name: "기타")
+        Activity(id: "0", image: MorningBearUIAsset.Images.exercise.image, name: "운동"),
+        Activity(id: "1", image: MorningBearUIAsset.Images.study.image, name: "공부"),
+        Activity(id: "2", image: MorningBearUIAsset.Images.life.image, name: "생활"),
+        Activity(id: "3", image: MorningBearUIAsset.Images.emotion.image, name: "정서"),
+        Activity(id: "4", image: MorningBearUIAsset.Images.hobby.image, name: "취미"),
+        Activity(id: "5", image: MorningBearUIAsset.Images.etc.image, name: "기타")
     ]
+    
+    var selectedActivities: [String] = []
     
     func completeInitialStep() {}
     

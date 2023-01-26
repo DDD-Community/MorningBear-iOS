@@ -12,6 +12,12 @@ import UIKit
 public class ActivityCell: UICollectionViewCell {
     public static let reuseIdentifier = String(describing: ActivityCell.self)
     
+    public override var isSelected: Bool {
+        didSet {
+            update(isSelected)
+        }
+    }
+    
     @IBOutlet weak var imageView: UIImageView! {
         didSet {
             imageView.contentMode = .scaleAspectFit
@@ -32,6 +38,16 @@ public class ActivityCell: UICollectionViewCell {
     public func prepate(_ data: Activity) {
         imageView.image = data.image
         activityName.text = data.name
+    }
+    
+    private func update(_ isSelected: Bool) {
+        if isSelected {
+            backgroundColor = MorningBearUIAsset.Colors.gray800.color
+            activityName.textColor = .white
+        } else {
+            backgroundColor = MorningBearUIAsset.Colors.gray900.color
+            activityName.textColor = MorningBearUIAsset.Colors.disabledText.color
+        }
     }
 }
 

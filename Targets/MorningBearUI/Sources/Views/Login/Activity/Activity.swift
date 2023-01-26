@@ -9,10 +9,12 @@
 import UIKit
 
 public struct Activity {
+    let id: String
     let image: UIImage
     let name: String
     
-    public init(image: UIImage, name: String) {
+    public init(id: String, image: UIImage, name: String) {
+        self.id = id
         self.image = image
         self.name = name
     }
