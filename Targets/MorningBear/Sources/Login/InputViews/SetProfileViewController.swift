@@ -143,7 +143,7 @@ extension SetProfileViewController: PHPickerViewControllerDelegate {
                 self.checkStateAndAvailiableNextButton()
             }
         } else {
-            fatalError("empty results or item provider not being able load UIImage")
+            print("empty results or item provider not being able load UIImage")
         }
     }
 }
