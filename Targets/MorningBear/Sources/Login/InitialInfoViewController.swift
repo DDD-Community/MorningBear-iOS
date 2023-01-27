@@ -22,6 +22,8 @@ class InitialInfoViewController: UIViewController {
         return pageVC
     }()
     
+    private lazy var innerScrollView = pageViewController.view.subviews.compactMap{ $0 as? UIScrollView }.first
+    
     private var infoInputViewControllers: [UIViewController] = {
         let storyboard = UIStoryboard(name: "InitialInfo", bundle: nil)
         return [
@@ -73,6 +75,8 @@ class InitialInfoViewController: UIViewController {
     
     private func setPageViewController() {
         pageViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        innerScrollView?.bounces = false
+        
         NSLayoutConstraint.activate([
             navigationBar.bottomAnchor.constraint(equalTo: pageViewController.view.topAnchor),
             pageViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
