@@ -31,7 +31,7 @@ class ArticleCollectionViewController: UIViewController, DiffableDataSourcing  {
         
         designNavigationBar()
         
-        diffableDataSource = configureDiffableDataSource(with: collectionView)
+        diffableDataSource = makeDiffableDataSource(with: collectionView)
         diffableDataSource.initDataSource(allSection: ArticleSection.allCases)
         
         fetchNewArticles()
@@ -103,8 +103,8 @@ extension ArticleCollectionViewController: UICollectionViewDataSourcePrefetching
 extension ArticleCollectionViewController {
     func bindDataSourceWithObservable() {}
     
-    func configureDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
-        let dataSource = makeDiffableDataSource(with: collectionView) { [weak self] collectionView, indexPath, model in
+    func makeDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
+        let dataSource = configureDiffableDataSource(with: collectionView) { [weak self] collectionView, indexPath, model in
             guard let self else { return UICollectionViewCell() }
             
             let cell = collectionView.dequeueReusableCell(

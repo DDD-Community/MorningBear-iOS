@@ -28,7 +28,7 @@ class MyMorningsViewController: UIViewController, DiffableDataSourcing {
         navigationController?.navigationBar.topItem?.backButtonTitle = ""
         navigationItem.title = "나의 미라클모닝"
         
-        diffableDataSource = configureDiffableDataSource(with: collectionView)
+        diffableDataSource = makeDiffableDataSource(with: collectionView)
         addSupplementaryView(diffableDataSource)
         
         diffableDataSource.initDataSource(allSection: Section.allCases)
@@ -74,18 +74,19 @@ extension MyMorningsViewController: CollectionViewCompositionable {
 
 extension MyMorningsViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.row > viewModel.myMornings.count - 3 {
-            let newMornings = viewModel.fetchNewMorning()
-            diffableDataSource.updateDataSource(in: .main, with: newMornings)
+        if indexPath.row > viewModel.myMornings.count - 4 { // 끝에서 4개 전에 새로운 이미지 요청
+            viewModel.fetchNewMorning()
         }
     }
 }
 
 extension MyMorningsViewController {
-    func bindDataSourceWithObservable() {}
+    func bindDataSourceWithObservable() {
         
-    func configureDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
-        let dataSource = makeDiffableDataSource(with: collectionView) { collectionView, indexPath, model in
+    }
+        
+    func makeDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
+        let dataSource = configureDiffableDataSource(with: collectionView) { collectionView, indexPath, model in
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: "RecentMorningCell", for: indexPath
             ) as! RecentMorningCell
