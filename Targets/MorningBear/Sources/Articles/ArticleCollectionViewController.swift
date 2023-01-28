@@ -12,11 +12,12 @@ import RxSwift
 
 import MorningBearUI
 
-class ArticleCollectionViewController: UIViewController {
+class ArticleCollectionViewController: UIViewController, DiffableDataSourcing  {
     typealias DiffableDataSource = UICollectionViewDiffableDataSource<ArticleSection, Article>
     
     private let bag = DisposeBag()
     private let viewModel = ArticleCollectionViewModel()
+    
     var diffableDataSource: DiffableDataSource!
     
     @IBOutlet weak var collectionView: UICollectionView! {
@@ -99,7 +100,7 @@ extension ArticleCollectionViewController: UICollectionViewDataSourcePrefetching
 }
 
 // MARK: - Related to diffable datasource
-extension ArticleCollectionViewController: DiffableDataSourcing {
+extension ArticleCollectionViewController {
     func bindDataSourceWithObservable() {}
     
     func configureDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {

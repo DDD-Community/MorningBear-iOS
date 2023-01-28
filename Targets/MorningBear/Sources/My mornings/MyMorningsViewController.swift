@@ -10,7 +10,7 @@ import UIKit
 
 import MorningBearUI
 
-class MyMorningsViewController: UIViewController {
+class MyMorningsViewController: UIViewController, DiffableDataSourcing {
     typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, RecentMorning>
     
     private let viewModel = MyMorningsViewModel()
@@ -81,7 +81,7 @@ extension MyMorningsViewController: UICollectionViewDelegate {
     }
 }
 
-extension MyMorningsViewController: DiffableDataSourcing {
+extension MyMorningsViewController {
     func bindDataSourceWithObservable() {}
         
     func configureDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
@@ -90,7 +90,10 @@ extension MyMorningsViewController: DiffableDataSourcing {
                 withReuseIdentifier: "RecentMorningCell", for: indexPath
             ) as! RecentMorningCell
             
-            cell.prepare(RecentMorning(id: UUID().uuidString, image: UIColor.random.image(), imageURL: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/morningbear-cb463.appspot.com/o/741B92B1-635A-4A47-A6EA-53E2C4AB1BA2.jpg?alt=media&token=b5fc814d-d108-427c-bdfa-081815f3f406"), desc: "kkk"))
+            cell.prepare(
+                RecentMorning(id: UUID().uuidString,
+                              imageURL: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/morningbear-cb463.appspot.com/o/741B92B1-635A-4A47-A6EA-53E2C4AB1BA2.jpg?alt=media&token=b5fc814d-d108-427c-bdfa-081815f3f406"))
+            )
             return cell
         }
         

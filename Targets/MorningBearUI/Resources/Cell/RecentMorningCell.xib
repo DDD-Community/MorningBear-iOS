@@ -25,18 +25,10 @@
                             <constraint firstAttribute="width" secondItem="JuC-wk-xI5" secondAttribute="height" multiplier="1:1" id="wSU-Hu-iuO"/>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SYU-eg-Tgo">
-                        <rect key="frame" x="179" y="189.66666666666666" width="42" height="21"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="JuC-wk-xI5" firstAttribute="top" secondItem="WJd-qq-01f" secondAttribute="top" id="Dfd-Dj-ot7"/>
-                    <constraint firstItem="SYU-eg-Tgo" firstAttribute="centerX" secondItem="JuC-wk-xI5" secondAttribute="centerX" id="I19-Ff-cMO"/>
                     <constraint firstItem="JuC-wk-xI5" firstAttribute="centerX" secondItem="WJd-qq-01f" secondAttribute="centerX" id="JPZ-qo-Pfk"/>
-                    <constraint firstItem="SYU-eg-Tgo" firstAttribute="centerY" secondItem="JuC-wk-xI5" secondAttribute="centerY" id="PoC-Jy-sqb"/>
                     <constraint firstItem="JuC-wk-xI5" firstAttribute="leading" secondItem="WJd-qq-01f" secondAttribute="leading" id="hYQ-uh-FpS"/>
                     <constraint firstAttribute="trailing" secondItem="JuC-wk-xI5" secondAttribute="trailing" id="svb-ZM-AUI"/>
                 </constraints>
@@ -44,7 +36,6 @@
             <size key="customSize" width="400" height="465"/>
             <connections>
                 <outlet property="imageView" destination="JuC-wk-xI5" id="B77-Wm-3zz"/>
-                <outlet property="titleLabel" destination="SYU-eg-Tgo" id="lLx-wa-ZR7"/>
             </connections>
             <point key="canvasLocation" x="366.15384615384613" y="223.5781990521327"/>
         </collectionViewCell>

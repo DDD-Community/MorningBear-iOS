@@ -12,7 +12,6 @@ import Kingfisher
 import MorningBearData
 
 public final class RecentMorningCell: UICollectionViewCell {
-    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView! {
         didSet {
             imageView.layer.cornerRadius = 10
@@ -37,7 +36,5 @@ public final class RecentMorningCell: UICollectionViewCell {
 extension RecentMorningCell {
     private func prepareCell(_ data: RecentMorning?) {
         self.imageView.kf.setImage(with: data?.imageURL)
-//        self.imageView.image = data?.image
-        self.titleLabel.text = data?.desc
     }
 }
