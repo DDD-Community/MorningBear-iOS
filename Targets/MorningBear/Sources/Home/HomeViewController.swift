@@ -73,7 +73,9 @@ extension HomeViewController: DiffableDataSourcing {
                 ) as! StateCell
                 
                 let state = State(nickname: "임시", oneLiner: "임시")
-                cell.prepare(state: state, myInfo: model as? MyInfo)
+                let myInfo = self.viewModel.myInfo
+                
+                cell.prepare(state: state, myInfo: myInfo)
                 
                 return cell
                 
@@ -124,11 +126,11 @@ extension HomeViewController: DiffableDataSourcing {
     func bindDataSourceWithObservable() {
         viewModel.$myInfo
             .observe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
-            .asDriver(onErrorJustReturn: MyInfo())
+            .asDriver(onErrorJustReturn: MyInfo(estimatedTime: 0, totalCount: 0, badgeCount: 0))
             .drive { [weak self] info in
                 guard let self else { return }
                 
-                self.diffableDataSource.updateDataSource(in: .state, with: [info])
+                self.diffableDataSource.replaceDataSource(in: .state, to: [info])
             }
             .disposed(by: bag)
         

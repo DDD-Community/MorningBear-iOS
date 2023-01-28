@@ -25,6 +25,7 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
     case "Query": return MorningBearAPI.Objects.Query
     case "User": return MorningBearAPI.Objects.User
     case "Report": return MorningBearAPI.Objects.Report
+    case "BadgeDetail": return MorningBearAPI.Objects.BadgeDetail
     case "Login": return MorningBearAPI.Objects.Login
     case "Mutation": return MorningBearAPI.Objects.Mutation
     case "Photo": return MorningBearAPI.Objects.Photo

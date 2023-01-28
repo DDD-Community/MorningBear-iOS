@@ -16,6 +16,10 @@ public class MyInfoForHomeQuery: GraphQLQuery {
             totalTime
             countSucc
           }
+          badgeList {
+            __typename
+            badgeId
+          }
         }
       }
       """
@@ -45,10 +49,13 @@ public class MyInfoForHomeQuery: GraphQLQuery {
       public static var __parentType: ParentType { MorningBearAPI.Objects.User }
       public static var __selections: [Selection] { [
         .field("reportInfo", ReportInfo?.self),
+        .field("badgeList", [BadgeList?]?.self),
       ] }
 
       ///  리포트정보 
       public var reportInfo: ReportInfo? { __data["reportInfo"] }
+      ///  획득 뱃지 리스트 
+      public var badgeList: [BadgeList?]? { __data["badgeList"] }
 
       /// FindMyInfo.ReportInfo
       ///
@@ -67,6 +74,22 @@ public class MyInfoForHomeQuery: GraphQLQuery {
         public var totalTime: Int? { __data["totalTime"] }
         ///  성공횟수 
         public var countSucc: Int? { __data["countSucc"] }
+      }
+
+      /// FindMyInfo.BadgeList
+      ///
+      /// Parent Type: `BadgeDetail`
+      public struct BadgeList: MorningBearAPI.SelectionSet {
+        public let __data: DataDict
+        public init(data: DataDict) { __data = data }
+
+        public static var __parentType: ParentType { MorningBearAPI.Objects.BadgeDetail }
+        public static var __selections: [Selection] { [
+          .field("badgeId", String?.self),
+        ] }
+
+        ///  뱃지 ID 
+        public var badgeId: String? { __data["badgeId"] }
       }
     }
   }
