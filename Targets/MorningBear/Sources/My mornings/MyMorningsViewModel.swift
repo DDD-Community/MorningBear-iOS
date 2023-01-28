@@ -8,24 +8,31 @@
 
 import Foundation
 
+import RxSwift
+
 import MorningBearDataProvider
 import MorningBearKit
 
 class MyMorningsViewModel<Provider: DataProviding> {
     private let dataProvider: Provider
+    private let bag = DisposeBag()
     
     @Bound(
         initValue: []
     ) private(set) var myMornings: [MyMorning]
     
-    
-    func fetchNewMorning() -> [MyMorning] {
-        dataProvider.fetch(MyMorningQuery(size: 10))
-        
-        return []
-    }
-    
     init(_ dataProvider: Provider = DefaultProvider.shared) {
         self.dataProvider = dataProvider
+        
+        fetchNewMorning()
+    }
+}
+
+extension MyMorningsViewModel {
+    /// 새로운 이미지들 요청
+    func fetchNewMorning() {
+        linkRx(dataProvider.fetch(MyMorningQuery(size: 10)), in: bag) { myMornings in
+            self.myMornings.append(contentsOf: myMornings)
+        }
     }
 }

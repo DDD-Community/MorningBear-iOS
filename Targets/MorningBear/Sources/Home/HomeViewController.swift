@@ -46,7 +46,7 @@ class HomeViewController: UIViewController, DiffableDataSourcing {
         
         designNavigationBar()
         
-        diffableDataSource = configureDiffableDataSource(with: collectionView)
+        diffableDataSource = makeDiffableDataSource(with: collectionView)
         addSupplementaryView(self.diffableDataSource)
         diffableDataSource.initDataSource(allSection: HomeSection.allCases)
         
@@ -62,8 +62,8 @@ extension HomeViewController {
     typealias Section = HomeSection
     typealias Model = AnyHashable
 
-    func configureDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
-        let dataSource = makeDiffableDataSource(with: collectionView) { [weak self] collectionView, indexPath, model in
+    func makeDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
+        let dataSource = configureDiffableDataSource(with: collectionView) { [weak self] collectionView, indexPath, model in
             guard let self else { return UICollectionViewCell() }
             
             switch HomeSection.getSection(index: indexPath.section) {

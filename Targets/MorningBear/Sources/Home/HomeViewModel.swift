@@ -69,25 +69,25 @@ class HomeViewModel<Provider: DataProviding> {
 extension HomeViewModel {
     /// 서버에서 데이터 로드
     func fetchRemoteData() {
-        dispose(dataProvider.fetch(MyInfoQuery())) { [weak self] data in
+        linkRx(dataProvider.fetch(MyInfoQuery()), in: bag) { [weak self] data in
             guard let self else { return }
             
             self.myInfo = data
         }
         
-        dispose(dataProvider.fetch(BadgeQuery())) { [weak self] data in
+        linkRx(dataProvider.fetch(BadgeQuery()), in: bag) { [weak self] data in
             guard let self else { return }
             
             self.badges = data
         }
         
-        dispose(dataProvider.fetch(MyMorningQuery())) {  [weak self] data in
+        linkRx(dataProvider.fetch(MyMorningQuery()), in: bag) {  [weak self] data in
             guard let self else { return }
             
             self.recentMornings = Array(data.prefix(4)) // 상위 4개만 표시하는게 정책임
         }
         
-        dispose(dataProvider.fetch(ArticleQuery(size: 10))) { [weak self] articles in
+        linkRx(dataProvider.fetch(ArticleQuery(size: 10)), in: bag) { [weak self] articles in
             guard let self else { return }
             
             self.articles = articles
@@ -180,22 +180,6 @@ private extension HomeViewModel {
             }
         
         return stringObservable
-    }
-    
-    /// dispose 작업 반복되는 것 캡슐화
-    func dispose<Value>(_ singleTrait: Single<Value>,
-                       completionHandler: @escaping (Value) -> Void) {
-        singleTrait
-            .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
-            .subscribe(
-                onSuccess: { data in
-                    completionHandler(data)
-                },
-                onFailure: {
-                    MorningBearLogger.track($0)
-                }
-            )
-            .disposed(by: bag)
     }
 }
 
