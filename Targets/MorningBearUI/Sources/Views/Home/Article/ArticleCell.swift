@@ -11,21 +11,17 @@ import UIKit
 @_exported import MorningBearData
 
 public class ArticleCell: UICollectionViewCell {
-    @IBOutlet weak var imageView: UIImageView! {
-        didSet {
-            imageView.contentMode = .scaleAspectFill
-        }
-    }
-    
     @IBOutlet weak var titleLabel: UILabel! {
         didSet {
             titleLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 16)
+            titleLabel.textColor = .black
         }
     }
     @IBOutlet weak var descriptionLabel: UILabel! {
         didSet {
             descriptionLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 14)
             descriptionLabel.numberOfLines = 2
+            descriptionLabel.textColor = .black
         }
     }
     
@@ -42,9 +38,17 @@ public class ArticleCell: UICollectionViewCell {
     }
     
     public func prepare(article: Article?) {
-        self.imageView.image = article?.image
         self.titleLabel.text = article?.title
         self.descriptionLabel.text = article?.description
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        let gradientLayer = CAGradientLayer.random
+        gradientLayer.frame = bounds
+        
+        self.layer.insertSublayer(gradientLayer, at: 0)
     }
 }
 

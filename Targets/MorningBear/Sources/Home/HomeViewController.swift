@@ -299,7 +299,7 @@ extension HomeViewController: CollectionViewCompositionable {
                 return provider.horizontalScrollLayoutSection(column: 2)
             case .articles:
                 let section = provider.horizontalScrollLayoutSection(column: 1, groupWidthFraction: 0.7)
-                section.orthogonalScrollingBehavior = .groupPagingCentered // 페이징 추가함. 변경 가능
+                section.orthogonalScrollingBehavior = .groupPaging // 페이징 추가함. 변경 가능
                 
                 return section
             case .none:
