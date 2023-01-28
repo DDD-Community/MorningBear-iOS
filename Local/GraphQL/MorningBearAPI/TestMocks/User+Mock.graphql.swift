@@ -11,6 +11,7 @@ public class User: MockObject {
 
   public struct MockFields {
     @Field<String>("accountId") public var accountId
+    @Field<[BadgeDetail?]>("badgeList") public var badgeList
     @Field<String>("memo") public var memo
     @Field<String>("nickName") public var nickName
     @Field<[Photo?]>("photoInfo") public var photoInfo
@@ -23,6 +24,7 @@ public class User: MockObject {
 public extension Mock where O == User {
   convenience init(
     accountId: String? = nil,
+    badgeList: [Mock<BadgeDetail>?]? = nil,
     memo: String? = nil,
     nickName: String? = nil,
     photoInfo: [Mock<Photo>?]? = nil,
@@ -32,6 +34,7 @@ public extension Mock where O == User {
   ) {
     self.init()
     self.accountId = accountId
+    self.badgeList = badgeList
     self.memo = memo
     self.nickName = nickName
     self.photoInfo = photoInfo

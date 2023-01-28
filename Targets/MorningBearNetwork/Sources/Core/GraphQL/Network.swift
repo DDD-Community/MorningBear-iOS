@@ -88,7 +88,7 @@ fileprivate final class HeaderInterceptor: ApolloInterceptor {
         completion: @escaping (Swift.Result<GraphQLResult<Operation.Data>, Error>) -> Void) {
             
             request.addHeader(name: "Authorization",
-                              value: "Bearer cJBURfM5nHJe0fyOTkGz8Kmz/vrsayoC6gOHVWZZXsQtiI3nGyLXA/fO9qWCs9QvEtJL7bJRO1csDnk2lhF8XA==")
+                              value: "Bearer 7DtsFUQV/p45ZWxy+ygag93GxafNrhQKw7Bm/4AxcUWPEykKpVTlLG6xJhAnRXZcFeh3qv2ITN/dkjIclGOIQg==")
             
             chain.proceedAsync(request: request, response: response,completion: completion)
         }

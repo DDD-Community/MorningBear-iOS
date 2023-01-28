@@ -20,12 +20,12 @@ import MorningBearNetwork
 
 public struct MyInfoQuery: Queryable {
     public let singleTrait = Network.shared.apollo.rx.fetch(query: MyInfoForHomeQuery())
-        .map { data -> MyInfoForHomeQuery.Data.FindMyInfo.ReportInfo in
+        .map { data -> MyInfoForHomeQuery.Data.FindMyInfo in
             guard let data = data.data else {
                 throw DataProviderError.cannotGetResponseFromServer
             }
             
-            guard let info = data.findMyInfo?.reportInfo else {
+            guard let info = data.findMyInfo else {
                 throw DataProviderError.invalidPayloadData(message: "나의 상태 정보를 불러올 수 없습니다")
             }
             
@@ -38,14 +38,28 @@ public struct MyInfoQuery: Queryable {
     public init() {}
 }
 
-fileprivate extension MyInfoForHomeQuery.Data.FindMyInfo.ReportInfo {
+fileprivate extension MyInfoForHomeQuery.Data.FindMyInfo {
+    func badgeCount() throws -> Int {
+        guard let badgeList else {
+            throw DataProviderError.invalidPayloadData(message: "배지 정보의 형식이 올바르지 않습니다(501)")
+        }
+        
+        return badgeList.count
+    }
+    
     func toNativeType() throws -> MyInfo {
-        guard let totalTime, let countSucc else {
+        guard let reportInfo else {
             throw DataProviderError.invalidPayloadData(message: "나의 상태 정보 형식이 올바르지 않습니다(501)")
         }
         
+        guard let totalTime = reportInfo.totalTime, let successCount = reportInfo.countSucc else {
+            throw DataProviderError.invalidPayloadData(message: "나의 상태 정보 형식이 올바르지 않습니다(501)")
+        }
+        
+        let badgeCount = try self.badgeCount()
+        
         return MyInfo(estimatedTime: totalTime,
-                      totalCount: countSucc,
-                      badgeCount: "-1")
+                      totalCount: successCount,
+                      badgeCount: badgeCount)
     }
 }

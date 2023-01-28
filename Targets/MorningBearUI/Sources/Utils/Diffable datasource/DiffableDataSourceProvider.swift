@@ -54,14 +54,34 @@ public extension UICollectionViewDiffableDataSource {
         self.apply(snapshot)
     }
     
-    func updateDataSource(in section: SectionIdentifierType, with newData: [ItemIdentifierType], animate: Bool = true) {
-        var snapshot = self.snapshot()
-        
-        guard !snapshot.sectionIdentifiers.isEmpty else {
+    func updateDataSource(
+        in section: SectionIdentifierType,
+        with newData: [ItemIdentifierType],
+        animate: Bool = true,
+        snapshot: NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType>? = nil
+    ) {
+        var snapshot = snapshot ?? self.snapshot()
+
+        guard snapshot.sectionIdentifiers.contains(section) else {
             fatalError("먼저 initDataSource하고 사용할 것!")
         }
         
         snapshot.appendItems(newData, toSection: section)
         self.apply(snapshot, animatingDifferences: animate)
+    }
+    
+    /// 섹션의 아이템을 해당 아이템으로 교체함
+    ///
+    /// 처음 실행 시 `updateDataSource`와 동일하게 동작하지만 그렇지 않을 경우
+    /// 아이템이 뒤에 추가되지 않고 단순히 교체됨
+    func replaceDataSource(in section: SectionIdentifierType, to newData: [ItemIdentifierType], animate: Bool = true) {
+        var snapshot = self.snapshot()
+        
+        if snapshot.sectionIdentifiers.contains(section), snapshot.numberOfItems(inSection: section) > 0 {
+            snapshot.reloadSections([section])
+            self.apply(snapshot, animatingDifferences: animate)
+        } else {
+            updateDataSource(in: section, with: newData)
+        }
     }
 }

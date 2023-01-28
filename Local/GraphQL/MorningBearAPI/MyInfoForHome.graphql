@@ -4,6 +4,9 @@ query MyInfoForHome {
     reportInfo {
       totalTime
       countSucc
+    },
+    badgeList {
+      badgeId
     }
   }
 }

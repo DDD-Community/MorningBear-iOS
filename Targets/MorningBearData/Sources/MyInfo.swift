@@ -11,11 +11,11 @@ import Foundation
 public struct MyInfo: Hashable {
     public let estimatedTime: Int
     public let totalCount: Int
-    public let badgeCount: String
+    public let badgeCount: Int
     
-    public init(estimatedTime: Int = 0,
-                totalCount: Int = 0,
-                badgeCount: String = "") {
+    public init(estimatedTime: Int,
+                totalCount: Int,
+                badgeCount: Int) {
         self.estimatedTime = estimatedTime
         self.totalCount = totalCount
         self.badgeCount = badgeCount

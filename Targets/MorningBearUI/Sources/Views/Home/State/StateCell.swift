@@ -103,9 +103,28 @@ public class StateCell: UICollectionViewCell {
         titleLabel.text = titleLabelText
         oneLinerLabel.text = state?.oneLiner
         
-        let myInfo = myInfo ?? MyInfo()
-        countLabel.text = String(myInfo.totalCount)
-        timeLabel.text = String(myInfo.estimatedTime)
-        badgeLabel.text = String(myInfo.badgeCount)
+        countLabel.text = String(parseToHourAndMinute(from: myInfo?.totalCount))
+        timeLabel.text = String("\(myInfo?.estimatedTime ?? 0)번")
+        badgeLabel.text = String("\(myInfo?.badgeCount ?? 0)개")
+    }
+}
+
+private extension StateCell {
+    func parseToHourAndMinute(from totalMinute: Int?) -> String {
+        guard var totalMinute else {
+            return "0분"
+        }
+        
+        let hour: Int = totalMinute / 60
+        let minute = totalMinute % 60
+        
+        let text: String
+        if hour < 1 {
+            text = "\(minute)분"
+        } else {
+            text = "\(hour)시간 \(minute)분"
+        }
+        
+        return text
     }
 }

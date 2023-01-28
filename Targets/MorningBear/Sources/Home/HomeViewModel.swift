@@ -19,14 +19,25 @@ class HomeViewModel<Provider: DataProviding> {
     
     private var bag = DisposeBag()
     
-    // MARK: Observables
+    // MARK: - Observables
     /// `accept`로 인한 수정을 막기 위해 Relay를 `observable`로 변환해서 씀
     /// - warning: `Observable`의 상태는 직접 수정되어서는 안됨.
     ///     반드시 `startRecording`, `stopRecording`에 의해서만 수정될 수 있도록 유의할 것
-    @Bound(initValue: MyInfo()) private(set) var myInfo: MyInfo
-    @Bound(initValue: []) private(set) var recentMornings: [RecentMorning]
-    @Bound(initValue: []) private(set) var badges: [Badge]
-    @Bound(initValue: []) private(set) var articles: [Article]
+    @Bound(initValue:
+            MyInfo(estimatedTime: 0, totalCount: 0, badgeCount: -1)
+    ) private(set) var myInfo: MyInfo
+    
+    @Bound(
+        initValue: []
+    ) private(set) var recentMornings: [RecentMorning]
+    
+    @Bound(
+        initValue: []
+    ) private(set) var badges: [Badge]
+    
+    @Bound(
+        initValue: []
+    ) private(set) var articles: [Article]
     
     private var elapsedTimeRelay: BehaviorRelay<String>
     var elapsedTimeObservable: Observable<String> {
@@ -38,47 +49,7 @@ class HomeViewModel<Provider: DataProviding> {
         recordingStateRelay.asObservable()
     }
     
-    func fetchRemoteData() {
-        dataProvider.fetch(BadgeQuery())
-            .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
-            .subscribe(
-                onSuccess: { [weak self] data in
-                    guard let self else { return }
-                    
-                    self.badges = data
-                },
-                onFailure: {
-                    MorningBearLogger.track($0)
-                }
-            )
-            .disposed(by: bag)
-        
-        
-        dataProvider.fetch(MyMorningPhotoQuery())
-            .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
-            .subscribe(
-                onSuccess: { [weak self] data in
-                    guard let self else { return }
-                    self.recentMornings = Array(data.prefix(4)) // 상위 4개만 표시하는게 정책임
-                },
-                onFailure: {
-                    MorningBearLogger.track($0)
-                }
-            )
-            .disposed(by: bag)
-        
-        dataProvider.fetch(ArticleQuery(size: 10))
-            .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
-            .subscribe(onSuccess: { [weak self] articles in
-                guard let self else { return }
-                
-                self.articles = articles
-            }, onFailure: {
-                MorningBearLogger.track($0)
-            })
-            .disposed(by: bag)
-    }
-    
+    // MARK: - 생성자
     init(_ dataProvider: Provider = HomeViewDataProvider()) {
         self.dataProvider = dataProvider as! HomeViewDataProvider
         
@@ -96,6 +67,34 @@ class HomeViewModel<Provider: DataProviding> {
 
 // MARK: - Public tools
 extension HomeViewModel {
+    /// 서버에서 데이터 로드
+    func fetchRemoteData() {
+        dispose(dataProvider.fetch(MyInfoQuery())) { [weak self] data in
+            guard let self else { return }
+            
+            self.myInfo = data
+        }
+        
+        dispose(dataProvider.fetch(BadgeQuery())) { [weak self] data in
+            guard let self else { return }
+            
+            self.badges = data
+        }
+        
+        dispose(dataProvider.fetch(MyMorningPhotoQuery())) {  [weak self] data in
+            guard let self else { return }
+            
+            self.recentMornings = Array(data.prefix(4)) // 상위 4개만 표시하는게 정책임
+        }
+        
+        dispose(dataProvider.fetch(ArticleQuery(size: 10))) { [weak self] articles in
+            guard let self else { return }
+            
+            self.articles = articles
+        }
+    }
+    
+    /// 기록중인지 체크하는 플래그 변수
     var isMyMorningRecording: MyMorningRecordingState {
         recordingStateRelay.value
     }
@@ -113,6 +112,7 @@ extension HomeViewModel {
         recordingStateRelay.accept(.recording(startDate: startDate))
     }
     
+    /// 기록을 멈춘다
     func stopRecording() throws -> Date {
         if case .recording(let startDate) = isMyMorningRecording {
             bag = DisposeBag() // reset bindings
@@ -155,12 +155,14 @@ private extension HomeViewModel {
         }
     }
     
+    /// 1초 재주는 `Observable`
     var timerObservable: Observable<Int> {
         return Observable<Int>.interval(
             .seconds(1), scheduler: SerialDispatchQueueScheduler(qos: .background)
         )
     }
     
+    /// `timerObservable`연결해서 시간 얼마나 지났는지 파싱해주는 `Observable`
     func timeIntervalObservable(from startDate: Date) -> Observable<String> {
         let stringObservable = timerObservable.withUnretained(self)
             .map { (weakSelf, elapsedTime) -> String in
@@ -178,6 +180,22 @@ private extension HomeViewModel {
             }
         
         return stringObservable
+    }
+    
+    /// dispose 작업 반복되는 것 캡슐화
+    func dispose<Value>(_ singleTrait: Single<Value>,
+                       completionHandler: @escaping (Value) -> Void) {
+        singleTrait
+            .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            .subscribe(
+                onSuccess: { data in
+                    completionHandler(data)
+                },
+                onFailure: {
+                    MorningBearLogger.track($0)
+                }
+            )
+            .disposed(by: bag)
     }
 }
 
