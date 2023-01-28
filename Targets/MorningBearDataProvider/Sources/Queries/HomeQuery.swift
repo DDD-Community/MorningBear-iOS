@@ -13,10 +13,10 @@ import RxSwift
 public struct HomeQuery<T: DataProviding>: Queryable {
     let dataProvider: T
     
-    public var singleTrait: Single<([Badge], MyInfo, [RecentMorning], [Article])> {
+    public var singleTrait: Single<([Badge], MyInfo, [MyMorning], [Article])> {
         let badges = dataProvider.fetch(BadgeQuery())
         let myInfo = dataProvider.fetch(MyInfoQuery())
-        let recentMorning = dataProvider.fetch(MyMorningPhotoQuery())
+        let recentMorning = dataProvider.fetch(MyMorningQuery())
         let articles = dataProvider.fetch(ArticleQuery(size: 10))
         
         return Single.zip(badges, myInfo, recentMorning, articles)

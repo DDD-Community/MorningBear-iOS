@@ -86,7 +86,7 @@ extension HomeViewController {
                 
                 if !self.viewModel.recentMornings.isEmpty {
                     let item = model // 최근 미라클 모닝은 상위 4개만 표시; MARK: 정렬 필수
-                    cell.prepare(item as! RecentMorning)
+                    cell.prepare(item as! MyMorning)
                 }
                 
                 return cell

@@ -9,15 +9,19 @@
 import Foundation
 
 import MorningBearDataProvider
+import MorningBearKit
 
 class MyMorningsViewModel<Provider: DataProviding> {
     private let dataProvider: Provider
-    private(set) var myMornings = [RecentMorning]()
     
-    func fetchNewMorning() -> [RecentMorning] {
-//        let newData = dataProvider.fetch()
-//        dataProvider.fetch(MyMorningQuery())
-//        myMornings.append(contentsOf: newData)
+    @Bound(
+        initValue: []
+    ) private(set) var myMornings: [MyMorning]
+    
+    
+    func fetchNewMorning() -> [MyMorning] {
+        dataProvider.fetch(MyMorningQuery(size: 10))
+        
         return []
     }
     
