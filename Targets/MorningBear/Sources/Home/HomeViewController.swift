@@ -12,7 +12,7 @@ import MorningBearUI
 import RxSwift
 import RxCocoa
 
-class HomeViewController: UIViewController {
+class HomeViewController: UIViewController, DiffableDataSourcing {
     typealias DiffableDataSource = UICollectionViewDiffableDataSource<HomeSection, AnyHashable>
     var diffableDataSource: DiffableDataSource!
 
@@ -58,7 +58,7 @@ class HomeViewController: UIViewController {
     }
 }
 
-extension HomeViewController: DiffableDataSourcing {
+extension HomeViewController {
     typealias Section = HomeSection
     typealias Model = AnyHashable
 

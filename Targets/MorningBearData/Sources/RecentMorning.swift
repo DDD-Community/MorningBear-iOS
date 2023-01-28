@@ -14,13 +14,9 @@ import UIKit
 public struct RecentMorning: Hashable, Identifiable {
     public let id: UUID
     public let imageURL: URL?
-    public let image: UIImage
-    public let desc: String
     
-    public init(id: String, image: UIImage, imageURL: URL?, desc: String) {
+    public init(id: String, imageURL: URL?) {
         self.id = UUID()
-        self.image = image
         self.imageURL = imageURL
-        self.desc = desc
     }
 }
