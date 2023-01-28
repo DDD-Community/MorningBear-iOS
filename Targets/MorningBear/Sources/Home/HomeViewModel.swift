@@ -29,7 +29,7 @@ class HomeViewModel<Provider: DataProviding> {
     
     @Bound(
         initValue: []
-    ) private(set) var recentMornings: [RecentMorning]
+    ) private(set) var recentMornings: [MyMorning]
     
     @Bound(
         initValue: []
@@ -81,7 +81,7 @@ extension HomeViewModel {
             self.badges = data
         }
         
-        dispose(dataProvider.fetch(MyMorningPhotoQuery())) {  [weak self] data in
+        dispose(dataProvider.fetch(MyMorningQuery())) {  [weak self] data in
             guard let self else { return }
             
             self.recentMornings = Array(data.prefix(4)) // 상위 4개만 표시하는게 정책임

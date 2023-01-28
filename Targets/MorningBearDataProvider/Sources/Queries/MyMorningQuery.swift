@@ -14,10 +14,10 @@ import RxSwift
 import MorningBearNetwork
 import MorningBearAPI
 
-public struct MyMorningPhotoQuery: Queryable {
+public struct MyMorningQuery: Queryable {
     let size: Int
     
-    public var singleTrait: Single<[RecentMorning]> {
+    public var singleTrait: Single<[MyMorning]> {
         Network.shared.apollo.rx.fetch(query: GetMyMorningPhotosQuery(photoSize: .some(size)))
             .map { data in
                 guard let data = data.data else {
@@ -48,9 +48,9 @@ public struct MyMorningPhotoQuery: Queryable {
 }
 
 fileprivate extension GetMyMorningPhotosQuery.Data.FindMyInfo.PhotoInfo {
-    var toNativeType: RecentMorning {
+    var toNativeType: MyMorning {
         
-        return RecentMorning(id: self.photoId ?? UUID().uuidString,
+        return MyMorning(id: self.photoId ?? UUID().uuidString,
                              imageURL: URL(string: self.photoLink ?? ""))
     }
 }

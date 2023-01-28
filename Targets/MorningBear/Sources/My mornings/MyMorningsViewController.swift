@@ -11,7 +11,7 @@ import UIKit
 import MorningBearUI
 
 class MyMorningsViewController: UIViewController, DiffableDataSourcing {
-    typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, RecentMorning>
+    typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, MyMorning>
     
     private let viewModel = MyMorningsViewModel()
     var diffableDataSource: DiffableDataSource!
@@ -91,7 +91,7 @@ extension MyMorningsViewController {
             ) as! RecentMorningCell
             
             cell.prepare(
-                RecentMorning(id: UUID().uuidString,
+                MyMorning(id: UUID().uuidString,
                               imageURL: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/morningbear-cb463.appspot.com/o/741B92B1-635A-4A47-A6EA-53E2C4AB1BA2.jpg?alt=media&token=b5fc814d-d108-427c-bdfa-081815f3f406"))
             )
             return cell
