@@ -28,8 +28,8 @@ class MyMorningsViewModel<Provider: DataProviding> {
 
 extension MyMorningsViewModel {
     /// 새로운 이미지들 요청
-    func fetchNewMorning() {
-        linkRx(dataProvider.fetch(MyMorningQuery(size: 10)), in: bag) { myMornings in
+    func fetchNewMorning(sort: MyMorningQuery.Sort = .desc) {
+        linkRx(dataProvider.fetch(MyMorningQuery(size: 10, sort: sort)), in: bag) { myMornings in
             self.myMornings.append(contentsOf: myMornings)
         }
     }
