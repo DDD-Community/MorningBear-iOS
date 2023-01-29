@@ -1,0 +1,10 @@
+query SortedMyMorningPhoto($size:Int, $sort:String) {
+  findPhotoByOrderType(orderInput: {
+    size: $size,
+    orderType: $sort
+  }) {
+    photoId
+    photoLink
+    createdAt
+  }
+}
