@@ -8,15 +8,13 @@
 
 import UIKit
 
-/// 나의 미라클 모닝에 사용되는 임시 모델
-///
-/// 네이밍이에서 recent가 빠지고 `MyMorning`등으로 개명될 가능성 농후함
+/// 나의 미라클 모닝기록 표시에 사용되는 모델
 public struct MyMorning: Hashable, Identifiable {
-    public let id: UUID
+    public let id: String
     public let imageURL: URL?
     
     public init(id: String, imageURL: URL?) {
-        self.id = UUID()
+        self.id = UUID().uuidString
         self.imageURL = imageURL
     }
 }

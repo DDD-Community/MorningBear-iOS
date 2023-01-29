@@ -26,7 +26,6 @@ final class MorningBearDateFormatterTests: XCTestCase {
         let dateStrings = ["오전 3시 30분", "오전 8시 3분", "오후 3시 39분", "오후 3시 9분"]
         
         for dateString in dateStrings {
-            print("@@", formatter.dateFormat, dateString, formatter.date(from: dateString))
             guard let date = formatter.date(from: dateString) else {
                 XCTFail("String에서 Date 값으로 변환 실패")
                 return

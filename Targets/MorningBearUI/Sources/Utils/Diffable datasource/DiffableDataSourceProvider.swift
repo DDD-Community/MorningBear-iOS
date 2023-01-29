@@ -22,8 +22,8 @@ public protocol DiffableDataSourcing {
     func makeDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource
     
     /// 데이터소스랑 `RxObservable` 연결할 때 쓰면 된다
-    func bindDataSourceWithObservable()
-    
+    func bindDataSourceWithObservable(_ dataSource: DiffableDataSource)
+
     /// Optional method
     ///
     /// 헤더나 푸터 더할 떄 쓰면 된다
@@ -48,6 +48,11 @@ extension DiffableDataSourcing {
     
     /// Optional method
     public func addSupplementaryView(_ diffableDataSource: DiffableDataSource) {}
+    
+    public func commit(_ dataSource: DiffableDataSource) {
+        addSupplementaryView(dataSource)
+        bindDataSourceWithObservable(dataSource)
+    }
 }
 
 // MARK: - Extension for DiffableDataSource
@@ -75,6 +80,7 @@ public extension UICollectionViewDiffableDataSource {
         }
         
         snapshot.appendItems(newData, toSection: section)
+        
         self.apply(snapshot, animatingDifferences: animate)
     }
     

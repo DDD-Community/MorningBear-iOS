@@ -6,6 +6,8 @@
 //  Copyright © 2023 com.dache. All rights reserved.
 //
 
+import Foundation
+
 import RxSwift
 import RxRelay
 
@@ -15,7 +17,7 @@ public struct Bound<Value> {
     
     public var wrappedValue: Value {
         get {
-            self.relay.value
+            return self.relay.value
         }
         set {
             self.relay.accept(newValue)
