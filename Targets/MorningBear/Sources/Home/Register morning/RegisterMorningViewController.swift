@@ -152,6 +152,9 @@ class RegisterMorningViewController: UIViewController {
 
 // MARK: - Public tools
 extension RegisterMorningViewController {
+    /// 기록이 이상하면 에러 튕김
+    ///
+    /// 지금은 1분 미만이면 튕김
     func prepare(startTime: Date, image: UIImage?) {
         startTimeText = viewModel.timeFormatter.string(from: startTime)
         
@@ -230,6 +233,15 @@ private extension RegisterMorningViewController {
         }
         
         return selectedCategoryIndexPath.row
+    }
+    
+    /// 시간 정상적인지 체크
+    func canSubmitDate(date: Date) -> Bool {
+        if date.timeIntervalSinceNow > -60 {
+            return false
+        } else {
+            return true
+        }
     }
 }
 
