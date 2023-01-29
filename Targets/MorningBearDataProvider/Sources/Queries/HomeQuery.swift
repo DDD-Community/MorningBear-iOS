@@ -11,9 +11,11 @@ import RxSwift
 @_exported import MorningBearData
 
 public struct HomeQuery<T: DataProviding>: Queryable {
+    public typealias ReturnType = ([Badge], MyInfo, [MyMorning], [Article])
+    
     let dataProvider: T
     
-    public var singleTrait: Single<([Badge], MyInfo, [MyMorning], [Article])> {
+    public var singleTrait: Single<ReturnType> {
         let badges = dataProvider.fetch(BadgeQuery())
         let myInfo = dataProvider.fetch(MyInfoQuery())
         let recentMorning = dataProvider.fetch(MyMorningQuery())

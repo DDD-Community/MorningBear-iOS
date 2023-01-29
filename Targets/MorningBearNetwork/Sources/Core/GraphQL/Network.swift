@@ -63,9 +63,11 @@ fileprivate final class RequestLoggingInterceptor: ApolloInterceptor {
             if let url = try? request.toURLRequest().url?.absoluteString.removingPercentEncoding {
                 if let variables = request.operation.__variables {
                     print("[🛰️ Apollo 🛰️] REQUEST 📤: " + "\(Operation.operationName) \n" +
+                          "↪️ Header: \(request.additionalHeaders)\n" +
                           "↪️ Parameters: \(variables), to: \(url)")
                 } else {
                     print("[🛰️ Apollo 🛰️] REQUEST 📤: " + "\(Operation.operationName) \n" +
+                          "↪️ Header: \(request.additionalHeaders)\n" +
                           "↪️ To: \(url)")
                 }
             }

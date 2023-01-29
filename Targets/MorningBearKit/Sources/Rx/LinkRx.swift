@@ -18,6 +18,7 @@ public func linkRx<Value>(
     disposeHandler: (() -> Void)? = nil
 ) {
     singleTrait.subscribe(on: scheduler)
+        .retry(2)
         .subscribe(
             onSuccess: { data in
                 print(data)
@@ -33,3 +34,4 @@ public func linkRx<Value>(
         )
         .disposed(by: bag)
 }
+

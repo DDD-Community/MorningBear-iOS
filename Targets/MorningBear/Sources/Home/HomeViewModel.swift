@@ -79,7 +79,9 @@ extension HomeViewModel {
             self.myInfo = values.1
             self.recentMornings = values.2
             self.articles = values.3
-        }, disposeHandler: {
+        }, errorHandler: { error in
+            print("Error")
+        } , disposeHandler: {
             self.isNetworking = false
         })
     }
