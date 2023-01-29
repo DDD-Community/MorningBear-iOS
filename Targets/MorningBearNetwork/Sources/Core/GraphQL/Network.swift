@@ -22,7 +22,9 @@ public class Network {
         let store = ApolloStore(cache: cache)
         
         let sessionClient = URLSessionClient(sessionConfiguration: .default, callbackQueue: nil)
-        let provider = NetworkInterceptorProvider(client: sessionClient, shouldInvalidateClientOnDeinit: true, store: store)
+        let provider = NetworkInterceptorProvider(client: sessionClient,
+                                                  shouldInvalidateClientOnDeinit: true,
+                                                  store: store)
         
         let url = URL(string: "http://138.2.126.76:8080/graphql")!
         
