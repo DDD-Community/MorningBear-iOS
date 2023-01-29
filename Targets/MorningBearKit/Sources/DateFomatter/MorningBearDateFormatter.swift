@@ -30,7 +30,7 @@ public struct MorningBearDateFormatter {
     /// ex. "오전 3:30"
     public static var shortimeFormatter: DateFormatter {
         let formatter = DateFormatter()
-        formatter.dateFormat = "hhmm"
+        formatter.dateFormat = "HHmm"
         formatter.locale = Locale(identifier: "ko")
 
         return formatter

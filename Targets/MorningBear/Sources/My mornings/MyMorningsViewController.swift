@@ -8,12 +8,16 @@
 
 import UIKit
 
+import RxSwift
+
 import MorningBearUI
 
 class MyMorningsViewController: UIViewController, DiffableDataSourcing {
     typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, MyMorning>
     
     private let viewModel = MyMorningsViewModel()
+    private let bag = DisposeBag()
+    
     var diffableDataSource: DiffableDataSource!
     
     @IBOutlet weak var collectionView: UICollectionView! {
@@ -29,10 +33,11 @@ class MyMorningsViewController: UIViewController, DiffableDataSourcing {
         navigationItem.title = "나의 미라클모닝"
         
         diffableDataSource = makeDiffableDataSource(with: collectionView)
-        addSupplementaryView(diffableDataSource)
-        
         diffableDataSource.initDataSource(allSection: Section.allCases)
-        diffableDataSource.updateDataSource(in: .main, with: viewModel.myMornings)
+        
+        commit(diffableDataSource)
+        
+        viewModel.fetchNewMorning()
     }
 }
 
@@ -74,15 +79,20 @@ extension MyMorningsViewController: CollectionViewCompositionable {
 
 extension MyMorningsViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.row > viewModel.myMornings.count - 4 { // 끝에서 4개 전에 새로운 이미지 요청
-            viewModel.fetchNewMorning()
-        }
+//        if indexPath.row > viewModel.myMornings.count - 4 { // 끝에서 4개 전에 새로운 이미지 요청
+//            viewModel.fetchNewMorning()
+//        }
     }
 }
 
 extension MyMorningsViewController {
-    func bindDataSourceWithObservable() {
-        
+    func bindDataSourceWithObservable(_ dataSource: DiffableDataSource) {
+        viewModel.$myMornings
+            .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            .subscribe { newMorningData in
+                self.diffableDataSource.updateDataSource(in: .main, with: newMorningData)
+            }
+            .disposed(by: bag)
     }
         
     func makeDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
@@ -91,10 +101,8 @@ extension MyMorningsViewController {
                 withReuseIdentifier: "RecentMorningCell", for: indexPath
             ) as! RecentMorningCell
             
-            cell.prepare(
-                MyMorning(id: UUID().uuidString,
-                              imageURL: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/morningbear-cb463.appspot.com/o/741B92B1-635A-4A47-A6EA-53E2C4AB1BA2.jpg?alt=media&token=b5fc814d-d108-427c-bdfa-081815f3f406"))
-            )
+            let myMorning = model
+            cell.prepare(MyMorning(id: myMorning.id, imageURL: myMorning.imageURL))
             return cell
         }
         
@@ -112,7 +120,7 @@ extension MyMorningsViewController {
         }
     }
     
-    enum Section: CaseIterable {
+    enum Section: Hashable, CaseIterable {
         case main
     }
 }

@@ -43,17 +43,18 @@ class HomeViewController: UIViewController, DiffableDataSourcing {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+                
+        // Set data source
+        diffableDataSource = makeDiffableDataSource(with: collectionView)
+        diffableDataSource.initDataSource(allSection: HomeSection.allCases)
+        commit(diffableDataSource)
         
+        // Set design
+        self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
         designNavigationBar()
         
-        diffableDataSource = makeDiffableDataSource(with: collectionView)
-        addSupplementaryView(self.diffableDataSource)
-        diffableDataSource.initDataSource(allSection: HomeSection.allCases)
-        
-        self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
-        
+        // Set observables
         bindButtons()
-        bindDataSourceWithObservable()
         bindBehaviorAccordingToRecordStatus()
     }
 }
@@ -123,7 +124,7 @@ extension HomeViewController {
         return dataSource
     }
     
-    func bindDataSourceWithObservable() {
+    func bindDataSourceWithObservable(_ dataSource: DiffableDataSource) {
         viewModel.$myInfo
             .observe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
             .asDriver(onErrorJustReturn: MyInfo(estimatedTime: 0, totalCount: 0, badgeCount: 0))
@@ -165,7 +166,7 @@ extension HomeViewController {
             .disposed(by: bag)
     }
     
-    func addSupplementaryView<Section, Model>(_ diffableDataSource: UICollectionViewDiffableDataSource<Section, Model>) {
+    func addSupplementaryView(_ diffableDataSource: DiffableDataSource) {
         diffableDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
             switch kind {
             case UICollectionView.elementKindSectionHeader:

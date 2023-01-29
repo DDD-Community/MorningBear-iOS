@@ -34,6 +34,8 @@ class ArticleCollectionViewController: UIViewController, DiffableDataSourcing  {
         diffableDataSource = makeDiffableDataSource(with: collectionView)
         diffableDataSource.initDataSource(allSection: ArticleSection.allCases)
         
+        commit(diffableDataSource)
+        
         fetchNewArticles()
     }
 }
@@ -101,7 +103,7 @@ extension ArticleCollectionViewController: UICollectionViewDataSourcePrefetching
 
 // MARK: - Related to diffable datasource
 extension ArticleCollectionViewController {
-    func bindDataSourceWithObservable() {}
+    func bindDataSourceWithObservable(_ diffableDataSource: DiffableDataSource) {}
     
     func makeDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
         let dataSource = configureDiffableDataSource(with: collectionView) { [weak self] collectionView, indexPath, model in

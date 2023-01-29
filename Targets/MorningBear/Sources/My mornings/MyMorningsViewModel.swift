@@ -23,8 +23,6 @@ class MyMorningsViewModel<Provider: DataProviding> {
     
     init(_ dataProvider: Provider = DefaultProvider.shared) {
         self.dataProvider = dataProvider
-        
-        fetchNewMorning()
     }
 }
 
