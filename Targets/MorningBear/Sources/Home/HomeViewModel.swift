@@ -23,13 +23,15 @@ class HomeViewModel<Provider: DataProviding> {
     /// `accept`로 인한 수정을 막기 위해 Relay를 `observable`로 변환해서 씀
     /// - warning: `Observable`의 상태는 직접 수정되어서는 안됨.
     ///     반드시 `startRecording`, `stopRecording`에 의해서만 수정될 수 있도록 유의할 것
-    @Bound(initValue:
-            MyInfo(estimatedTime: 0, totalCount: 0, badgeCount: -1)
-    ) private(set) var myInfo: MyInfo
+    @Bound(
+        initValue: false
+    ) private(set) var isNetworking: Bool
     
     @Bound(
-        initValue: []
-    ) private(set) var recentMornings: [MyMorning]
+        initValue: MyInfo(estimatedTime: 0, totalCount: 0, badgeCount: -1)
+    ) private(set) var myInfo: MyInfo
+    
+    @Bound(initValue: []) private(set) var recentMornings: [MyMorning]
     
     @Bound(
         initValue: []
@@ -67,16 +69,22 @@ class HomeViewModel<Provider: DataProviding> {
 
 // MARK: - Public tools
 extension HomeViewModel {
+    // MARK: - Networking
     /// 서버에서 데이터 로드
     func fetchRemoteData() {
-        linkRx(dataProvider.fetch(HomeQuery()), in: bag) { values in
+        self.isNetworking = true
+        
+        linkRx(dataProvider.fetch(HomeQuery()), in: bag, completionHandler: { values in
             self.badges = values.0
             self.myInfo = values.1
             self.recentMornings = values.2
             self.articles = values.3
-        }
+        }, disposeHandler: {
+            self.isNetworking = false
+        })
     }
     
+    // MARK: - Recording
     /// 기록중인지 체크하는 플래그 변수
     var isMyMorningRecording: MyMorningRecordingState {
         recordingStateRelay.value

@@ -15,15 +15,18 @@ import RxCocoa
 class HomeViewController: UIViewController, DiffableDataSourcing {
     typealias DiffableDataSource = UICollectionViewDiffableDataSource<HomeSection, AnyHashable>
     var diffableDataSource: DiffableDataSource!
-
+    
     private let bag = DisposeBag()
     private let viewModel = HomeViewModel()
+    
+    private let refreshControl = UIRefreshControl()
     
     /// 카메라 뷰: 미리 로딩하기 위해서 처음부터 만들어 놓기
     private let cameraViewController = UIImagePickerController()
     
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
+            collectionView.refreshControl = self.refreshControl
             // CollectionViewCompositionable 제공함수. 관련 내용 소스파일 or 주석 참조.
             configureCompositionalCollectionView()
         }
@@ -56,6 +59,7 @@ class HomeViewController: UIViewController, DiffableDataSourcing {
         // Set observables
         bindButtons()
         bindBehaviorAccordingToRecordStatus()
+        bindRefreshControl()
     }
 }
 
@@ -141,7 +145,7 @@ extension HomeViewController {
             .drive { [weak self] articles in
                 guard let self else { return }
                 
-                self.diffableDataSource.updateDataSource(in: .articles, with: articles)
+                self.diffableDataSource.replaceDataSource(in: .articles, to: articles)
             }
             .disposed(by: bag)
         
@@ -151,7 +155,7 @@ extension HomeViewController {
             .drive { [weak self] badges in
                 guard let self else { return }
                 
-                self.diffableDataSource.updateDataSource(in: .badges, with: badges)
+                self.diffableDataSource.replaceDataSource(in: .badges, to: badges)
             }
             .disposed(by: bag)
         
@@ -161,7 +165,7 @@ extension HomeViewController {
             .drive { [weak self] mornings in
                 guard let self else { return }
                 
-                self.diffableDataSource.updateDataSource(in: .recentMornings, with: mornings)
+                self.diffableDataSource.replaceDataSource(in: .recentMornings, to: mornings)
             }
             .disposed(by: bag)
     }
@@ -247,6 +251,28 @@ private extension HomeViewController {
             .disposed(by: bag)
     }
     
+    func bindRefreshControl() {
+        refreshControl.rx.controlEvent(.valueChanged)
+            .withUnretained(self)
+            .bind { weakSelf, _ in
+                weakSelf.viewModel.fetchRemoteData()
+            }
+            .disposed(by: bag)
+        
+        viewModel.$isNetworking
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            .asDriver(onErrorJustReturn: false)
+            .drive { [weak self] flag in
+                guard let self else { return }
+                
+                if flag == false {
+                    self.refreshControl.endRefreshing()
+                }
+            }
+            .disposed(by: bag)
+    }
+    
+    // MARK: - Functional methods
     func startRecording() {
         // 버튼 전환
         showRecordingNowButton()
