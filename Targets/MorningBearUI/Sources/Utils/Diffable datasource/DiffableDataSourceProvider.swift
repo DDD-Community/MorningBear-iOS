@@ -80,7 +80,6 @@ public extension UICollectionViewDiffableDataSource {
         }
         
         snapshot.appendItems(newData, toSection: section)
-        
         self.apply(snapshot, animatingDifferences: animate)
     }
     

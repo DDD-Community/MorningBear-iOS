@@ -69,28 +69,11 @@ class HomeViewModel<Provider: DataProviding> {
 extension HomeViewModel {
     /// 서버에서 데이터 로드
     func fetchRemoteData() {
-        linkRx(dataProvider.fetch(MyInfoQuery()), in: bag) { [weak self] data in
-            guard let self else { return }
-            
-            self.myInfo = data
-        }
-        
-        linkRx(dataProvider.fetch(BadgeQuery()), in: bag) { [weak self] data in
-            guard let self else { return }
-            
-            self.badges = data
-        }
-        
-        linkRx(dataProvider.fetch(MyMorningQuery()), in: bag) {  [weak self] data in
-            guard let self else { return }
-            
-            self.recentMornings = Array(data.prefix(4)) // 상위 4개만 표시하는게 정책임
-        }
-        
-        linkRx(dataProvider.fetch(ArticleQuery(size: 10)), in: bag) { [weak self] articles in
-            guard let self else { return }
-            
-            self.articles = articles
+        linkRx(dataProvider.fetch(HomeQuery()), in: bag) { values in
+            self.badges = values.0
+            self.myInfo = values.1
+            self.recentMornings = values.2
+            self.articles = values.3
         }
     }
     
