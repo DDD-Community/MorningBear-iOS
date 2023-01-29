@@ -108,6 +108,10 @@ extension HomeViewModel {
     /// 기록을 멈춘다
     func stopRecording() throws -> Date {
         if case .recording(let startDate) = isMyMorningRecording {
+            guard startDate.timeIntervalSinceNow < -60 else {
+                throw HomeError.invalidDate(message: "1분 미만의 기록은 제출할 수 없습니다.")
+            }
+            
             bag = DisposeBag() // reset bindings
             configureBindings() // set bindings again
             
@@ -179,11 +183,14 @@ private extension HomeViewModel {
 private extension HomeViewModel {
     enum HomeError: LocalizedError {
         case stopRecordingWhileIdle
+        case invalidDate(message: String)
         
         var errorDescription: String? {
             switch self {
             case .stopRecordingWhileIdle:
                 return "잘못된 동작입니다. 다시 시도해주세요"
+            case .invalidDate(let message):
+                return message
             }
         }
     }

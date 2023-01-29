@@ -54,7 +54,8 @@ extension RegisterMorningViewModel {
         
         // 날짜 파싱 잘 되는지 확인
         guard let fullStartDate = startTimeDate.changeYearMonthDayValue(to: currentDate, is24Hour: false),
-              let fullEndDate = endTimeDate.changeYearMonthDayValue(to: currentDate, is24Hour: false) else {
+              let fullEndDate = endTimeDate.changeYearMonthDayValue(to: currentDate, is24Hour: false)
+        else {
             return .error(RegisterMorningViewError.invalidDate(message: "형식이 올바르지 않습니다."))
         }
         
@@ -129,7 +130,7 @@ enum RegisterMorningViewError: LocalizedError {
         case .emptyCategory:
             return "카테고리 정보가 선택되지 않았습니다"
         case .invalidDate(let message):
-            return "날짜 데이터가 바르지 않습니다. \(message)"
+            return "\(message)"
         }
     }
 }

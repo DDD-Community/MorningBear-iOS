@@ -289,15 +289,15 @@ private extension HomeViewController {
         
         do {
             let startDate = try viewModel.stopRecording()
+            
             registerMorningViewController.prepare(startTime: startDate, image: nil)
+            self.navigationController?.pushViewController(registerMorningViewController, animated: true)
+            
+            // 버튼 전환
+            showStartRecordingButton()
         } catch let error {
             showAlert(error)
         }
-
-        self.navigationController?.pushViewController(registerMorningViewController, animated: true)
-        
-        // 버튼 전환
-        showStartRecordingButton()
     }
     
     func showRecordingNowButton() {
@@ -407,8 +407,12 @@ extension HomeViewController: UIImagePickerControllerDelegate, UINavigationContr
             }
             
             if case .recording(startDate: let savedStartDate) = viewModel.isMyMorningRecording {
-                registerMorningViewController.prepare(startTime: savedStartDate, image: takenPhoto)
-                self.navigationController?.pushViewController(registerMorningViewController, animated: true)
+                do {
+                    registerMorningViewController.prepare(startTime: savedStartDate, image: takenPhoto)
+                    self.navigationController?.pushViewController(registerMorningViewController, animated: true)
+                } catch let error {
+                    self.showAlert(error)
+                }
             } else {
                 // TODO: Error
             }
