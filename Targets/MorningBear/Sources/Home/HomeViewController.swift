@@ -90,8 +90,8 @@ extension HomeViewController {
                 ) as! RecentMorningCell
                 
                 if !self.viewModel.recentMornings.isEmpty {
-                    let item = model // 최근 미라클 모닝은 상위 4개만 표시; MARK: 정렬 필수
-                    cell.prepare(item as! MyMorning)
+                    let item = self.viewModel.recentMornings[indexPath.item]
+                    cell.prepare(item)
                 }
                 
                 return cell
@@ -290,7 +290,12 @@ private extension HomeViewController {
         do {
             let startDate = try viewModel.stopRecording()
             
-            registerMorningViewController.prepare(startTime: startDate, image: nil)
+            registerMorningViewController.prepare(startTime: startDate, image: nil, popAction: { [weak self] in
+                guard let self else { return }
+                
+                self.viewModel.fetchRemoteData()
+            })
+            
             self.navigationController?.pushViewController(registerMorningViewController, animated: true)
             
             // 버튼 전환
@@ -408,7 +413,7 @@ extension HomeViewController: UIImagePickerControllerDelegate, UINavigationContr
             
             if case .recording(startDate: let savedStartDate) = viewModel.isMyMorningRecording {
                 do {
-                    registerMorningViewController.prepare(startTime: savedStartDate, image: takenPhoto)
+                    registerMorningViewController.prepare(startTime: savedStartDate, image: takenPhoto, popAction: {})
                     self.navigationController?.pushViewController(registerMorningViewController, animated: true)
                 } catch let error {
                     self.showAlert(error)

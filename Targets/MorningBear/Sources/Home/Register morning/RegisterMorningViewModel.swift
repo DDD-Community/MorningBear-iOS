@@ -72,7 +72,7 @@ extension RegisterMorningViewModel {
             return .error(RegisterMorningViewError.emptyCategory)
         }
         
-        // 요청 객체 생성
+        // 요청 객체 생성z
         let info = MorningRegistrationInfo(image: image, category: intParsedCategory,
                                            startTime: fullStartDate, endTime: fullEndDate,
                                            comment: comment)
