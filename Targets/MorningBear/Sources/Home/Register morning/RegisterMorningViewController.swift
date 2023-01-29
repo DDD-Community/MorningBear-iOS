@@ -23,6 +23,8 @@ class RegisterMorningViewController: UIViewController {
     // For category collection view
     var categoryCollectionViewProvider: HorizontalScrollCollectionViewProvider<CapsuleCell, String>?
     
+    private var popAction: (() -> Void)!
+    
     // MARK: View components
     @IBOutlet weak var scrollView: UIScrollView!
     
@@ -155,12 +157,14 @@ extension RegisterMorningViewController {
     /// 기록이 이상하면 에러 튕김
     ///
     /// 지금은 1분 미만이면 튕김
-    func prepare(startTime: Date, image: UIImage?) {
+    func prepare(startTime: Date, image: UIImage?, popAction: @escaping () -> Void) {
         startTimeText = viewModel.timeFormatter.string(from: startTime)
         
         if let image {
             morningImage = image
-        } 
+        }
+        
+        self.popAction = popAction
     }
 }
 
@@ -210,6 +214,7 @@ private extension RegisterMorningViewController {
                     .subscribe(
                         onSuccess: { _ in
                             self.navigationController?.popViewController(animated: true)
+                            self.popAction()
                         },
                         onFailure: { error in
                             self.showAlert(error)

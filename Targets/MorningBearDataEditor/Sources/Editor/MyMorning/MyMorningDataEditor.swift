@@ -65,6 +65,7 @@ fileprivate struct MorningRegistrationSingleTrait<RemoteStorage: RemoteStoraging
                 // 요청객체에 URL 채워넣고 리퀘스트 쏨
                 MorningInfoRegisterMutation(photoInput: photoInput).singleTrait
             }
+            .retry(2)
         
         return trait
     }
