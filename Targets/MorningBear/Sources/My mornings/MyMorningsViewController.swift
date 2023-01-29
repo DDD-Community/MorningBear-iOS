@@ -89,9 +89,12 @@ extension MyMorningsViewController {
     func bindDataSourceWithObservable(_ dataSource: DiffableDataSource) {
         viewModel.$myMornings
             .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
-            .subscribe { newMorningData in
+            .asDriver(onErrorJustReturn: [])
+            .drive(onNext: { [weak self] newMorningData in
+                guard let self else { return }
+                
                 self.diffableDataSource.updateDataSource(in: .main, with: newMorningData)
-            }
+            })
             .disposed(by: bag)
     }
         
