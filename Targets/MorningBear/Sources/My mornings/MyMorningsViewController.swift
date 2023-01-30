@@ -93,19 +93,21 @@ extension MyMorningsViewController {
             .drive(onNext: { [weak self] newMorningData in
                 guard let self else { return }
                 
-                self.diffableDataSource.updateDataSource(in: .main, with: newMorningData)
+                self.diffableDataSource.replaceDataSource(in: .main, to: newMorningData)
             })
             .disposed(by: bag)
     }
         
     func makeDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
-        let dataSource = configureDiffableDataSource(with: collectionView) { collectionView, indexPath, model in
+        let dataSource = configureDiffableDataSource(with: collectionView) { [weak self] collectionView, indexPath, model in
+            guard let self else { return UICollectionViewCell() }
+            
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: "RecentMorningCell", for: indexPath
             ) as! RecentMorningCell
             
-            let myMorning = model
-            cell.prepare(MyMorning(id: myMorning.id, imageURL: myMorning.imageURL))
+            let item = self.viewModel.myMornings[indexPath.row]
+            cell.prepare(item)
             return cell
         }
         
@@ -141,15 +143,19 @@ extension MyMorningsViewController {
             for: indexPath
         ) as! HomeSectionHeaderCell
         
+        let menuItems: [UIAction] = {
+            return [
+                UIAction(title: "최신순", image: UIImage(systemName: "arrow.down.circle"), handler: { _ in
+                    self.viewModel.fetchNewMorning(sort: .desc)
+                }),
+                UIAction(title: "오래된순", image: UIImage(systemName: "arrow.up.circle"), handler: { _ in
+                    self.viewModel.fetchNewMorning(sort: .asc)
+                }),
+            ]
+        }()
         
-        headerCell.prepare(title: "나의 최근 미라클 모닝", buttonText: "정렬 방식") { [weak self] in
-            guard let self else {
-                return
-            }
-            
-            // do something
-            print("정렬")
-        }
+        let menu = UIMenu(title: "정렬 방식", children: menuItems)
+        headerCell.prepare(title: "나의 최근 미라클 모닝", buttonText: "정렬 방식", menu: menu)
         
         return headerCell
     }

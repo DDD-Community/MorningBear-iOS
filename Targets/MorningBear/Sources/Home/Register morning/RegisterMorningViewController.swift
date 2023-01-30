@@ -288,7 +288,6 @@ extension RegisterMorningViewController: CollectionViewCompositionable {
 // MARK: - Keyboard avoidance 설정
 extension RegisterMorningViewController {
     func setKeyboardObserver() {
-        print("Reg")
 
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow),
                                                name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -303,7 +302,6 @@ extension RegisterMorningViewController {
         var keyboardFrame:CGRect = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
         
-        print("WTF")
 
         var contentInset: UIEdgeInsets = self.scrollView.contentInset
         contentInset.bottom = keyboardFrame.size.height
@@ -312,8 +310,6 @@ extension RegisterMorningViewController {
     }
 
     @objc func keyboardWillHide(notification:NSNotification){
-        
-        print("Gone")
         let contentInset:UIEdgeInsets = UIEdgeInsets.zero
         scrollView.contentInset = contentInset
     }

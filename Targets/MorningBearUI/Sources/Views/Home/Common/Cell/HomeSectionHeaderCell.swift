@@ -78,6 +78,10 @@ extension HomeSectionHeaderCell {
     public func prepare(title: String, buttonText: String, buttonAction: @escaping Action) {
         prepareCell(title: title, buttonText: buttonText, buttonAction: buttonAction)
     }
+    
+    public func prepare(title: String, buttonText: String, menu: UIMenu) {
+        prepareCell(title: title, buttonText: buttonText, menu: menu)
+    }
 }
 
 // MARK: Interanal tools
@@ -96,7 +100,22 @@ extension HomeSectionHeaderCell {
         }
         
         self.titleLabel.text = title
+        
+        self.moreButton.menu = nil // 메뉴는 사용하지 않음
+        self.moreButton.showsMenuAsPrimaryAction = false
         self.moreButton.setTitle(buttonText, for: .normal)
+    }
+    
+    /// 액션 대신에 메뉴를 넣은 버튼
+    private func prepareCell(title: String?, buttonText: String?, menu: UIMenu?) {
+        self.needsButton = true
+        
+        self.moreButton.setTitle(buttonText, for: .normal)
+        self.moreButton.menu = menu
+        self.moreButton.showsMenuAsPrimaryAction = true
+        
+        self.buttonAction = {} // 탭 액션은 사용하지 않음
+        self.titleLabel.text = title
     }
     
     private func bindButton() {

@@ -17,10 +17,12 @@ import MorningBearAPI
 public struct MyMorningQuery: Queryable {
     let size: Int
     let sort: Sort
+    let useCache: Bool
     
     public var singleTrait: Single<[MyMorning]> {
         Network.shared.apollo.rx.fetch(
-            query: SortedMyMorningPhotoQuery(size: .some(size), sort: .some(sort.rawValue))
+            query: SortedMyMorningPhotoQuery(size: .some(size), sort: .some(String(sort.rawValue))),
+            cachePolicy: useCache ? .returnCacheDataElseFetch : .fetchIgnoringCacheData
         )
         .map { data in
             guard let data = data.data else {
@@ -39,21 +41,24 @@ public struct MyMorningQuery: Queryable {
             
             return mappedInfo
         }
+        .retry(2)
     }
     
     public init() {
         self.size = 4
         self.sort = .desc
+        self.useCache = false
     }
     
-    public init(size: Int, sort: Sort) {
+    public init(size: Int, sort: Sort, useCache: Bool) {
         self.size = size
         self.sort = sort
+        self.useCache = useCache
     }
     
-    public enum Sort: String {
-        case asc
-        case desc
+    public enum Sort: Int, Equatable {
+        case asc = 1
+        case desc = 2
     }
 }
 
