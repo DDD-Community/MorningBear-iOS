@@ -44,8 +44,8 @@ public extension FirebaseStorageService {
         let singleTrait = Single<URL>.create { observer in
             // Upload the file
             fileRef.putData(data, metadata: nil) { (metadata, error) in
-                if let error = error {
-                    observer(.failure(error))
+                if error != nil {
+                    observer(.failure(StorageError.failToReachRemote))
                     return
                 }
                 

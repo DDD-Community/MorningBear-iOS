@@ -31,9 +31,11 @@ class MyMorningsViewModel<Provider: DataProviding> {
 
 extension MyMorningsViewModel {
     /// 새로운 이미지들 요청
-    func fetchNewMorning(sort: MyMorningQuery.Sort = .desc) {
+    func fetchNewMorning(sort: MyMorningQuery.Sort? = nil) {
+        let sort = sort ?? self.currentSortStatus
+        
         linkRx(
-            dataProvider.fetch(MyMorningQuery(size: 10, sort: sort, useCache: false)),
+            dataProvider.fetch(MyMorningQuery(size: 10, sort: sort, useCache: true)),
             scheduler: SerialDispatchQueueScheduler(qos: .userInitiated),
             in: bag,
             completionHandler: { myMornings in

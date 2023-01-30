@@ -103,8 +103,8 @@ public class StateCell: UICollectionViewCell {
         titleLabel.text = titleLabelText
         oneLinerLabel.text = state?.oneLiner
         
-        countLabel.text = String(parseToHourAndMinute(from: myInfo?.totalCount))
-        timeLabel.text = String("\(myInfo?.estimatedTime ?? 0)번")
+        countLabel.text = String(parseToHourAndMinute(from: myInfo?.estimatedTime))
+        timeLabel.text = String("\(myInfo?.totalCount ?? 0)번")
         badgeLabel.text = String("\(myInfo?.badgeCount ?? 0)개")
     }
 }
