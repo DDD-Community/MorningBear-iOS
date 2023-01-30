@@ -12,6 +12,7 @@ enum StorageError: LocalizedError {
     case invalidData
     case invalidImage
     case invalidPath
+    case failToReachRemote
     case failToLoadImage
     case failToSaveImage
     case failToFetchData
@@ -24,6 +25,8 @@ enum StorageError: LocalizedError {
             return "이미지 처리 중 오류가 발생했습니다"
         case .invalidPath:
             return "경로가 잘못되었습니다"
+        case .failToReachRemote:
+            return "원격저장소 접근 중 오류가 발생했습니다. 관리자에게 문의하세요."
         case .failToLoadImage:
             return "이미지 다운로드 중 오류가 발생했습니다"
         case .failToSaveImage:

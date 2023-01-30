@@ -24,11 +24,20 @@ public class ArticleCell: UICollectionViewCell {
             descriptionLabel.textColor = .black
         }
     }
+    var gradientLayer: CAGradientLayer = .random
     
     public override func awakeFromNib() {
         super.awakeFromNib()
         
         designCell()
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        gradientLayer = CAGradientLayer.random
+        gradientLayer.frame = bounds
+        self.layer.insertSublayer(gradientLayer, at: 0)
     }
     
     public override func prepareForReuse() {
@@ -40,15 +49,6 @@ public class ArticleCell: UICollectionViewCell {
     public func prepare(article: Article?) {
         self.titleLabel.text = article?.title
         self.descriptionLabel.text = article?.description
-    }
-    
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        let gradientLayer = CAGradientLayer.random
-        gradientLayer.frame = bounds
-        
-        self.layer.insertSublayer(gradientLayer, at: 0)
     }
 }
 
