@@ -14,8 +14,10 @@ import RxRelay
 /// 일일히 `BehaviorRelay`, `Observable` 나눠주는 거 귀찮아서 하나로 묶어버림
 ///
 /// 1차적인 목적은 뷰 컨트롤러에서 relay에 `accept`하는 것 막으려고 relay를 `getter`로부터 숨기는 것
+///
+/// - warning: `struct`로 선언하면 메모리 접근 에러 발생함
 @propertyWrapper
-public struct Bound<Value> {
+public class Bound<Value> {
     private let relay: BehaviorRelay<Value>
     
     public var wrappedValue: Value {
