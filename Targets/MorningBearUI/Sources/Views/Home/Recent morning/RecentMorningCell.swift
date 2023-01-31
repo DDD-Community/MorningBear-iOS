@@ -11,7 +11,10 @@ import UIKit
 import Kingfisher
 import MorningBearData
 
-public final class RecentMorningCell: UICollectionViewCell {
+public final class RecentMorningCell: UICollectionViewCell, CustomCellType {
+    public static let filename = "RecentMorningCell"
+    public static let reuseIdentifier = "RecentMorningCell"
+    
     @IBOutlet weak var imageView: UIImageView! {
         didSet {
             imageView.layer.cornerRadius = 10

@@ -8,7 +8,10 @@
 
 import UIKit
 
-class CategoryCell: UICollectionViewCell {
+public class CategoryCell: UICollectionViewCell, CustomCellType {
+    public static var filename = "CatogoryCell"
+    public static let reuseIdentifier = "CatogoryCell"
+    
     @IBOutlet weak var iconImageView: UIImageView! {
         didSet {
             iconImageView.contentMode = .scaleAspectFit
@@ -21,7 +24,7 @@ class CategoryCell: UICollectionViewCell {
         }
     }
     
-    override func awakeFromNib() {
+    public override func awakeFromNib() {
         super.awakeFromNib()
         
     }

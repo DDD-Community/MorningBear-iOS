@@ -8,10 +8,13 @@
 
 import UIKit
 
-public class ProfileCell: UICollectionViewCell {
+public class ProfileCell: UICollectionViewCell, CustomCellType {
+    public static let filename = "ProfileCell"
+    public static let reuseIdentifier = "ProfileCell"
+    
     @IBOutlet weak var profileImageView: UIImageView! {
         didSet {
-            
+            profileImageView.contentMode = .scaleAspectFit
         }
     }
     

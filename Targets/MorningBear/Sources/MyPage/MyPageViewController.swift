@@ -92,20 +92,14 @@ extension MyPageViewController: CollectionViewCompositionable {
     func registerCells() {
         let bundle =  MorningBearUIResources.bundle
 
-        // 나의 상태. 횟수, 총 시간 등등 맨위에 들어가는 그거
-        var cellNib = UINib(nibName: "StateCell", bundle: bundle)
-        collectionView.register(cellNib,
-                                forCellWithReuseIdentifier: "StateCell")
+        let cells: [any CustomCellType.Type] = [
+            ProfileCell.self, CategoryCell.self, RecentMorningCell.self
+        ]
         
-        // 카테고리
-//        cellNib = UINib(nibName: "BadgeCell", bundle: bundle)
-//        collectionView.register(cellNib,
-//                                forCellWithReuseIdentifier: "BadgeCell")
-        
-        // 나의 최근 미라클 모닝
-        cellNib = UINib(nibName: "RecentMorningCell", bundle: bundle)
-        collectionView.register(cellNib,
-                                forCellWithReuseIdentifier: "RecentMorningCell")
+        // Register
+        cells.forEach {
+            $0.register(to: collectionView, bundle: bundle)
+        }
     }
 }
 
@@ -114,13 +108,13 @@ extension MyPageViewController: DiffableDataSourcing {
     typealias Model = AnyHashable
     
     func makeDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
-        configureDiffableDataSource(with: collectionView) {
+        configureDiffableDataSource(with: collectionView) { collectionView, indexPath, model in 
             
         }
     }
     
-    func bindDataSourceWithObservable(_ dataSource: DataSouce) {
-        <#code#>
+    func bindDataSourceWithObservable(_ dataSource: DiffableDataSource) {
+        
     }
 }
 
