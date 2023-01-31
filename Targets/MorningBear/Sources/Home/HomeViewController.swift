@@ -80,7 +80,10 @@ extension HomeViewController {
                 let state = State(nickname: "임시", oneLiner: "임시")
                 let myInfo = self.viewModel.myInfo
                 
-                cell.prepare(state: state, myInfo: myInfo)
+                cell.prepare(state: state, myInfo: myInfo) {
+                    // FIXME: Navigate for test
+                    self.navigate(boardName: "MyPage", vcId: "MyPage")
+                }
                 
                 return cell
                 
@@ -476,10 +479,7 @@ extension HomeViewController {
                 }
                 
                 // 아티클 모두 보기 목록으로 이동(네비게이션)
-                let articlesCollectionViewController = UIStoryboard(name: "ArticlesCollection", bundle: nil)
-                    .instantiateViewController(withIdentifier: "ArticlesCollection")
-                
-                self.navigationController?.pushViewController(articlesCollectionViewController, animated: true)
+                self.navigate(boardName: "ArticlesCollection", vcId: "ArticlesCollection")
             }
         default:
             break
@@ -503,12 +503,16 @@ extension HomeViewController {
         
         footerCell.prepare(buttonText: "더 보러가기") {
             // 나의 미라클모닝 목록으로 이동(네비게이션)
-            let myRecentMorningController = UIStoryboard(name: "MyMornings", bundle: nil)
-                .instantiateViewController(withIdentifier: "MyMornings")
-            
-            self.navigationController?.pushViewController(myRecentMorningController, animated: true)
+            self.navigate(boardName: "MyMornings", vcId: "MyMornings")
         }
         
         return footerCell
+    }
+    
+    private func navigate(boardName: String, vcId: String) {
+        let board = UIStoryboard(name: boardName, bundle: nil)
+        let vc = board.instantiateViewController(withIdentifier: vcId)
+        
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

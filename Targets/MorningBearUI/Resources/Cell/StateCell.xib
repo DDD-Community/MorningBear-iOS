@@ -5,7 +5,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -38,23 +37,14 @@
                                     </label>
                                 </subviews>
                             </stackView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sxH-MC-sW9">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qyQ-hi-rq5">
                                 <rect key="frame" x="0.0" y="62.666666666666657" width="527" height="59"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b1F-ng-zRe">
-                                        <rect key="frame" x="243.00000000000003" y="19.333333333333336" width="41.333333333333343" height="20.333333333333336"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstItem="b1F-ng-zRe" firstAttribute="centerY" secondItem="sxH-MC-sW9" secondAttribute="centerY" id="4n7-MX-Mi1"/>
-                                    <constraint firstAttribute="height" constant="59" id="JhI-WP-pi6"/>
-                                    <constraint firstItem="b1F-ng-zRe" firstAttribute="centerX" secondItem="sxH-MC-sW9" secondAttribute="centerX" id="idU-Or-VKv"/>
+                                    <constraint firstAttribute="height" constant="59" id="Thj-MH-V4R"/>
                                 </constraints>
-                            </view>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Button"/>
+                            </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H7a-YS-jcc">
                                 <rect key="frame" x="0.0" y="137.66666666666663" width="527" height="200.33333333333337"/>
                                 <subviews>
@@ -144,9 +134,9 @@
                             </view>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="sxH-MC-sW9" firstAttribute="leading" secondItem="ctS-aL-EC6" secondAttribute="leading" id="8d4-5r-jpe"/>
                             <constraint firstItem="H7a-YS-jcc" firstAttribute="leading" secondItem="ctS-aL-EC6" secondAttribute="leading" id="GeV-9p-UqN"/>
-                            <constraint firstAttribute="trailing" secondItem="sxH-MC-sW9" secondAttribute="trailing" id="Uyb-ud-1ca"/>
+                            <constraint firstItem="qyQ-hi-rq5" firstAttribute="leading" secondItem="ctS-aL-EC6" secondAttribute="leading" id="J4c-Z5-K9I"/>
+                            <constraint firstAttribute="trailing" secondItem="qyQ-hi-rq5" secondAttribute="trailing" id="X82-Nb-w3H"/>
                             <constraint firstAttribute="trailing" secondItem="H7a-YS-jcc" secondAttribute="trailing" id="d9j-5T-TpJ"/>
                         </constraints>
                     </stackView>
@@ -165,8 +155,7 @@
                 <outlet property="badgeTitleLabel" destination="fCT-Gx-7vx" id="Aj3-8R-bj8"/>
                 <outlet property="countLabel" destination="lMh-0V-xCJ" id="IgE-EB-p3m"/>
                 <outlet property="countTitleLabel" destination="hca-Bk-HPg" id="q1o-Fx-B0x"/>
-                <outlet property="oneLinerLabel" destination="b1F-ng-zRe" id="ijW-qQ-ke2"/>
-                <outlet property="oneLinerWrapperView" destination="sxH-MC-sW9" id="5av-HH-VXS"/>
+                <outlet property="oneLinerButton" destination="qyQ-hi-rq5" id="2Bf-pw-b0Y"/>
                 <outlet property="stateWrapperView" destination="H7a-YS-jcc" id="wzI-KL-eSf"/>
                 <outlet property="subTitleLabel" destination="4cC-uH-GyM" id="ReB-dP-u1h"/>
                 <outlet property="timeLabel" destination="aXr-l1-VqY" id="ZXN-Th-tqI"/>
@@ -177,11 +166,8 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="bonfire" width="24.333333969116211" height="24"/>
+        <image name="bonfire" width="18.333333969116211" height="21"/>
         <image name="time" width="20" height="20"/>
-        <image name="trophy" width="24.333333969116211" height="24"/>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
+        <image name="trophy" width="24.333333969116211" height="18"/>
     </resources>
 </document>

@@ -8,18 +8,21 @@
 
 import UIKit
 
+import RxCocoa
+import RxSwift
+
 import MorningBearData
 
 public class StateCell: UICollectionViewCell {
-    @IBOutlet weak var oneLinerWrapperView: UIView! {
+    private let bag = DisposeBag()
+    
+    @IBOutlet weak var oneLinerButton: UIButton! {
         didSet {
-            oneLinerWrapperView.backgroundColor = MorningBearUIAsset.Colors.gray800.color
-            oneLinerWrapperView.layer.cornerRadius = 8
-        }
-    }
-    @IBOutlet weak var oneLinerLabel: UILabel! {
-        didSet {
-            oneLinerLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 16)
+            oneLinerButton.backgroundColor = MorningBearUIAsset.Colors.gray800.color
+            oneLinerButton.layer.cornerRadius = 8
+            
+            oneLinerButton.setTitleColor(.white, for: .normal)
+            oneLinerButton.titleLabel?.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 16)
         }
     }
     @IBOutlet weak var stateWrapperView: UIView! {
@@ -80,6 +83,7 @@ public class StateCell: UICollectionViewCell {
         }
     }
     
+    public typealias Action = () -> Void
     
     public override func awakeFromNib() {
         super.awakeFromNib()
@@ -89,10 +93,10 @@ public class StateCell: UICollectionViewCell {
     public override func prepareForReuse() {
         super.prepareForReuse()
         
-        self.prepare(state: nil, myInfo: nil)
+        self.prepare(state: nil, myInfo: nil, tapAction: nil)
     }
     
-    public func prepare(state: State?, myInfo: MyInfo?) {
+    public func prepare(state: State?, myInfo: MyInfo?, tapAction: Action?) {
         let titleLabelText: String?
         if let state {
             titleLabelText = "안녕하세요, \(state.nickname)님"
@@ -101,7 +105,9 @@ public class StateCell: UICollectionViewCell {
         }
         
         titleLabel.text = titleLabelText
-        oneLinerLabel.text = state?.oneLiner
+        
+        oneLinerButton.setTitle(state?.oneLiner, for: .normal)
+        bindButton(with: tapAction)
         
         countLabel.text = String(parseToHourAndMinute(from: myInfo?.estimatedTime))
         timeLabel.text = String("\(myInfo?.totalCount ?? 0)번")
@@ -110,6 +116,13 @@ public class StateCell: UICollectionViewCell {
 }
 
 private extension StateCell {
+    func bindButton(with action: Action?) {
+        oneLinerButton.rx.tap.bind {
+            action?()
+        }
+        .disposed(by: bag)
+    }
+    
     func parseToHourAndMinute(from totalMinute: Int?) -> String {
         guard var totalMinute else {
             return "0분"
