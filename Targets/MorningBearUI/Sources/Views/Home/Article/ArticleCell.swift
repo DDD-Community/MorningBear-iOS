@@ -7,10 +7,12 @@
 //
 
 import UIKit
-
 @_exported import MorningBearData
 
-public class ArticleCell: UICollectionViewCell {
+public class ArticleCell: UICollectionViewCell, CustomCellType {
+    public static let filename = "ArticleCell"
+    public static let reuseIdentifier = "ArticleCell"
+    
     @IBOutlet weak var titleLabel: UILabel! {
         didSet {
             titleLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 16)
@@ -44,6 +46,10 @@ public class ArticleCell: UICollectionViewCell {
         super.prepareForReuse()
         
         self.prepare(article: nil)
+    }
+    
+    public func prepare(_ data: Article) {
+        self.prepare(article: data)
     }
     
     public func prepare(article: Article?) {

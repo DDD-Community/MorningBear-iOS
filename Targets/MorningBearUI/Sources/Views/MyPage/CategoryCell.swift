@@ -7,10 +7,11 @@
 //
 
 import UIKit
+@_exported import MorningBearData
 
 public class CategoryCell: UICollectionViewCell, CustomCellType {
-    public static var filename = "CatogoryCell"
-    public static let reuseIdentifier = "CatogoryCell"
+    public static var filename = "CategoryCell"
+    public static let reuseIdentifier = "CategoryCell"
     
     @IBOutlet weak var iconImageView: UIImageView! {
         didSet {
@@ -28,4 +29,11 @@ public class CategoryCell: UICollectionViewCell, CustomCellType {
         super.awakeFromNib()
         
     }
+    
+    public func prepare(_ data: MorningBearData.Category) {
+        iconImageView.image = MorningBearUIAsset.Images.bonfire.image
+        descriptionLabel.text = data.description
+    }
 }
+
+

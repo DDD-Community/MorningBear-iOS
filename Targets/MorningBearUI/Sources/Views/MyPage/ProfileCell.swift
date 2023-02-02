@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_exported import MorningBearData
 
 public class ProfileCell: UICollectionViewCell, CustomCellType {
     public static let filename = "ProfileCell"
@@ -76,6 +77,14 @@ public class ProfileCell: UICollectionViewCell, CustomCellType {
 }
 
 public extension ProfileCell {
+    func prepare(_ data: Profile) {
+        self.prepare(image: data.image,
+                     nickname: data.nickname,
+                     postCount: data.postCount,
+                     supportCount: data.supportCount,
+                     badgeCount: data.badgeCount)
+    }
+    
     func prepare(image: UIImage, nickname: String, postCount: Int, supportCount: Int, badgeCount: Int) {
         profileImageView.image = image
         

@@ -23,7 +23,7 @@ class RegisterMorningViewModel<Editor: MyMorningDataEditing> {
     private let myMorningDataEditor: Editor
 
     let currentDate = Date()
-    let categories: [String] = MorningRegistrationInfo.Category.allCases.map({ $0.description })
+    let categories: [String] = Category.allCases.map({ $0.description })
 
     /// 밖에서 보여줄 때 쓰는 시간 포매터
     let timeFormatter = MorningBearDateFormatter.timeFormatter
@@ -68,7 +68,7 @@ extension RegisterMorningViewModel {
         let comment = commentText
         
         // 카테고리 넣고
-        guard let intParsedCategory = MorningRegistrationInfo.Category(rawValue: category) else {
+        guard let intParsedCategory = Category(rawValue: category) else {
             return .error(RegisterMorningViewError.emptyCategory)
         }
         

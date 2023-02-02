@@ -98,36 +98,25 @@ extension HomeViewController {
                 }
                 
                 return cell
-
+                
             case .badges:
-                let cell = collectionView.dequeueReusableCell(
-                    withReuseIdentifier: "BadgeCell", for: indexPath
-                ) as! BadgeCell
-                
-                if !self.viewModel.badges.isEmpty {
-                    let item = self.viewModel.badges[indexPath.item]
-                    cell.prepare(badge: item)
-                }
-                
-                return cell
+                return BadgeCell.dequeueAndPrepare(
+                    from: collectionView,
+                    at: indexPath,
+                    prepare: self.viewModel.badges[indexPath.item]
+                )
                 
             case .articles:
-                let cell = collectionView.dequeueReusableCell(
-                    withReuseIdentifier: "ArticleCell", for: indexPath
-                ) as! ArticleCell
-                
-                if !self.viewModel.articles.isEmpty {
-                    let item = self.viewModel.articles[indexPath.item]
-                    cell.prepare(article: item)
-                }
-                
-                return cell
-            
+                return ArticleCell.dequeueAndPrepare(
+                    from: collectionView,
+                    at: indexPath,
+                    prepare: self.viewModel.articles[indexPath.item]
+                )
             case .none:
                 return UICollectionViewCell()
             }
         }
-
+        
         return dataSource
     }
     
@@ -378,15 +367,11 @@ extension HomeViewController: CollectionViewCompositionable {
         collectionView.register(cellNib,
                                 forCellWithReuseIdentifier: "RecentMorningCell")
         
-        // 배지
-        cellNib = UINib(nibName: "BadgeCell", bundle: bundle)
-        collectionView.register(cellNib,
-                                forCellWithReuseIdentifier: "BadgeCell")
+        let cellTypes: [any CustomCellType.Type] = [
+            ArticleCell.self, BadgeCell.self
+        ]
+        cellTypes.forEach { $0.register(to: collectionView, bundle: bundle) }
         
-        // 아티클
-        cellNib = UINib(nibName: "ArticleCell", bundle: bundle)
-        collectionView.register(cellNib,
-                                forCellWithReuseIdentifier: "ArticleCell")
         
         // 헤더 - 공용
         cellNib = UINib(nibName: "HomeSectionHeaderCell", bundle: bundle)

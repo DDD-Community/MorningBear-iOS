@@ -9,7 +9,7 @@
 import UIKit
 
 import Kingfisher
-import MorningBearData
+@_exported import MorningBearData
 
 public final class RecentMorningCell: UICollectionViewCell, CustomCellType {
     public static let filename = "RecentMorningCell"

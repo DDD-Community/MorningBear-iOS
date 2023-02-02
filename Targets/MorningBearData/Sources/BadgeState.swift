@@ -6,7 +6,7 @@
 //  Copyright © 2023 com.dache. All rights reserved.
 //
 
-public struct BadgeState {
+public struct BadgeState: Hashable {
     public let nickname: String
     public let badgeCount: Int
     

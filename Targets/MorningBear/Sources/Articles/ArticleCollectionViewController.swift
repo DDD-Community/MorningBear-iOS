@@ -73,9 +73,19 @@ extension ArticleCollectionViewController: CollectionViewCompositionable {
     func registerCells() {
         let bundle = MorningBearUIResources.bundle
         // 상태(헤더)
-        let cellNib = UINib(nibName: "ArticleCell", bundle: bundle)
-        collectionView.register(cellNib,
-                                forCellWithReuseIdentifier: "ArticleCell")
+        
+        let cells: [any CustomCellType.Type] = [
+            ArticleCell.self
+        ]
+        
+        // Register
+        cells.forEach {
+            $0.register(to: collectionView, bundle: bundle)
+        }
+//        
+//        let cellNib = UINib(nibName: "ArticleCell", bundle: bundle)
+//        collectionView.register(cellNib,
+//                                forCellWithReuseIdentifier: "ArticleCell")
     }
 }
 
