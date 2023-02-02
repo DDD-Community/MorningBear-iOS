@@ -17,6 +17,20 @@ public protocol CustomCellType: UICollectionViewCell {
 }
 
 public extension CustomCellType {
+    static func registerHeader(to collectionView: UICollectionView, bundle: Bundle?) {
+        let cellNib = UINib(nibName: Self.filename, bundle: bundle)
+        collectionView.register(cellNib,
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                withReuseIdentifier: Self.reuseIdentifier)
+    }
+
+    static func registerFooter(to collectionView: UICollectionView, bundle: Bundle?) {
+        let cellNib = UINib(nibName: Self.filename, bundle: bundle)
+        collectionView.register(cellNib,
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+                                withReuseIdentifier: Self.reuseIdentifier)
+    }
+    
     static func register(to collectionView: UICollectionView, bundle: Bundle?) {
         let cellNib = UINib(nibName: Self.filename, bundle: bundle)
         collectionView.register(cellNib, forCellWithReuseIdentifier: Self.reuseIdentifier)
@@ -41,7 +55,10 @@ public extension CustomCellType {
             withReuseIdentifier: Self.reuseIdentifier, for: indexPath
         ) as! Self
         
-        cell.prepare(data)
+        DispatchQueue.main.async {
+            cell.prepare(data)
+        }
+        
         return cell
     }
 }

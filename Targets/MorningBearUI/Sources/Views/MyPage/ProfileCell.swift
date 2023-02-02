@@ -21,13 +21,14 @@ public class ProfileCell: UICollectionViewCell, CustomCellType {
     
     @IBOutlet weak var nicknameLabel: UILabel! {
         didSet {
-            nicknameLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 14)
+            nicknameLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 16)
             nicknameLabel.textColor = .white
         }
     }
     
     @IBOutlet weak var postTitileLabel: UILabel! {
         didSet {
+            postTitileLabel.text = "게시글"
             postTitileLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 14)
             postTitileLabel.textColor = .white
         }
@@ -35,12 +36,13 @@ public class ProfileCell: UICollectionViewCell, CustomCellType {
     @IBOutlet weak var postCountLabel: UILabel! {
         didSet {
             postCountLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 14)
-            postCountLabel.textColor = .white
+            postCountLabel.textColor = MorningBearUIAsset.Colors.gray700.color
         }
     }
     
     @IBOutlet weak var supportTitleLabel: UILabel! {
         didSet {
+            supportTitleLabel.text = "받은응원"
             supportTitleLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 14)
             supportTitleLabel.textColor = .white
         }
@@ -48,12 +50,13 @@ public class ProfileCell: UICollectionViewCell, CustomCellType {
     @IBOutlet weak var supportCountLabel: UILabel! {
         didSet {
             supportCountLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 14)
-            supportCountLabel.textColor = .white
+            supportCountLabel.textColor = MorningBearUIAsset.Colors.gray700.color
         }
     }
     
     @IBOutlet weak var badgeTitleLabel: UILabel! {
         didSet {
+            badgeTitleLabel.text = "보유뱃지"
             badgeTitleLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 14)
             badgeTitleLabel.textColor = .white
         }
@@ -61,7 +64,7 @@ public class ProfileCell: UICollectionViewCell, CustomCellType {
     @IBOutlet weak var badgeCountLabel: UILabel! {
         didSet {
             badgeCountLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 14)
-            badgeCountLabel.textColor = .white
+            badgeCountLabel.textColor = MorningBearUIAsset.Colors.gray700.color
         }
     }
     
@@ -72,6 +75,9 @@ public class ProfileCell: UICollectionViewCell, CustomCellType {
     
     public override func awakeFromNib() {
         super.awakeFromNib()
+        backgroundColor = MorningBearUIAsset.Colors.gray900.color
+        layer.cornerRadius = 8
+        
         prepareCell() 
     }
 }

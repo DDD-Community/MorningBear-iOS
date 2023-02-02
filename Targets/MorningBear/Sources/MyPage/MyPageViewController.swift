@@ -66,14 +66,14 @@ extension MyPageViewController: CollectionViewCompositionable {
             case .state:
                 return provider.plainLayoutSection(height: 100)
             case .category:
-                return provider.plainLayoutSection(height: 154)
+                return provider.horizontalScrollLayoutSectionWithHeader(showItemCount: 4, height: 71)
             case .myMorning:
-                return provider.plainLayoutSection(height: 154)
+                return provider.squareCellDynamicGridLayoutSection(column: 3)
             default:
                 fatalError("가질 수 없는 섹션 인덱스")
             }
         }
-        
+
         collectionView.collectionViewLayout = layout
     }
     
@@ -99,6 +99,8 @@ extension MyPageViewController: CollectionViewCompositionable {
         
         // Register
         cells.forEach { $0.register(to: collectionView, bundle: bundle) }
+        
+        HomeSectionHeaderCell.registerHeader(to: collectionView, bundle: bundle)
     }
 }
 
@@ -131,10 +133,32 @@ extension MyPageViewController: DiffableDataSourcing {
         dataSource.updateDataSource(in: .myMorning, with: [self.viewModel.recentMorning])
     }
     
+    func addSupplementaryView(_ diffableDataSource: DiffableDataSource) {
+        diffableDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+            switch kind {
+            case UICollectionView.elementKindSectionHeader:
+                return self.properHeaderCell(for: indexPath)
+            default:
+                return UICollectionReusableView()
+            }
+        }
+    }
+    
     enum MyPageSection: Int, Hashable, CaseIterable {
         case state
         case category
         case myMorning
+    }
+    
+    private func properHeaderCell(for indexPath: IndexPath) -> HomeSectionHeaderCell {
+        let headerCell = collectionView.dequeueReusableSupplementaryView(
+            ofKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: "HomeSectionHeaderCell",
+            for: indexPath
+        ) as! HomeSectionHeaderCell
+        
+        headerCell.prepare(title: "나의 미라클모닝 목록")
+        return headerCell
     }
 }
 

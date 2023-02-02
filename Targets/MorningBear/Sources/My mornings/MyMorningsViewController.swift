@@ -134,8 +134,6 @@ extension MyMorningsViewController {
 // MARK: - Internal tools
 extension MyMorningsViewController {
     /// 섹션 별로 적절한 헤더 뷰를 제공
-    ///
-    /// 현재로서는 버튼 유무만 조정
     private func properHeaderCell(for indexPath: IndexPath) -> HomeSectionHeaderCell {
         let headerCell = collectionView.dequeueReusableSupplementaryView(
             ofKind: UICollectionView.elementKindSectionHeader,

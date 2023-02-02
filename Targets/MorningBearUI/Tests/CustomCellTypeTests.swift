@@ -9,14 +9,7 @@
 import XCTest
 import UIKit
 
-import Quick
-import Nimble
-
 @testable import MorningBearUI
-
-final class CustomCellTypeTest: QuickSpec {
-    
-}
 
 final class CustomCellTypeTests: XCTestCase {
     private var testBundle: Bundle {

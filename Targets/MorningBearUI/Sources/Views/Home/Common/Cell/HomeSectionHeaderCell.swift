@@ -11,7 +11,10 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-public class HomeSectionHeaderCell: UICollectionViewCell {
+public class HomeSectionHeaderCell: UICollectionViewCell, CustomCellType {
+    public static let filename = "HomeSectionHeaderCell"
+    public static let reuseIdentifier = "HomeSectionHeaderCell"
+    
     public typealias Action = () -> Void
     
     // View components
@@ -69,6 +72,10 @@ extension HomeSectionHeaderCell {
     /// 버튼이 사용가능한지 표시
     public var isButtonDisabled: Bool {
         return needsButton == false
+    }
+    
+    public func prepare(_ data: String) {
+        self.prepare(title: data)
     }
     
     public func prepare(title: String) {

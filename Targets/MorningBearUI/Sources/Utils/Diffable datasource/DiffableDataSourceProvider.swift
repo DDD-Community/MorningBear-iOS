@@ -33,13 +33,12 @@ public protocol DiffableDataSourcing {
 // MARK: - Extension for the protocol
 extension DiffableDataSourcing {
     public typealias Handler = (_ collectionView: UICollectionView, _ indexPath: IndexPath, _ model:Model) -> UICollectionViewCell
-    
     public func configureDiffableDataSource(
         with collectionView: UICollectionView,
         prepareAction: @escaping Handler
     ) -> DiffableDataSource {
-        let datasource = DiffableDataSource(collectionView: collectionView) { (collectionView, indexPath, model) -> UICollectionViewCell in
-            
+        let datasource = DiffableDataSource(collectionView: collectionView) {
+            (collectionView, indexPath, model) -> UICollectionViewCell in
             return prepareAction(collectionView, indexPath, model)
         }
         

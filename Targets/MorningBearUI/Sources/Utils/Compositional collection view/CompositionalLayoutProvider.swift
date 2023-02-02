@@ -61,6 +61,37 @@ public struct CompositionalLayoutProvider {
         return section
     }
     
+    public func horizontalScrollLayoutSection(showItemCount count: Int, height: CGFloat) -> NSCollectionLayoutSection {
+        // item
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .fractionalHeight(1)
+        )
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        // group
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0 / CGFloat(count)),
+            heightDimension: .estimated(height)
+        )
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
+        // section
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .continuous
+        
+        section.interGroupSpacing = 6
+        
+        return section
+    }
+    
+    public func horizontalScrollLayoutSectionWithHeader(showItemCount count: Int, height: CGFloat) -> NSCollectionLayoutSection {
+        let section = horizontalScrollLayoutSection(showItemCount: count, height: height)
+        section.boundarySupplementaryItems.append(commonHeader)
+        
+        return section
+    }
+    
     /// 내 상태같은 1개 셀만을 표기하는 레이아웃 섹션
     ///
     /// 통용 인셋(좌우 20)을 위해 사용
@@ -301,4 +332,8 @@ extension CompositionalLayoutProvider {
         
         return header
     }
+}
+
+struct HorizontalLayoutSection {
+    
 }
