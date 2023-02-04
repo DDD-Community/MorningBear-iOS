@@ -12,6 +12,7 @@ import UIKit
 public class ArticleCell: UICollectionViewCell, CustomCellType {
     public static let filename = "ArticleCell"
     public static let reuseIdentifier = "ArticleCell"
+    public static let bundle = MorningBearUIResources.bundle
     
     @IBOutlet weak var titleLabel: UILabel! {
         didSet {

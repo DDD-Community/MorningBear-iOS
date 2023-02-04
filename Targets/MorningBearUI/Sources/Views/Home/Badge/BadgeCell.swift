@@ -13,6 +13,7 @@ import MorningBearData
 public class BadgeCell: UICollectionViewCell, CustomCellType {
     public static let filename = "BadgeCell"
     public static let reuseIdentifier = "BadgeCell"
+    public static let bundle = MorningBearUIResources.bundle
     
     @IBOutlet weak var imageWrapperView: UIView! {
         didSet {

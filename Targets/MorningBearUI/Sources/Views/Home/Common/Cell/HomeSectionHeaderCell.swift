@@ -14,6 +14,8 @@ import RxCocoa
 public class HomeSectionHeaderCell: UICollectionViewCell, CustomCellType {
     public static let filename = "HomeSectionHeaderCell"
     public static let reuseIdentifier = "HomeSectionHeaderCell"
+    public static let bundle = MorningBearUIResources.bundle
+
     
     public typealias Action = () -> Void
     

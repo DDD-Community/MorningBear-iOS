@@ -14,6 +14,7 @@ import Kingfisher
 public final class RecentMorningCell: UICollectionViewCell, CustomCellType {
     public static let filename = "RecentMorningCell"
     public static let reuseIdentifier = "RecentMorningCell"
+    public static let bundle = MorningBearUIResources.bundle
     
     @IBOutlet weak var imageView: UIImageView! {
         didSet {

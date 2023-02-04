@@ -333,7 +333,3 @@ extension CompositionalLayoutProvider {
         return header
     }
 }
-
-struct HorizontalLayoutSection {
-    
-}

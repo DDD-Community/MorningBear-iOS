@@ -370,7 +370,7 @@ extension HomeViewController: CollectionViewCompositionable {
         let cellTypes: [any CustomCellType.Type] = [
             ArticleCell.self, BadgeCell.self
         ]
-        cellTypes.forEach { $0.register(to: collectionView, bundle: bundle) }
+        cellTypes.forEach { $0.register(to: collectionView) }
         
         
         // 헤더 - 공용

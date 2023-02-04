@@ -18,7 +18,6 @@ final class CustomCellTypeTests: XCTestCase {
     
     private var collectionView: UICollectionView!
     
-    
     override func setUpWithError() throws {
         self.continueAfterFailure = false
         

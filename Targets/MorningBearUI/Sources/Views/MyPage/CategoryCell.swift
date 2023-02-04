@@ -12,7 +12,8 @@ import UIKit
 public class CategoryCell: UICollectionViewCell, CustomCellType {
     public static var filename = "CategoryCell"
     public static let reuseIdentifier = "CategoryCell"
-    
+    public static let bundle = MorningBearUIResources.bundle
+
     @IBOutlet weak var iconImageView: UIImageView! {
         didSet {
             iconImageView.contentMode = .scaleAspectFit

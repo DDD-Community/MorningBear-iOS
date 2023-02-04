@@ -66,7 +66,9 @@ extension Project {
                         .external(name: "MorningBearAPI"),
                         .target(name: "MorningBearNetwork")
                        ]),
-            makeTarget(name: additionalTargets.UI, platform: platform, needsResource: true,
+            makeTarget(name: additionalTargets.UI, platform: platform,
+                       needsResource: true,
+                       needTestResource: true,
                        dependencies: [
                         .external(name: "RxSwift"),
                         .external(name: "RxCocoa"),
@@ -119,6 +121,7 @@ extension Project {
     private static func makeTarget(name: String,
                                    platform: Platform,
                                    needsResource: Bool = false,
+                                   needTestResource: Bool = false,
                                    dependencies: [TargetDependency],
                                    additionalTestTarget: [TargetDependency] = [],
                                    settings: Settings? = nil)
@@ -141,7 +144,7 @@ extension Project {
                            bundleId: "\(organizationName).\(name)Tests",
                            infoPlist: .default,
                            sources: ["Targets/\(name)/Tests/**"],
-                           resources: [],
+                           resources: needTestResource ?  ["Targets/\(name)/Tests/Resources/**"] : [],
                            dependencies: testDependencies)
         
         return [sources, tests]

@@ -80,7 +80,7 @@ extension ArticleCollectionViewController: CollectionViewCompositionable {
         
         // Register
         cells.forEach {
-            $0.register(to: collectionView, bundle: bundle)
+            $0.register(to: collectionView)
         }
 //        
 //        let cellNib = UINib(nibName: "ArticleCell", bundle: bundle)

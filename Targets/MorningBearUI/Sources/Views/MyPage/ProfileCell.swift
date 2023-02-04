@@ -12,7 +12,8 @@ import UIKit
 public class ProfileCell: UICollectionViewCell, CustomCellType {
     public static let filename = "ProfileCell"
     public static let reuseIdentifier = "ProfileCell"
-    
+    public static let bundle = MorningBearUIResources.bundle
+
     @IBOutlet weak var profileImageView: UIImageView! {
         didSet {
             profileImageView.contentMode = .scaleAspectFit
