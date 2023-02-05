@@ -82,6 +82,8 @@ class SetProfileViewController: UIViewController {
         
         setDelegate()
         bindButtons()
+        
+        self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
     }
     
     private func setDelegate() {

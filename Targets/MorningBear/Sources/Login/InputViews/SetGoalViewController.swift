@@ -46,6 +46,8 @@ class SetGoalViewController: UIViewController {
         super.viewDidLoad()
       
         setDelegate()
+        
+        self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
     }
     
     private func setDelegate() {

@@ -55,6 +55,8 @@ class SetWakeupTimeViewController: UIViewController {
         super.viewDidLoad()
         
         bindButton()
+        
+        self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
     }
     
     private func bindButton() {

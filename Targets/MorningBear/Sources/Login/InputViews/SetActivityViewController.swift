@@ -39,6 +39,8 @@ class SetActivityViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
     }
 }
 
