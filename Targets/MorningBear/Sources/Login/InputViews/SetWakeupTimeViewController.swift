@@ -15,6 +15,7 @@ import RxCocoa
 class SetWakeupTimeViewController: UIViewController {
     
     private let bag = DisposeBag()
+    var viewModel: InitialInfoViewModel!
     
     @IBOutlet weak var titleLabel: UILabel! {
         didSet {

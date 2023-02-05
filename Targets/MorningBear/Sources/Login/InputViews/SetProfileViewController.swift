@@ -16,8 +16,8 @@ import RxCocoa
 class SetProfileViewController: UIViewController {
     
     private let bag = DisposeBag()
-    private let viewModel = InitialInfoViewModel.shared
     private var imageIsSelected: Bool = false
+    var viewModel: InitialInfoViewModel!
     
     private lazy var photoPicker: PHPickerViewController = {
         var configuration = PHPickerConfiguration()

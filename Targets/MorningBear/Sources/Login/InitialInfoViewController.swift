@@ -15,7 +15,7 @@ import RxCocoa
 class InitialInfoViewController: UIViewController {
     
     private let bag = DisposeBag()
-    private let viewModel = InitialInfoViewModel.shared
+    private let viewModel = InitialInfoViewModel()
     
     private lazy var pageViewController: UIPageViewController = {
         let pageVC = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
@@ -24,17 +24,31 @@ class InitialInfoViewController: UIViewController {
     
     private lazy var innerScrollView = pageViewController.view.subviews.compactMap{ $0 as? UIScrollView }.first
     
-    private var infoInputViewControllers: [UIViewController] = {
+    private lazy var infoInputViewControllers: [UIViewController] = {
         let storyboard = UIStoryboard(name: "InitialInfo", bundle: nil)
+        let setWakeUpTimeVC = storyboard.instantiateViewController(withIdentifier: "SetWakeupTime") as! SetWakeupTimeViewController
+        let setActivityVC = storyboard.instantiateViewController(withIdentifier: "SetActivity") as! SetActivityViewController
+        let setGoalVC = storyboard.instantiateViewController(withIdentifier: "SetGoal") as! SetGoalViewController
+        let setProfile = storyboard.instantiateViewController(withIdentifier: "SetProfile") as! SetProfileViewController
+        
+        setWakeUpTimeVC.viewModel = viewModel
+        setActivityVC.viewModel = viewModel
+        setGoalVC.viewModel = viewModel
+        setProfile.viewModel = viewModel
+        
         return [
-            storyboard.instantiateViewController(withIdentifier: "SetWakeupTime"),
-            storyboard.instantiateViewController(withIdentifier: "SetActivity"),
-            storyboard.instantiateViewController(withIdentifier: "SetGoal"),
-            storyboard.instantiateViewController(withIdentifier: "SetProfile")
+            setWakeUpTimeVC,
+            setActivityVC,
+            setGoalVC,
+            setProfile
         ]
     }()
     
-    @IBOutlet weak var navigationBar: UIView!
+    @IBOutlet weak var navigationBar: UIView! {
+        didSet {
+            navigationBar.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
+        }
+    }
     @IBOutlet weak var nextButton: UIButton! {
         didSet {
             nextButton.layer.cornerRadius = 12
@@ -42,14 +56,12 @@ class InitialInfoViewController: UIViewController {
             nextButton.setTitle("다음", for: .normal)
         }
     }
-    
     @IBOutlet weak var titleLabel: UILabel! {
         didSet {
             titleLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 20)
             titleLabel.text = "회원가입"
         }
     }
-    
     @IBOutlet weak var backButton: UIButton! {
         didSet {
             backButton.setImage(MorningBearUIAsset.Images.backArrow.image, for: .normal)
@@ -71,6 +83,8 @@ class InitialInfoViewController: UIViewController {
         view.addSubview(pageViewController.view)
         view.sendSubviewToBack(pageViewController.view)
         navigationController?.isNavigationBarHidden = true
+        
+        view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
     }
     
     private func setPageViewController() {

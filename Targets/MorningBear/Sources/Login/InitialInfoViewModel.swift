@@ -12,10 +12,7 @@ import RxRelay
 // FIXME: develop에 머지 후 변경된 타겟 상태에 따라 수정될 예정
 import MorningBearUI
 
-/// `InitialInfoViewController`의 4가지의 Input View들이 동시에 해당 viewModel을 바라보며 상태를 관리하기 때문에 singletone으로 생성합니다.
 class InitialInfoViewModel {
-    
-    static let shared = InitialInfoViewModel()
     
     // page view managing values
     var currentIndex: BehaviorRelay<Int>
@@ -39,7 +36,7 @@ class InitialInfoViewModel {
     
     func completeInitialStep() {}
     
-    private init() {
+    init() {
         self.currentIndex = BehaviorRelay(value: 0)
         self.canGoNext = BehaviorRelay(value: true)
     }

@@ -15,7 +15,7 @@ import RxCocoa
 class SetGoalViewController: UIViewController {
     
     private let bag = DisposeBag()
-    private let viewModel = InitialInfoViewModel.shared
+    var viewModel: InitialInfoViewModel!
     
     @IBOutlet weak var titleLabel: UILabel! {
         didSet {
