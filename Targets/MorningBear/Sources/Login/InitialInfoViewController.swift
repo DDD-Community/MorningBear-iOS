@@ -29,18 +29,18 @@ class InitialInfoViewController: UIViewController {
         let setWakeUpTimeVC = storyboard.instantiateViewController(withIdentifier: "SetWakeupTime") as! SetWakeupTimeViewController
         let setActivityVC = storyboard.instantiateViewController(withIdentifier: "SetActivity") as! SetActivityViewController
         let setGoalVC = storyboard.instantiateViewController(withIdentifier: "SetGoal") as! SetGoalViewController
-        let setProfile = storyboard.instantiateViewController(withIdentifier: "SetProfile") as! SetProfileViewController
+        let setProfileVC = storyboard.instantiateViewController(withIdentifier: "SetProfile") as! SetProfileViewController
         
         setWakeUpTimeVC.viewModel = viewModel
         setActivityVC.viewModel = viewModel
         setGoalVC.viewModel = viewModel
-        setProfile.viewModel = viewModel
+        setProfileVC.viewModel = viewModel
         
         return [
             setWakeUpTimeVC,
             setActivityVC,
             setGoalVC,
-            setProfile
+            setProfileVC
         ]
     }()
     
@@ -90,6 +90,7 @@ class InitialInfoViewController: UIViewController {
     private func setPageViewController() {
         pageViewController.view.translatesAutoresizingMaskIntoConstraints = false
         innerScrollView?.bounces = false
+        innerScrollView?.isScrollEnabled = false
         
         NSLayoutConstraint.activate([
             navigationBar.bottomAnchor.constraint(equalTo: pageViewController.view.topAnchor),
@@ -112,20 +113,21 @@ class InitialInfoViewController: UIViewController {
         nextButton.rx.tap
             .withUnretained(self)
             .bind { owner, _ in
-                let currentValue = owner.viewModel.currentIndex.value
-                owner.viewModel.currentIndex.accept(currentValue + 1)
-                owner.viewModel.canGoNext.accept(false)
+                let currentIndex = owner.viewModel.currentIndex.value
+                owner.viewModel.currentIndex.accept(currentIndex + 1)
+                owner.viewModel.canGoNext.accept(owner.viewModel.canGoNext.value)
             }
             .disposed(by: bag)
         
         backButton.rx.tap
             .withUnretained(self)
             .bind { owner, _ in
-                let currentValue = owner.viewModel.currentIndex.value
-                if currentValue == 0 {
+                let currentIndex = owner.viewModel.currentIndex.value
+                if currentIndex == 0 {
                     self.navigationController?.popViewController(animated: true)
                 } else {
-                    owner.viewModel.currentIndex.accept(currentValue - 1)
+                    owner.viewModel.currentIndex.accept(currentIndex - 1)
+                    owner.viewModel.canGoNext.accept(owner.viewModel.canGoNext.value)
                 }
             }
             .disposed(by: bag)
@@ -153,9 +155,10 @@ class InitialInfoViewController: UIViewController {
         viewModel.canGoNext.withUnretained(self)
             .observe(on: MainScheduler.instance)
             .bind { owner, canGoNext in
-                owner.nextButton.isEnabled = canGoNext ? true : false
-                owner.nextButton.backgroundColor = canGoNext ? MorningBearUIAsset.Colors.primaryDefault.color : MorningBearUIAsset.Colors.gray800.color
-                owner.nextButton.setTitleColor(canGoNext ? .white : MorningBearUIAsset.Colors.captionText.color, for: .normal)
+                let currentValue = owner.viewModel.canGoNext.value[owner.viewModel.currentIndex.value]
+                owner.nextButton.isEnabled = currentValue ? true : false
+                owner.nextButton.backgroundColor = currentValue ? MorningBearUIAsset.Colors.primaryDefault.color : MorningBearUIAsset.Colors.gray800.color
+                owner.nextButton.setTitleColor(currentValue ? .white : MorningBearUIAsset.Colors.captionText.color, for: .normal)
             }
             .disposed(by: bag)
     }

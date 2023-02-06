@@ -16,7 +16,7 @@ class InitialInfoViewModel {
     
     // page view managing values
     var currentIndex: BehaviorRelay<Int>
-    var canGoNext: BehaviorRelay<Bool>
+    var canGoNext: BehaviorRelay<[Bool]>
     var oldIndex: Int = 0
     
     // Wake up
@@ -38,6 +38,6 @@ class InitialInfoViewModel {
     
     init() {
         self.currentIndex = BehaviorRelay(value: 0)
-        self.canGoNext = BehaviorRelay(value: true)
+        self.canGoNext = BehaviorRelay(value: [true, false, false, false])
     }
 }

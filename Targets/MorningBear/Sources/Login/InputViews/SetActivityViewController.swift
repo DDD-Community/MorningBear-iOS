@@ -96,7 +96,10 @@ extension SetActivityViewController: UICollectionViewDataSource {
         
         cell.isSelected = true
         viewModel.selectedActivities.append(indexPath.row.description)
-        viewModel.canGoNext.accept(true)
+        
+        var value = viewModel.canGoNext.value
+        value[viewModel.currentIndex.value] = true
+        viewModel.canGoNext.accept(value)
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
@@ -107,7 +110,9 @@ extension SetActivityViewController: UICollectionViewDataSource {
             viewModel.selectedActivities.remove(at: index)
             
             if viewModel.selectedActivities.isEmpty {
-                viewModel.canGoNext.accept(false)
+                var value = viewModel.canGoNext.value
+                value[viewModel.currentIndex.value] = false
+                viewModel.canGoNext.accept(value)
             }
         }
     }

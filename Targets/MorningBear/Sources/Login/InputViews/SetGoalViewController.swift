@@ -55,10 +55,14 @@ class SetGoalViewController: UIViewController {
     }
     
     @objc func textFieldIsEditing(_ sender: Any?) {
+        var value = viewModel.canGoNext.value
+        
         if goalTextField.text == "" {
-            viewModel.canGoNext.accept(false)
+            value[viewModel.currentIndex.value] = false
+            viewModel.canGoNext.accept(value)
         } else {
-            viewModel.canGoNext.accept(true)
+            value[viewModel.currentIndex.value] = true
+            viewModel.canGoNext.accept(value)
         }
     }
 }
