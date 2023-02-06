@@ -72,6 +72,26 @@ class SetProfileViewController: UIViewController {
             cancelButton.isHidden = true
         }
     }
+    @IBOutlet weak var underLine: UIView! {
+        didSet {
+            underLine.backgroundColor = MorningBearUIAsset.Colors.disabledText.color
+        }
+    }
+    @IBOutlet weak var warningIcon: UIImageView! {
+        didSet {
+            warningIcon.contentMode = .scaleAspectFit
+            warningIcon.image = MorningBearUIAsset.Images.errorWarning.image
+            warningIcon.isHidden = true
+        }
+    }
+    @IBOutlet weak var warningLabel: UILabel! {
+        didSet {
+            warningLabel.font = MorningBearUIFontFamily.Pretendard.Typography.bodySmall.font
+            warningLabel.textAlignment = .center
+            warningLabel.textColor = MorningBearUIAsset.Colors.canceledDark.color
+            warningLabel.isHidden = true
+        }
+    }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
@@ -108,11 +128,52 @@ class SetProfileViewController: UIViewController {
             .disposed(by: bag)
     }
     
+    private func isValidNickName(_ nickname: String?) -> Bool {
+        guard nickname != nil else { return false }
+        
+        let nickRegEx = "^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]*$"
+        let pred = NSPredicate(format:"SELF MATCHES %@", nickRegEx)
+        print(pred.evaluate(with: nickname))
+        return pred.evaluate(with: nickname)
+    }
+    
+    private func showWarningLabel() {
+        warningLabel.isHidden = false
+        warningIcon.isHidden = false
+    }
+    
+    private func hideWarningLabel() {
+        warningLabel.isHidden = true
+        warningIcon.isHidden = true
+    }
+    
     private func checkStateAndAvailiableNextButton() {
-        if imageIsSelected && nicknameTextField.text != "" {
-            viewModel.canGoNext.accept(true)
+        var value = viewModel.canGoNext.value
+        hideWarningLabel()
+        
+        if nicknameTextField.text == "" {
+            hideWarningLabel()
+            
+            value[viewModel.currentIndex.value] = false
+            viewModel.canGoNext.accept(value)
+        } else if nicknameTextField.text?.count ?? 0 < 2 {
+            warningLabel.text = "최소 2자, 최대 8자 이내로 입력해주세요"
+            showWarningLabel()
+            
+            value[viewModel.currentIndex.value] = false
+            viewModel.canGoNext.accept(value)
+        } else if !isValidNickName(nicknameTextField.text) {
+            warningLabel.text = "올바른 형식의 닉네임을 입력해주세요"
+            showWarningLabel()
+            
+            value[viewModel.currentIndex.value] = false
+            viewModel.canGoNext.accept(value)
+        } else if !imageIsSelected {
+            value[viewModel.currentIndex.value] = false
+            viewModel.canGoNext.accept(value)
         } else {
-            viewModel.canGoNext.accept(false)
+            value[viewModel.currentIndex.value] = true
+            viewModel.canGoNext.accept(value)
         }
     }
     
@@ -123,7 +184,9 @@ class SetProfileViewController: UIViewController {
             cancelButton.isHidden = false
         }
         
-        checkStateAndAvailiableNextButton()
+        DispatchQueue.main.async {
+            self.checkStateAndAvailiableNextButton()
+        }
     }
 }
 
@@ -141,8 +204,8 @@ extension SetProfileViewController: PHPickerViewControllerDelegate {
                 DispatchQueue.main.async {
                     self.profileImageView.image = image as? UIImage
                     self.imageIsSelected = true
+                    self.checkStateAndAvailiableNextButton()
                 }
-                self.checkStateAndAvailiableNextButton()
             }
         } else {
             print("empty results or item provider not being able load UIImage")
@@ -164,7 +227,10 @@ extension SetProfileViewController: UITextFieldDelegate {
                 return true
             }
         }
-        guard textField.text!.count < maxLength else { return false }
+        guard textField.text!.count < maxLength else {
+            textField.resignFirstResponder()
+            return false
+        }
         return true
     }
 }
