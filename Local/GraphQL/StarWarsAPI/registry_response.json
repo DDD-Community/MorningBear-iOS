@@ -1,1 +1,0 @@
-{"errors":[{"message":"406: Not Acceptable","extensions":{"code":"INTERNAL_SERVER_ERROR","response":{"url":"http://engine-graphql.prod.svc.cluster.local:8081/api/graphql","status":406,"statusText":"Not Acceptable","body":{"errors":[{"message":"Tokens must have 3 parts separated by a colon."}]}}}}],"data":{"service":null}}

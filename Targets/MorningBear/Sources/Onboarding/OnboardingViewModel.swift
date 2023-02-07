@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import MorningBearUI
+import MorningBearData
 
 class OnboardingViewModel {
     let onboardingData: [OnboardingData] = [

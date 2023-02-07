@@ -163,7 +163,9 @@ extension HomeViewController: CollectionViewCompositionable {
         let layout = UICollectionViewCompositionalLayout { (section, env) -> NSCollectionLayoutSection? in
             switch HomeSection.getSection(index: section) {
             case .state:
-                return provider.plainLayoutSection(height: 200) // 1개 셀
+                let layout = provider.plainLayoutSection(height: 286)
+                layout.contentInsets.top += 16
+                return layout // 1개 셀
             case .recentMornings:
                 return provider.staticGridLayoutSection(column: 2)
             case .badges:
@@ -330,6 +332,17 @@ extension HomeViewController: UICollectionViewDataSource {
         }
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch HomeSection.getSection(index: indexPath.section) {
+        case .articles:
+            let article = viewModel.articleList[indexPath.row]
+            article.openURL(context: UIApplication.shared)
+        default:
+            // TODO: 언젠간..
+            break
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         // 헤더 & 푸터 설정
         switch kind {
@@ -373,8 +386,16 @@ extension HomeViewController {
                 self.navigationController?.pushViewController(myBadgeViewController, animated: true)
             }
         case .articles:
-            headerCell.prepare(title: "지금 읽기 딱 좋은 아티클", buttonText: "모두 보기>") {
-                print("읽을거리")
+            headerCell.prepare(title: "지금 읽기 딱 좋은 아티클", buttonText: "모두 보기>") { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                
+                // 아티클 모두 보기 목록으로 이동(네비게이션)
+                let articlesCollectionViewController = UIStoryboard(name: "ArticlesCollection", bundle: nil)
+                    .instantiateViewController(withIdentifier: "ArticlesCollection")
+                
+                self.navigationController?.pushViewController(articlesCollectionViewController, animated: true)
             }
         default:
             break

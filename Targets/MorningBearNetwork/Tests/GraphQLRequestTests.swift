@@ -11,9 +11,6 @@ import XCTest
 import Apollo
 import RxSwift
 
-import StarWarsAPI
-import StarWarsAPITestMocks
-
 import MorningBearAPI
 import MorningBearAPITestMocks
 
@@ -52,7 +49,7 @@ final class GraphQLRequestTests: XCTestCase {
     func test__RxApollo_fetch() throws {
         let expectation = XCTestExpectation(description: "graphQL")
         
-        Network.shared.apolloTest.rx.fetch(query: Query())
+        Network.shared.apolloTest.rx.fetch(query: FindLoginInfoQuery())
             .subscribe(
                 onSuccess: { data in
                     print(data.data?.allFilms?.films as Any)

@@ -123,15 +123,6 @@ type Like {
   updatedBadge: [Badge]
 }
 
-""" 응원하기를 위한 입력데이터 """
-input LikeInput {
-  """ 응원하기 코드 """
-  likeCode: String
-
-  """ 응원하기 대상 사용자ID """
-  takenAccountId: String
-}
-
 type Login {
   redirectUri: String
   jsKey: String
@@ -153,10 +144,10 @@ type Mutation {
   saveBlock(blockAccountId: String): [Block]
 
   """ 응원하기 (뱃지이벤트 발생) """
-  saveLike(likeInput: LikeInput): Like
+  saveLike(takenAccountId: String): Like
 
   """ 응원 취소하기 """
-  deleteLike(likeInput: LikeInput): Boolean
+  deleteLike(takenAccountId: String): Boolean
 
   """ 내 사진 저장 (뱃지이벤트 발생) """
   saveMyPhoto(photoInput: PhotoInput): Photo
@@ -279,6 +270,9 @@ type Query {
 
   """ 아티클 조회하기 """
   searchArticle(sizeInput: Int): [Article]
+
+  """ 오늘의 미라클모닝러 조회하기 """
+  findTodayPhoto: Photo
 
   """ 가장 인기있는 사용자리스트 조회 """
   findPopularUserInfo(sizeInput: Int): [User]

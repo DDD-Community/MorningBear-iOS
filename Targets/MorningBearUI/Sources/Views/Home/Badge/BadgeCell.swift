@@ -8,18 +8,28 @@
 
 import UIKit
 
+import MorningBearData
+
 public class BadgeCell: UICollectionViewCell {
+    @IBOutlet weak var imageWrapperView: UIView! {
+        didSet {
+            imageWrapperView.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
+            imageView.clipsToBounds = true
+        }
+    }
     @IBOutlet weak var imageView: UIImageView! {
         didSet {
-            imageView.contentMode = .scaleAspectFill
-            imageView.clipsToBounds = true
-            imageView.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
+            imageView.contentMode = .scaleAspectFit
+            imageView.backgroundColor = .clear
+            
+            imageView.clipsToBounds = false
+            imageView.layer.masksToBounds = false
         }
     }
     @IBOutlet weak var badgeNameLabel: UILabel! {
         didSet {
             badgeNameLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 14)
-            badgeNameLabel.textColor = MorningBearUIAsset.Colors.disabledText.color
+            badgeNameLabel.textColor = .white
         }
     }
     @IBOutlet weak var badgeGainDateLabel: UILabel! {
@@ -44,7 +54,7 @@ public class BadgeCell: UICollectionViewCell {
     public override func draw(_ rect: CGRect) {
         super.draw(rect)
 
-        imageView.layer.mask = circleMaskLayer(frame: imageView.frame)
+        imageWrapperView.layer.mask = circleMaskLayer(frame: imageWrapperView.frame)
     }
     
     public func prepare(badge: Badge?) {

@@ -10,6 +10,8 @@ import UIKit
 import MorningBearUI
 
 class MyBadgesViewController: UIViewController {
+    private let viewModel = MyBadgeViewModel()
+    
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
             configureCompositionalCollectionView()
@@ -33,14 +35,14 @@ extension MyBadgesViewController: CollectionViewCompositionable {
             case .state:
                 return provider.plainLayoutSection(height: 160, inset: .zero) // 1개 셀
             case .badges:
-                return provider.dynamicGridLayoutSection(column: 3)
+                return provider.dynamicGridLayoutSection(column: 3, row: 4)
             case .none:
                 return nil
             }
         }
 
         let config = UICollectionViewCompositionalLayoutConfiguration()
-        config.interSectionSpacing = 6
+        config.interSectionSpacing = 20
         
         layout.configuration = config
         collectionView.collectionViewLayout = layout
@@ -85,7 +87,7 @@ extension MyBadgesViewController: UICollectionViewDataSource {
         case .state:
             return 1 // 헤더기 때문에 하나만 존재
         case .badges:
-            return 14
+            return viewModel.badges.count
         default:
             return 0
         }
@@ -99,7 +101,7 @@ extension MyBadgesViewController: UICollectionViewDataSource {
             ) as! MyBadgeStateCell
             
             
-            cell.prepare(MyBadgeState(nickname: "크크크", badgeCount: 12))
+            cell.prepare(BadgeState(nickname: "크크크", badgeCount: 12))
             return cell
             
         case .badges:
@@ -107,8 +109,9 @@ extension MyBadgesViewController: UICollectionViewDataSource {
                 withReuseIdentifier: "BadgeCell", for: indexPath
             ) as! BadgeCell
             
+            let badge = viewModel.badges[indexPath.row]
+            cell.prepare(badge: badge)
             
-            cell.prepare(badge: Badge(image: UIImage(systemName: "person")!, title: "ss", desc: "Ss"))
             return cell
             
         default:

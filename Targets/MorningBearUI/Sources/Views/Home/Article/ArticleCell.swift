@@ -8,6 +8,8 @@
 
 import UIKit
 
+@_exported import MorningBearData
+
 public class ArticleCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView! {
         didSet {
@@ -40,13 +42,9 @@ public class ArticleCell: UICollectionViewCell {
     }
     
     public func prepare(article: Article?) {
-        guard let article = article else {
-            return
-        }
-        
-        self.imageView.image = article.image
-        self.titleLabel.text = article.title
-        self.descriptionLabel.text = article.description
+        self.imageView.image = article?.image
+        self.titleLabel.text = article?.title
+        self.descriptionLabel.text = article?.description
     }
 }
 

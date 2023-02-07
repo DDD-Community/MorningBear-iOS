@@ -12,10 +12,6 @@ let dependencies = Dependencies(
     carthage: [],
     swiftPackageManager: [
         .remote(
-            url: "https://github.com/2dubu/Moya",
-            requirement: .branch("master")
-        ),
-        .remote(
             url: "https://github.com/ReactiveX/RxSwift.git",
             requirement: .upToNextMajor(from: "6.5.0")
         ),
@@ -43,7 +39,6 @@ let dependencies = Dependencies(
             url: "https://github.com/Quick/nimble",
             requirement: .upToNextMajor(from: "11.2.0")
         ),
-        .local(path: .relativeToRoot("Local/GraphQL/StarWarsAPI")),
         .local(path: .relativeToRoot("Local/GraphQL/MorningBearAPI"))
     ],
     platforms: [.iOS]

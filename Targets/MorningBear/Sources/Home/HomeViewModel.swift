@@ -11,7 +11,7 @@ import Foundation
 import RxSwift
 import RxRelay
 
-import MorningBearUI
+import MorningBearDataProvider
 import MorningBearKit
 
 class HomeViewModel {

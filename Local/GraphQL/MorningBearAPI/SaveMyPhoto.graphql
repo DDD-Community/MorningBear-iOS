@@ -1,0 +1,10 @@
+mutation SaveMyPhoto($input:PhotoInput) {
+  saveMyPhoto(photoInput: $input) {
+    photoLink
+    updatedBadge {
+      badgeId
+      badgeTitle
+      badgeDesc
+    }
+  }
+}
