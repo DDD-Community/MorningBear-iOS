@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Size=24x24, Type=Arrow-Left.png",
+      "filename" : "Size=48x48, Type=Exercise.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Size=24x24, Type=Arrow-Left@2x.png",
+      "filename" : "Size=48x48, Type=Exercise@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Size=24x24, Type=Arrow-Left@3x.png",
+      "filename" : "Size=48x48, Type=Exercise@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

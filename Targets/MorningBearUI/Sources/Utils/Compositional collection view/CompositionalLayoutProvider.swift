@@ -159,9 +159,12 @@ public struct CompositionalLayoutProvider {
         return section
     }
     
-    public func dynamicGridLayoutSection(column: Int, row: Int, spacing: CGFloat) -> NSCollectionLayoutSection {
-        let spacing: CGFloat = 12
-        
+    public func dynamicGridLayoutSection(
+        column: Int,
+        height: CGFloat,
+        inset: NSDirectionalEdgeInsets,
+        spacing: CGFloat = 40
+    ) -> NSCollectionLayoutSection {
         // item
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(calculatedFraction(column)),
@@ -179,6 +182,7 @@ public struct CompositionalLayoutProvider {
             layoutSize: stackingGroupSize,
             subitems: [item]
         )
+        stackingGroup.interItemSpacing = .fixed(spacing)
 
         // section
         let section = NSCollectionLayoutSection(group: stackingGroup)
