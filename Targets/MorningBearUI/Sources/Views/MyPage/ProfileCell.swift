@@ -17,6 +17,7 @@ public class ProfileCell: UICollectionViewCell, CustomCellType {
     @IBOutlet weak var profileImageView: UIImageView! {
         didSet {
             profileImageView.contentMode = .scaleAspectFit
+            clipsToBounds = true
         }
     }
     
@@ -74,6 +75,12 @@ public class ProfileCell: UICollectionViewCell, CustomCellType {
         prepareCell()
     }
     
+    public override func draw(_ rect: CGRect) {
+        super.draw(rect)
+
+        profileImageView.layer.mask = circleMaskLayer(frame: profileImageView.frame)
+    }
+    
     public override func awakeFromNib() {
         super.awakeFromNib()
         backgroundColor = MorningBearUIAsset.Colors.gray900.color
@@ -110,5 +117,15 @@ private extension ProfileCell {
         postCountLabel.text = nil
         supportCountLabel.text = nil
         badgeCountLabel.text = nil
+    }
+    
+    func circleMaskLayer(frame: CGRect) -> CAShapeLayer {
+        let maskLayer = CAShapeLayer()
+        let circlePath = UIBezierPath(ovalIn: frame)
+        
+        maskLayer.path = circlePath.cgPath
+        maskLayer.fillColor = UIColor.white.cgColor
+
+        return maskLayer
     }
 }
