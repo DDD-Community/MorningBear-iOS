@@ -11,12 +11,31 @@ import UIKit
 import MorningBearData
 
 public class OnboardingCell: UICollectionViewCell {
-    @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var descriptionLabel: UILabel!
+    public static let reuseIdentifier = String(describing: OnboardingCell.self)
+    
+    @IBOutlet weak var imageView: UIImageView! {
+        didSet {
+            imageView.contentMode = .scaleAspectFit
+        }
+    }
+    @IBOutlet weak var titleLabel: UILabel! {
+        didSet {
+            titleLabel.font = MorningBearUIFontFamily.Pretendard.Typography.displaySmall.font
+            titleLabel.textColor = .white
+        }
+    }
+    @IBOutlet weak var descriptionLabel: UILabel! {
+        didSet {
+            descriptionLabel.font = MorningBearUIFontFamily.Pretendard.Typography.bodyLarge.font
+            descriptionLabel.textColor = .white
+            descriptionLabel.numberOfLines = 2
+            descriptionLabel.textAlignment = .center
+            
+        }
+    }
     
     public func configure(data: OnboardingData) {
-        imageView.image = UIImage(named: data.image)
+        imageView.image = data.image
         titleLabel.text = data.title
         descriptionLabel.text = data.description
     }

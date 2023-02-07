@@ -1,10 +1,64 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13142" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12042"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="OnboardingCell" id="xLd-nF-mHy" customClass="OnboardingCell" customModule="MorningBearUI" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="410" height="632"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="gx5-3s-SkE" customClass="OnboardingCell" customModule="MorningBearUI" customModuleProvider="target">
+                <rect key="frame" x="0.0" y="0.0" width="410" height="632"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="abY-bc-gqy">
+                        <rect key="frame" x="0.0" y="0.0" width="410" height="392"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="392" id="Egn-Ue-d2j"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hXL-dc-6pH">
+                        <rect key="frame" x="184" y="432" width="42" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BoR-Bu-Df5">
+                        <rect key="frame" x="184.33333333333334" y="469" width="41.333333333333343" height="30.666666666666686"/>
+                        <attributedString key="attributedText">
+                            <fragment content="Label">
+                                <attributes>
+                                    <font key="NSFont" metaFont="system" size="17"/>
+                                    <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineHeightMultiple="1.5" tighteningFactorForTruncation="0.0"/>
+                                </attributes>
+                            </fragment>
+                        </attributedString>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="hXL-dc-6pH" firstAttribute="top" secondItem="abY-bc-gqy" secondAttribute="bottom" constant="40" id="3MH-oL-gnd"/>
+                    <constraint firstItem="BoR-Bu-Df5" firstAttribute="centerX" secondItem="gx5-3s-SkE" secondAttribute="centerX" id="SQn-Cb-8CQ"/>
+                    <constraint firstItem="hXL-dc-6pH" firstAttribute="centerX" secondItem="gx5-3s-SkE" secondAttribute="centerX" id="XMr-zE-31u"/>
+                    <constraint firstItem="abY-bc-gqy" firstAttribute="top" secondItem="gx5-3s-SkE" secondAttribute="top" id="c2l-45-pr8"/>
+                    <constraint firstItem="BoR-Bu-Df5" firstAttribute="top" secondItem="hXL-dc-6pH" secondAttribute="bottom" constant="16" id="dmp-eN-wZM"/>
+                    <constraint firstAttribute="trailing" secondItem="abY-bc-gqy" secondAttribute="trailing" id="j0O-pF-s0T"/>
+                    <constraint firstItem="abY-bc-gqy" firstAttribute="leading" secondItem="gx5-3s-SkE" secondAttribute="leading" id="llD-X7-Ing"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <size key="customSize" width="410" height="632"/>
+            <connections>
+                <outlet property="descriptionLabel" destination="BoR-Bu-Df5" id="wdw-of-rK9"/>
+                <outlet property="imageView" destination="abY-bc-gqy" id="9aI-lV-DDT"/>
+                <outlet property="titleLabel" destination="hXL-dc-6pH" id="LV0-jZ-15q"/>
+            </connections>
+            <point key="canvasLocation" x="30.534351145038165" y="-5.6338028169014089"/>
+        </collectionViewCell>
     </objects>
 </document>
