@@ -6,14 +6,14 @@
 //  Copyright © 2022 com.dache. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 public struct OnboardingData {
-    public let image: String
+    public let image: UIImage
     public let title: String
     public let description: String
     
-    public init(image: String, title: String, description: String) {
+    public init(image: UIImage, title: String, description: String) {
         self.image = image
         self.title = title
         self.description = description
