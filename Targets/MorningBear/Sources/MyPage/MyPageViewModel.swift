@@ -16,6 +16,12 @@ class MyPageViewModel {
                           nickname: "sss", postCount: 1, supportCount: 23, badgeCount: 3)
     
     let category = Category.emotion
+    let themes = Category.allCases.map { $0.description }
     
-    let recentMorning = MyMorning(id: "kkk", imageURL: URL(string: "www.naver.com")!)
+    let recentMorning = [
+        MyMorning(imageURL: URL(string: "www.naver1.com")!),
+        MyMorning(imageURL: URL(string: "www.naver2.com")!),
+        MyMorning(imageURL: URL(string: "www.naver3.com")!),
+        MyMorning(imageURL: URL(string: "www.naver4.com")!)
+    ]
 }

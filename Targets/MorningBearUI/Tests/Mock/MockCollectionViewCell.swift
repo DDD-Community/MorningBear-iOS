@@ -10,7 +10,7 @@ import UIKit
 
 @testable import MorningBearUI
 
-enum MockSection: Int, Hashable {
+enum MockSection: Int, Hashable, CaseIterable {
     case first
     case second
 }
@@ -20,7 +20,11 @@ class MockCollectionViewCell: UICollectionViewCell, CustomCellType {
     static var filename: String = "MockCollectionViewCell"
     static var reuseIdentifier: String = "MockCollectionViewCell"
     
-    func prepare(_ data: MockModel) {}
+    var name: String?
+    
+    func prepare(_ data: MockModel) {
+        name = data.title
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -44,4 +48,10 @@ class MockOtherCollectionViewCell: UICollectionViewCell, CustomCellType {
 
 }
 
-struct MockModel {}
+struct MockModel: Hashable {
+    let title: String
+    
+    init(title: String = "Mock") {
+        self.title = title
+    }
+}

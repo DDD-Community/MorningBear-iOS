@@ -88,6 +88,9 @@ public struct CompositionalLayoutProvider {
     public func horizontalScrollLayoutSectionWithHeader(showItemCount count: Int, height: CGFloat) -> NSCollectionLayoutSection {
         let section = horizontalScrollLayoutSection(showItemCount: count, height: height)
         section.boundarySupplementaryItems.append(commonHeader)
+        section.decorationItems = [
+           NSCollectionLayoutDecorationItem.background(elementKind: "BackgroundReusableView")
+        ]
         
         return section
     }
@@ -226,14 +229,18 @@ public struct CompositionalLayoutProvider {
     /// 나의 미라클 모닝 상세 뷰에서 사용되는 정사각형 셀 그리드를 위한 레이아웃 섹션
     ///
     /// 스크롤 가능, 헤더 있음
-    public func squareCellDynamicGridLayoutSection(column: Int) -> NSCollectionLayoutSection {
+    public func squareCellDynamicGridLayoutSection(
+        column: Int,
+        needsHeader: Bool = true,
+        itemSpacing: CGFloat = 15
+    ) -> NSCollectionLayoutSection {
         // item
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(calculatedFraction(column)),
             heightDimension: .fractionalHeight(1)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        let itemInset = 7.5
+        let itemInset = itemSpacing / 2
         item.contentInsets = NSDirectionalEdgeInsets(top: itemInset, leading: itemInset, bottom: itemInset, trailing: itemInset)
 
         // row group
@@ -251,10 +258,12 @@ public struct CompositionalLayoutProvider {
         section.orthogonalScrollingBehavior = .none
         section.interGroupSpacing = 0
         
-        // Add header
-        let header = commonHeader
-        header.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10) // FIXME: 아닌 것 같음
-        section.boundarySupplementaryItems = [header]
+        if needsHeader {
+            // Add header
+            let header = commonHeader
+            header.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10) // FIXME: 아닌 것 같음
+            section.boundarySupplementaryItems = [header]
+        }
         
         section.contentInsets = narrowSectionInset
         return section
@@ -293,7 +302,32 @@ public struct CompositionalLayoutProvider {
         return section
     }
     
+    public func divier(height: CGFloat = 6) -> NSCollectionLayoutSection {
+        // item
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .fractionalHeight(1)
+        )
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+        // group
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .absolute(height)
+        )
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
+        // section
+        let section = NSCollectionLayoutSection(group: group)
+        return section
+    }
+    
     public init() {}
+}
+
+
+public extension CompositionalLayoutProvider {
+    
 }
 
 // MARK: Internal tools
@@ -332,4 +366,10 @@ extension CompositionalLayoutProvider {
         
         return header
     }
+}
+
+public struct CompositionalLayoutOption {
+    let heihgt: CGFloat
+    let width: CGFloat
+    
 }

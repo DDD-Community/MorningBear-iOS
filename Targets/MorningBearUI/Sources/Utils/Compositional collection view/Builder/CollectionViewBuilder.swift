@@ -21,33 +21,33 @@ public typealias LayoutConfiguration = UICollectionViewCompositionalLayoutConfig
 ///
 /// - Example: `self.collectionView = collectionViewBuilder.build()`
 public final class CollectionViewBuilder<Section, Item>
-where Section: Hashable,
+where Section: Hashable & CaseIterable,
       Item: Hashable
 {
     public typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, Item>
-    
-    public typealias CellProvider =  (_ collectionView: UICollectionView, _ indexPath: IndexPath) -> UICollectionViewCell?
+    public typealias CellProvider =  DiffableDataSource.CellProvider
     public typealias SupplementaryViewProvider = DiffableDataSource.SupplementaryViewProvider
     public typealias ObservableProvider = (Section) -> UpdatePolicy
     
+    /// 외부에서 이미 선언된 `collectionView`를 가져와 베이스 콜렉션 뷰로 선언합니다
     private let base: UICollectionView
     
-    /// 사용할 섹션 목록
+    /// 사용할 섹션  목록입니다.
     public let sections: [Section]
-    /// 사용할 셀 타입 목록
+    /// `register`할 아이템 셀의 목록을 저장합니다.
     public let cellTypes: [AnyCustomCellType]
-    /// 사용할 헤더, 푸터 셀 타입 목록(`enum`)
+    /// `register`할 헤더, 혹은 푸터에 사용되는 셀을 저장합니다. `Kind`라는 `enum` 타입을 갖습니다.
     public let supplementarycellTypes: [Kind]
-    
+    /// `delegate` 선언부를 가져옵니다
     private let delegate: UICollectionViewDelegate
-    /// 디자인 옵션 포함한 빌드 옵션
+    /// 디자인 옵션을 포함한 빌드 옵션이 포함되어 있습니다.
     private let option: CollectionViewBuilderOption
-
     /// `dataSource`는 뷰 컨트롤러에 저장해둘 것. 안 하면 데이터 표시가 안됨...
     private var dataSource: DiffableDataSource
+    /// 콜렉션 뷰에 전달할 레이아웃입니다.
     private var layout: UICollectionViewLayout
     
-    /// 옵저버블 바인딩 할거 넣어주는 프로바이더. 빌더를 새로 만들까 싶기도
+    /// 옵저버블 바인딩 할거 넣어주는 프로바이더. 빌더나 인터셉터로 새로 분리할까 싶기도
     private let observableProvider: ObservableProvider
     private let bag: DisposeBag
 
@@ -99,6 +99,7 @@ where Section: Hashable,
             layoutConfiguration: layoutConfiguration
         )
         self.layout = layoutBuilder.build()
+        self.layout.register(BackgroundReusableView.self, forDecorationViewOfKind: "BackgroundReusableView")
         
         self.delegate = delegate
         self.option = option
@@ -129,7 +130,6 @@ extension CollectionViewBuilder {
     }
     
     private func configureObservables() {
-        
         sections.forEach { [weak self] section in
             guard let self else { return }
             
@@ -166,6 +166,10 @@ extension CollectionViewBuilder {
 
 public extension CollectionViewBuilder {
     func build() -> (collectionView: UICollectionView, dataSource: DiffableDataSource) {
+        guard Section.allCases.count == sections.count else {
+            fatalError("등록되지 않은 섹션이 있습니다. 확인해주세요!")
+        }
+        
         registerCells()
         configureDataSource()
         configureLayout()
@@ -193,19 +197,23 @@ public struct CollectionViewBuilderOption {
     let showsVerticalScrollIndicator: Bool
     let backgroundColor: UIColor
     let clipsToBounds: Bool
+    let interSectionSpacing: CGFloat
     
     public init(
         isScrollEnabled: Bool = true,
         showsHorizontalScrollIndicator: Bool = false,
         showsVerticalScrollIndicator: Bool = false,
         backgroundColor: UIColor = .clear,
-        clipsToBounds: Bool = true
+        clipsToBounds: Bool = true,
+        interSectionSpacing: CGFloat = 0
     ) {
         self.isScrollEnabled = isScrollEnabled
         self.showsHorizontalScrollIndicator = showsHorizontalScrollIndicator
         self.showsVerticalScrollIndicator = showsVerticalScrollIndicator
         self.backgroundColor = backgroundColor
         self.clipsToBounds = clipsToBounds
+        
+        self.interSectionSpacing = interSectionSpacing
     }
 }
 

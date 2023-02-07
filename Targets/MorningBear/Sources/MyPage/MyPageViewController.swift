@@ -34,12 +34,15 @@ class MyPageViewController: UIViewController {
     }
     
     private var collectionViewBuilder: CollectionViewBuilder<MyPageSection, AnyHashable> {
+        let layoutConfig = UICollectionViewCompositionalLayoutConfiguration()
+        layoutConfig.interSectionSpacing = 20
+        
         return .init(
             base: self.collectionView,
-            sections: [.state, .category, .myMorning],
-            cellTypes: [ProfileCell.self, CategoryCell.self, RecentMorningCell.self],
+            sections: [.state, .category, .divider, .themeSelection, .myMorning],
+            cellTypes: [ProfileCell.self, CategoryCell.self, DividerCell.self, CapsuleCell.self, RecentMorningCell.self],
             supplementarycellTypes: [.header(HomeSectionHeaderCell.self)],
-            cellProvider: { [weak self] collectionView, indexPath in
+            cellProvider: { [weak self] collectionView, indexPath, _ in
                 guard let self else { return UICollectionViewCell() }
 
                 switch MyPageSection(rawValue: indexPath.section) {
@@ -47,8 +50,12 @@ class MyPageViewController: UIViewController {
                     return ProfileCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: self.viewModel.profile)
                 case .category:
                     return CategoryCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: self.viewModel.category)
+                case .divider:
+                    return DividerCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: ())
+                case .themeSelection:
+                    return CapsuleCell.dequeueAndPrepare(from: collectionView, at: indexPath, sources: self.viewModel.themes)
                 case .myMorning:
-                    return RecentMorningCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: self.viewModel.recentMorning)
+                    return RecentMorningCell.dequeueAndPrepare(from: collectionView, at: indexPath, sources: self.viewModel.recentMorning)
                 case .none:
                     fatalError("가질 수 없는 섹션 인덱스")
                 }
@@ -67,24 +74,42 @@ class MyPageViewController: UIViewController {
                     return .replace(Observable.of([self.viewModel.profile]))
                 case .category:
                     return .replace(Observable.of([self.viewModel.category]))
+                case .divider:
+                    return .replace(Observable.of([""]))
+                case .themeSelection:
+                    return .replace(Observable.of(self.viewModel.themes))
                 case .myMorning:
-                    return .replace(Observable.of([self.viewModel.recentMorning]))
+                    return .replace(Observable.of(self.viewModel.recentMorning))
                 }
             },
             layoutSectionProvider: { section, _ in
                 let provider = CompositionalLayoutProvider()
-
+                
                 switch MyPageSection(rawValue: section) {
                 case .state:
-                    return provider.plainLayoutSection(height: 100)
+                    let layout = provider.plainLayoutSection(height: 100)
+                    layout.contentInsets = .init(top: 17, leading: 18, bottom: 0, trailing: 18)
+                    
+                    return layout
                 case .category:
-                    return provider.horizontalScrollLayoutSectionWithHeader(showItemCount: 4, height: 71)
+                    let layout = provider.horizontalScrollLayoutSectionWithHeader(showItemCount: 4, height: 71)
+                    layout.contentInsets = .init(top: 0, leading: 18, bottom: 0, trailing: 18)
+                    
+                    return layout
+                case .divider:
+                    return provider.divier(height: 6)
+                case .themeSelection:
+                    let layout = provider.horizontalScrollLayoutSectionWithHeader(showItemCount: 5, height: 33)
+                    layout.contentInsets = .init(top: 0, leading: 18, bottom: 0, trailing: 18)
+                    
+                    return layout
                 case .myMorning:
-                    return provider.squareCellDynamicGridLayoutSection(column: 3)
+                    return provider.squareCellDynamicGridLayoutSection(column: 3, needsHeader: false, itemSpacing: 9)
                 default:
                     fatalError("가질 수 없는 섹션 인덱스")
                 }
             },
+            layoutConfiguration: layoutConfig,
             delegate: self,
             disposeBag: bag
         )
@@ -113,6 +138,8 @@ private extension MyPageViewController {
     enum MyPageSection: Int, Hashable, CaseIterable {
         case state
         case category
+        case divider
+        case themeSelection
         case myMorning
     }
     
@@ -128,93 +155,9 @@ private extension MyPageViewController {
     }
 }
 
-//extension MyPageViewController: CollectionViewCompositionable {
-//    func layoutCollectionView() {
-//        let provider = CompositionalLayoutProvider()
-//        let layout = UICollectionViewCompositionalLayout { (section, env) -> NSCollectionLayoutSection? in
-//            switch MyPageSection(rawValue: section) {
-//            case .state:
-//                return provider.plainLayoutSection(height: 100)
-//            case .category:
-//                return provider.horizontalScrollLayoutSectionWithHeader(showItemCount: 4, height: 71)
-//            case .myMorning:
-//                return provider.squareCellDynamicGridLayoutSection(column: 3)
-//            default:
-//                fatalError("가질 수 없는 섹션 인덱스")
-//            }
-//        }
-//
-//        collectionView.collectionViewLayout = layout
-//    }
-//
-//    func designCollectionView() {
-//        collectionView.isScrollEnabled = true
-//        collectionView.showsHorizontalScrollIndicator = false
-//        collectionView.showsVerticalScrollIndicator = true
-//        collectionView.backgroundColor = .clear
-//        collectionView.clipsToBounds = true
-//    }
-//
-//    func connectCollectionViewWithDelegates() {
-//        collectionView.delegate = self
-//        collectionView.dataSource = self.diffableDataSource
-//    }
-//
-//    func registerCells() {
-//        let bundle =  MorningBearUIResources.bundle
-//
-//        let cells: [any CustomCellType.Type] = [
-//            ProfileCell.self, CategoryCell.self, RecentMorningCell.self
-//        ]
-//
-//        // Register
-//        cells.forEach { $0.register(to: collectionView) }
-//
-//        HomeSectionHeaderCell.registerHeader(to: collectionView)
-//    }
-//}
-//
-//extension MyPageViewController: DiffableDataSourcing {
-//    typealias Section = MyPageSection
-//    typealias Model = AnyHashable
-//
-//    func makeDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
-//        let datasource = configureDiffableDataSource(with: collectionView) { [weak self] collectionView, indexPath, model in
-//            guard let self else { return UICollectionViewCell() }
-//
-//            switch MyPageSection(rawValue: indexPath.section) {
-//            case .state:
-//                return ProfileCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: self.viewModel.profile)
-//            case .category:
-//                return CategoryCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: self.viewModel.category)
-//            case .myMorning:
-//                return RecentMorningCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: self.viewModel.recentMorning)
-//            case .none:
-//                return UICollectionViewCell()
-//            }
-//        }
-//
-//        return datasource
-//    }
-//
-//    func bindDataSourceWithObservable(_ dataSource: DiffableDataSource) {
-//        dataSource.updateDataSource(in: .state, with: [self.viewModel.profile])
-//        dataSource.updateDataSource(in: .category, with: [self.viewModel.category])
-//        dataSource.updateDataSource(in: .myMorning, with: [self.viewModel.recentMorning])
-//    }
-//
-//    func addSupplementaryView(_ diffableDataSource: DiffableDataSource) {
-//        diffableDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
-//            switch kind {
-//            case UICollectionView.elementKindSectionHeader:
-//                return self.properHeaderCell(for: indexPath)
-//            default:
-//                return UICollectionReusableView()
-//            }
-//        }
-//    }
-//
-//
-//}
-
 extension MyPageViewController: UICollectionViewDelegate {}
+extension MyPageViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
+    }
+}

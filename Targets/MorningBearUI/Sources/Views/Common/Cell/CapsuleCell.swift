@@ -8,14 +8,20 @@
 
 import UIKit
 
-public class CapsuleCell: UICollectionViewCell, HorizontalScrollCellType {
+public class CapsuleCell: UICollectionViewCell, HorizontalScrollCellType, CustomCellType {
+    public static let filename = "CapsuleCell"
+    public static let reuseIdentifier = "CapsuleCell"
+    public static let bundle = MorningBearUIResources.bundle
+    
     public override var isSelected: Bool{
         willSet{
             super.isSelected = newValue
             if newValue == true {
-                self.backgroundColor = .white
-                self.contentLabel.textColor = .black
+                self.layer.borderColor = MorningBearUIAsset.Colors.primaryDefault.color.cgColor
+                self.backgroundColor = MorningBearUIAsset.Colors.primaryDefault.color
+                self.contentLabel.textColor = .white
             } else {
+                self.layer.borderColor = MorningBearUIAsset.Colors.gray500.color.cgColor
                 self.backgroundColor = .clear
                 self.contentLabel.textColor = MorningBearUIAsset.Colors.gray500.color
             }
@@ -50,6 +56,10 @@ public class CapsuleCell: UICollectionViewCell, HorizontalScrollCellType {
 }
 
 public extension CapsuleCell {
+    func prepare(_ data: String) {
+        prepareCell(title: data)
+    }
+    
     func prepare(title: String) {
         prepareCell(title: title)
     }

@@ -13,8 +13,8 @@ public struct MyMorning: Hashable, Identifiable {
     public let id: String
     public let imageURL: URL?
     
-    public init(id: String, imageURL: URL?) {
-        self.id = UUID().uuidString
+    public init(id: String = UUID().uuidString, imageURL: URL?) {
+        self.id = id
         self.imageURL = imageURL
     }
 }

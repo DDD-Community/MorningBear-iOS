@@ -14,7 +14,7 @@ where Section: Hashable,
       Item: Hashable
 {
     typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, Item>
-    typealias CellProvider =  (_ collectionView: UICollectionView, _ indexPath: IndexPath) -> UICollectionViewCell?
+    typealias CellProvider =  DiffableDataSource.CellProvider
     typealias SupplementaryViewProvider = DiffableDataSource.SupplementaryViewProvider
     
     private let collectionView: UICollectionView
@@ -58,7 +58,7 @@ private extension DiffableDataSourceBuilder {
     func configureDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
         let datasource = DiffableDataSource(collectionView: collectionView) {
             (collectionView, indexPath, model) -> UICollectionViewCell in
-            guard let cell = cellProvider(collectionView, indexPath) else {
+            guard let cell = cellProvider(collectionView, indexPath, model) else {
                 return UICollectionViewCell()
             }
             
