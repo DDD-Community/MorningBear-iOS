@@ -8,10 +8,14 @@
 
 import UIKit
 
-import MorningBearData
+import Kingfisher
+@_exported import MorningBearData
 
-public final class RecentMorningCell: UICollectionViewCell {
-    @IBOutlet weak var titleLabel: UILabel!
+public final class RecentMorningCell: UICollectionViewCell, CustomCellType {
+    public static let filename = "RecentMorningCell"
+    public static let reuseIdentifier = "RecentMorningCell"
+    public static let bundle = MorningBearUIResources.bundle
+    
     @IBOutlet weak var imageView: UIImageView! {
         didSet {
             imageView.layer.cornerRadius = 10
@@ -28,14 +32,13 @@ public final class RecentMorningCell: UICollectionViewCell {
         self.prepareCell(nil)
     }
     
-    public func prepare(_ data: RecentMorning) {
+    public func prepare(_ data: MyMorning) {
         prepareCell(data)
     }
 }
 
 extension RecentMorningCell {
-    private func prepareCell(_ data: RecentMorning?) {
-        self.imageView.image = data?.image
-        self.titleLabel.text = data?.title
+    private func prepareCell(_ data: MyMorning?) {
+        self.imageView.kf.setImage(with: data?.imageURL)
     }
 }

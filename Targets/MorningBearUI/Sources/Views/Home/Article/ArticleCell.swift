@@ -7,32 +7,40 @@
 //
 
 import UIKit
-
 @_exported import MorningBearData
 
-public class ArticleCell: UICollectionViewCell {
-    @IBOutlet weak var imageView: UIImageView! {
-        didSet {
-            imageView.contentMode = .scaleAspectFill
-        }
-    }
+public class ArticleCell: UICollectionViewCell, CustomCellType {
+    public static let filename = "ArticleCell"
+    public static let reuseIdentifier = "ArticleCell"
+    public static let bundle = MorningBearUIResources.bundle
     
     @IBOutlet weak var titleLabel: UILabel! {
         didSet {
             titleLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 16)
+            titleLabel.textColor = .black
         }
     }
     @IBOutlet weak var descriptionLabel: UILabel! {
         didSet {
             descriptionLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 14)
             descriptionLabel.numberOfLines = 2
+            descriptionLabel.textColor = .black
         }
     }
+    var gradientLayer: CAGradientLayer = .random
     
     public override func awakeFromNib() {
         super.awakeFromNib()
         
         designCell()
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        gradientLayer = CAGradientLayer.random
+        gradientLayer.frame = bounds
+        self.layer.insertSublayer(gradientLayer, at: 0)
     }
     
     public override func prepareForReuse() {
@@ -41,8 +49,11 @@ public class ArticleCell: UICollectionViewCell {
         self.prepare(article: nil)
     }
     
+    public func prepare(_ data: Article) {
+        self.prepare(article: data)
+    }
+    
     public func prepare(article: Article?) {
-        self.imageView.image = article?.image
         self.titleLabel.text = article?.title
         self.descriptionLabel.text = article?.description
     }

@@ -35,6 +35,7 @@ let project = Project.app(name: "MorningBear",
                                 Storage: "MorningBearStorage",
                                 Image: "MorningBearImage",
                                 DataProvider: "MorningBearDataProvider",
-                                DataEditor: "MorningBearDataEditor"
+                                DataEditor: "MorningBearDataEditor",
+                                Test: "MorningBearTestKit"
                             )
 )

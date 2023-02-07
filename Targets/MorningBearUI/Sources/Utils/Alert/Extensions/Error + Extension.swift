@@ -21,7 +21,7 @@ fileprivate struct ErrorAlert<T>: Alertable where T: Error {
     
     init(_ error: T) {
         self.error = error
-        self.alertComponent = AlertComponent(title: "에러 발생",
+        self.alertComponent = AlertComponent(title: "앗..!",
                                              message: "\(error.localizedDescription)",
                                              buttons: [UIAlertAction(title: "OK", style: .default)])
     }

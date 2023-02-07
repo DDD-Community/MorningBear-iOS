@@ -15,9 +15,9 @@ public struct MorningRegistrationInfo {
     public let endTime: Date
     public let comment: String
     
-    public init(image: UIImage, category: String, startTime: Date, endTime: Date, comment: String) {
+    public init(image: UIImage, category: Category, startTime: Date, endTime: Date, comment: String) {
         self.image = image
-        self.category = category
+        self.category = category.id
         self.startTime = startTime
         self.endTime = endTime
         self.comment = comment

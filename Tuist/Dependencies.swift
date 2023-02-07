@@ -39,6 +39,10 @@ let dependencies = Dependencies(
             url: "https://github.com/Quick/nimble",
             requirement: .upToNextMajor(from: "11.2.0")
         ),
+        .remote(
+            url: "https://github.com/onevcat/Kingfisher",
+            requirement: .upToNextMajor(from: "7.5.0")
+        ),
         .local(path: .relativeToRoot("Local/GraphQL/MorningBearAPI"))
     ],
     platforms: [.iOS]

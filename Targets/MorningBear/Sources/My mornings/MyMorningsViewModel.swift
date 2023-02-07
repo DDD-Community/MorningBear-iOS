@@ -8,22 +8,46 @@
 
 import Foundation
 
-import MorningBearDataProvider
+import RxSwift
 
-class MyMorningsViewModel {
-    private let dataProvider: MyMorningDataProvider
-    var myMornings: [RecentMorning]
+import MorningBearDataProvider
+import MorningBearKit
+
+class MyMorningsViewModel<Provider: DataProviding> {
+    private let dataProvider: Provider
+    private let bag = DisposeBag()
     
-    func fetchNewMorning() -> [RecentMorning] {
-        let newData = dataProvider.fetch()
-        
-        myMornings.append(contentsOf: newData)
-        return newData
-    }
+    /// 데이터를 새로 덮어씌울지 페이징할지는 소트 타입이 바뀌는지를 보고 판단
+    private var currentSortStatus: MyMorningQuery.Sort = .desc
     
-    init(_ dataProvider: MyMorningDataProvider = MyMorningDataProvider()) {
+    @Bound(
+        initValue: []
+    ) private(set) var myMornings: [MyMorning]
+    
+    init(_ dataProvider: Provider = DefaultProvider.shared) {
         self.dataProvider = dataProvider
+    }
+}
+
+extension MyMorningsViewModel {
+    /// 새로운 이미지들 요청
+    func fetchNewMorning(sort: MyMorningQuery.Sort? = nil) {
+        let sort = sort ?? self.currentSortStatus
         
-        self.myMornings = dataProvider.fetch()
+        linkRx(
+            dataProvider.fetch(MyMorningQuery(size: 10, sort: sort, useCache: true)),
+            scheduler: SerialDispatchQueueScheduler(qos: .userInitiated),
+            in: bag,
+            completionHandler: { myMornings in
+                if self.currentSortStatus == sort {
+                    self.myMornings.append(contentsOf: myMornings)
+                } else {
+                    self.myMornings = myMornings
+                }
+            },
+            disposeHandler: {
+                self.currentSortStatus = sort
+            }
+        )
     }
 }

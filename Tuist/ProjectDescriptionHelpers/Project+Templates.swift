@@ -1,3 +1,4 @@
+
 import ProjectDescription
 
 /// Project helpers are functions that simplify the way you define your project.
@@ -21,7 +22,9 @@ extension Project {
                             Storage: String,
                             Image: String,
                             DataProvider: String,
-                            DataEditor: String)) -> Project {
+                            DataEditor: String,
+                            Test: String
+                           )) -> Project {
         
         // MARK: - App level
         var targets = makeAppTargets(name: name,
@@ -44,6 +47,9 @@ extension Project {
                         .external(name: "FirebaseStorage"),
                         .external(name: "RxSwift"),
                        ],
+                       additionalTestTarget: [
+                        .external(name: "RxBlocking")
+                       ],
                        settings: .settings(
                         base: [
                             "OTHER_LDFLAGS": ["$(inherited)", "-ObjC"],
@@ -60,12 +66,15 @@ extension Project {
                         .external(name: "MorningBearAPI"),
                         .target(name: "MorningBearNetwork")
                        ]),
-            makeTarget(name: additionalTargets.UI, platform: platform, needsResource: true,
+            makeTarget(name: additionalTargets.UI, platform: platform,
+                       needsResource: true,
+                       needTestResource: true,
                        dependencies: [
                         .external(name: "RxSwift"),
                         .external(name: "RxCocoa"),
                         .external(name: "Quick"),
                         .external(name: "Nimble"),
+                        .external(name: "Kingfisher"),
                         .target(name: "MorningBearData"),
                         .target(name: "MorningBearKit")
                        ]),
@@ -92,7 +101,13 @@ extension Project {
                         .target(name: "MorningBearUI"),
                         .target(name: "MorningBearNetwork"),
                         .target(name: "MorningBearStorage")
-                       ])
+                       ],
+                       additionalTestTarget: [
+                        .external(name: "RxBlocking")
+                       ]),
+            makeTarget(name: additionalTargets.Test, platform: platform,
+                       dependencies: []
+                      )
         ].flatMap { $0 }
         
         return Project(
@@ -106,8 +121,11 @@ extension Project {
     private static func makeTarget(name: String,
                                    platform: Platform,
                                    needsResource: Bool = false,
+                                   needTestResource: Bool = false,
                                    dependencies: [TargetDependency],
-                                   settings: Settings? = nil) -> [Target] {
+                                   additionalTestTarget: [TargetDependency] = [],
+                                   settings: Settings? = nil)
+    -> [Target] {
         let sources = Target(name: name,
                              platform: platform,
                              product: .framework,
@@ -119,14 +137,15 @@ extension Project {
                              dependencies: dependencies,
                              settings: settings)
         
+        let testDependencies = [.target(name: name)] + additionalTestTarget
         let tests = Target(name: "\(name)Tests",
                            platform: platform,
                            product: .unitTests,
                            bundleId: "\(organizationName).\(name)Tests",
                            infoPlist: .default,
                            sources: ["Targets/\(name)/Tests/**"],
-                           resources: [],
-                           dependencies: [.target(name: name)])
+                           resources: needTestResource ?  ["Targets/\(name)/Tests/Resources/**"] : [],
+                           dependencies: testDependencies)
         
         return [sources, tests]
     }

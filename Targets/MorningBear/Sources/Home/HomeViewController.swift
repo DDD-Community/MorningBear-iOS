@@ -12,15 +12,21 @@ import MorningBearUI
 import RxSwift
 import RxCocoa
 
-class HomeViewController: UIViewController {
+class HomeViewController: UIViewController, DiffableDataSourcing {
+    typealias DiffableDataSource = UICollectionViewDiffableDataSource<HomeSection, AnyHashable>
+    var diffableDataSource: DiffableDataSource!
+    
     private let bag = DisposeBag()
     private let viewModel = HomeViewModel()
+    
+    private let refreshControl = UIRefreshControl()
     
     /// 카메라 뷰: 미리 로딩하기 위해서 처음부터 만들어 놓기
     private let cameraViewController = UIImagePickerController()
     
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
+            collectionView.refreshControl = self.refreshControl
             // CollectionViewCompositionable 제공함수. 관련 내용 소스파일 or 주석 참조.
             configureCompositionalCollectionView()
         }
@@ -40,13 +46,133 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+                
+        // Set data source
+        diffableDataSource = makeDiffableDataSource(with: collectionView)
+        diffableDataSource.initDataSource(allSection: HomeSection.allCases)
+        commit(diffableDataSource)
         
+        // Set design
+        self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
         designNavigationBar()
         
+        // Set observables
         bindButtons()
         bindBehaviorAccordingToRecordStatus()
+        bindRefreshControl()
+    }
+}
 
-        self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
+extension HomeViewController {
+    typealias Section = HomeSection
+    typealias Model = AnyHashable
+
+    func makeDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
+        let dataSource = configureDiffableDataSource(with: collectionView) { [weak self] collectionView, indexPath, model in
+            guard let self else { return UICollectionViewCell() }
+            
+            switch HomeSection.getSection(index: indexPath.section) {
+            case .state:
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: "StateCell", for: indexPath
+                ) as! StateCell
+                
+                let state = State(nickname: "임시", oneLiner: "임시")
+                let myInfo = self.viewModel.myInfo
+                
+                cell.prepare(state: state, myInfo: myInfo) {
+                    // FIXME: Navigate for test
+                    self.navigate(boardName: "MyPage", vcId: "MyPage")
+                }
+                
+                return cell
+                
+            case .recentMornings:
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: "RecentMorningCell", for: indexPath
+                ) as! RecentMorningCell
+                
+                if !self.viewModel.recentMornings.isEmpty {
+                    let item = self.viewModel.recentMornings[indexPath.item]
+                    cell.prepare(item)
+                }
+                
+                return cell
+                
+            case .badges:
+                return BadgeCell.dequeueAndPrepare(
+                    from: collectionView,
+                    at: indexPath,
+                    prepare: self.viewModel.badges[indexPath.item]
+                )
+                
+            case .articles:
+                return ArticleCell.dequeueAndPrepare(
+                    from: collectionView,
+                    at: indexPath,
+                    prepare: self.viewModel.articles[indexPath.item]
+                )
+            case .none:
+                return UICollectionViewCell()
+            }
+        }
+        
+        return dataSource
+    }
+    
+    func bindDataSourceWithObservable(_ dataSource: DiffableDataSource) {
+        viewModel.$myInfo
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            .asDriver(onErrorJustReturn: MyInfo(estimatedTime: 0, totalCount: 0, badgeCount: 0))
+            .drive { [weak self] info in
+                guard let self else { return }
+                
+                self.diffableDataSource.replaceDataSource(in: .state, to: [info])
+            }
+            .disposed(by: bag)
+        
+        viewModel.$articles
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            .asDriver(onErrorJustReturn: [])
+            .drive { [weak self] articles in
+                guard let self else { return }
+                
+                self.diffableDataSource.replaceDataSource(in: .articles, to: articles)
+            }
+            .disposed(by: bag)
+        
+        viewModel.$badges
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            .asDriver(onErrorJustReturn: [])
+            .drive { [weak self] badges in
+                guard let self else { return }
+                
+                self.diffableDataSource.replaceDataSource(in: .badges, to: badges)
+            }
+            .disposed(by: bag)
+        
+        viewModel.$recentMornings
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            .asDriver(onErrorJustReturn: [])
+            .drive { [weak self] mornings in
+                guard let self else { return }
+                
+                self.diffableDataSource.replaceDataSource(in: .recentMornings, to: mornings)
+            }
+            .disposed(by: bag)
+    }
+    
+    func addSupplementaryView(_ diffableDataSource: DiffableDataSource) {
+        diffableDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+            switch kind {
+            case UICollectionView.elementKindSectionHeader:
+                return self.properHeaderCell(for: indexPath)
+            case UICollectionView.elementKindSectionFooter:
+                return self.properFooterCell(for: indexPath)
+            default:
+                return UICollectionReusableView()
+            }
+        }
     }
 }
 
@@ -117,6 +243,28 @@ private extension HomeViewController {
             .disposed(by: bag)
     }
     
+    func bindRefreshControl() {
+        refreshControl.rx.controlEvent(.valueChanged)
+            .withUnretained(self)
+            .bind { weakSelf, _ in
+                weakSelf.viewModel.fetchRemoteData()
+            }
+            .disposed(by: bag)
+        
+        viewModel.$isNetworking
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            .asDriver(onErrorJustReturn: false)
+            .drive { [weak self] flag in
+                guard let self else { return }
+                
+                if flag == false {
+                    self.refreshControl.endRefreshing()
+                }
+            }
+            .disposed(by: bag)
+    }
+    
+    // MARK: - Functional methods
     func startRecording() {
         // 버튼 전환
         showRecordingNowButton()
@@ -133,15 +281,20 @@ private extension HomeViewController {
         
         do {
             let startDate = try viewModel.stopRecording()
-            registerMorningViewController.prepare(startTime: startDate, image: nil)
+            
+            registerMorningViewController.prepare(startTime: startDate, image: nil, popAction: { [weak self] in
+                guard let self else { return }
+                
+                self.viewModel.fetchRemoteData()
+            })
+            
+            self.navigationController?.pushViewController(registerMorningViewController, animated: true)
+            
+            // 버튼 전환
+            showStartRecordingButton()
         } catch let error {
             showAlert(error)
         }
-
-        self.navigationController?.pushViewController(registerMorningViewController, animated: true)
-        
-        // 버튼 전환
-        showStartRecordingButton()
     }
     
     func showRecordingNowButton() {
@@ -172,7 +325,7 @@ extension HomeViewController: CollectionViewCompositionable {
                 return provider.horizontalScrollLayoutSection(column: 2)
             case .articles:
                 let section = provider.horizontalScrollLayoutSection(column: 1, groupWidthFraction: 0.7)
-                section.orthogonalScrollingBehavior = .groupPagingCentered // 페이징 추가함. 변경 가능
+                section.orthogonalScrollingBehavior = .groupPaging // 페이징 추가함. 변경 가능
                 
                 return section
             case .none:
@@ -198,7 +351,7 @@ extension HomeViewController: CollectionViewCompositionable {
     
     func connectCollectionViewWithDelegates() {
         collectionView.delegate = self
-        collectionView.dataSource = self
+        collectionView.dataSource = self.diffableDataSource
     }
     
     func registerCells() {
@@ -214,15 +367,11 @@ extension HomeViewController: CollectionViewCompositionable {
         collectionView.register(cellNib,
                                 forCellWithReuseIdentifier: "RecentMorningCell")
         
-        // 배지
-        cellNib = UINib(nibName: "BadgeCell", bundle: bundle)
-        collectionView.register(cellNib,
-                                forCellWithReuseIdentifier: "BadgeCell")
+        let cellTypes: [any CustomCellType.Type] = [
+            ArticleCell.self, BadgeCell.self
+        ]
+        cellTypes.forEach { $0.register(to: collectionView) }
         
-        // 아티클
-        cellNib = UINib(nibName: "ArticleCell", bundle: bundle)
-        collectionView.register(cellNib,
-                                forCellWithReuseIdentifier: "ArticleCell")
         
         // 헤더 - 공용
         cellNib = UINib(nibName: "HomeSectionHeaderCell", bundle: bundle)
@@ -251,8 +400,12 @@ extension HomeViewController: UIImagePickerControllerDelegate, UINavigationContr
             }
             
             if case .recording(startDate: let savedStartDate) = viewModel.isMyMorningRecording {
-                registerMorningViewController.prepare(startTime: savedStartDate, image: takenPhoto)
-                self.navigationController?.pushViewController(registerMorningViewController, animated: true)
+                do {
+                    registerMorningViewController.prepare(startTime: savedStartDate, image: takenPhoto, popAction: {})
+                    self.navigationController?.pushViewController(registerMorningViewController, animated: true)
+                } catch let error {
+                    self.showAlert(error)
+                }
             } else {
                 // TODO: Error
             }
@@ -263,96 +416,15 @@ extension HomeViewController: UIImagePickerControllerDelegate, UINavigationContr
 }
 
 // MARK: - Delegate methods
-extension HomeViewController: UICollectionViewDelegate {}
-
-extension HomeViewController: UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        HomeSection.allCases.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch HomeSection.getSection(index: section) {
-        case .state:
-            return 1 // 내 상태는 단일 셀 섹션임
-        case .recentMornings:
-            return min(4, viewModel.recentMorningList.count) // 최근 미라클 모닝은 상위 4개만 표시
-        case .badges:
-            return viewModel.badgeList.count
-        case .articles:
-            return viewModel.articleList.count
-        case .none:
-            return 0
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch HomeSection.getSection(index: indexPath.section) {
-        case .state:
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "StateCell", for: indexPath
-            ) as! StateCell
-            
-            let item = viewModel.state
-            cell.prepare(state: item)
-            
-            return cell
-            
-        case .recentMornings:
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "RecentMorningCell", for: indexPath
-            ) as! RecentMorningCell
-            
-            let item = viewModel.recentMorningList.prefix(4)[indexPath.item] // 최근 미라클 모닝은 상위 4개만 표시; MARK: 정렬 필수
-            cell.prepare(item)
-            
-            return cell
-            
-        case .badges:
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "BadgeCell", for: indexPath
-            ) as! BadgeCell
-            
-            let item = viewModel.badgeList[indexPath.item]
-            cell.prepare(badge: item)
-            
-            return cell
-            
-        case .articles:
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "ArticleCell", for: indexPath
-            ) as! ArticleCell
-            
-            let item = viewModel.articleList[indexPath.item]
-            cell.prepare(article: item)
-            
-            return cell
-        
-        case .none:
-            return UICollectionViewCell()
-        }
-    }
-    
+extension HomeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch HomeSection.getSection(index: indexPath.section) {
         case .articles:
-            let article = viewModel.articleList[indexPath.row]
+            let article = viewModel.articles[indexPath.row]
             article.openURL(context: UIApplication.shared)
         default:
             // TODO: 언젠간..
             break
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        // 헤더 & 푸터 설정
-        switch kind {
-        case UICollectionView.elementKindSectionHeader:
-            return properHeaderCell(for: indexPath)
-            
-        case UICollectionView.elementKindSectionFooter:
-            return properFooterCell(for: indexPath)
-        default:
-            return UICollectionReusableView()
         }
     }
 }
@@ -392,10 +464,7 @@ extension HomeViewController {
                 }
                 
                 // 아티클 모두 보기 목록으로 이동(네비게이션)
-                let articlesCollectionViewController = UIStoryboard(name: "ArticlesCollection", bundle: nil)
-                    .instantiateViewController(withIdentifier: "ArticlesCollection")
-                
-                self.navigationController?.pushViewController(articlesCollectionViewController, animated: true)
+                self.navigate(boardName: "ArticlesCollection", vcId: "ArticlesCollection")
             }
         default:
             break
@@ -419,12 +488,16 @@ extension HomeViewController {
         
         footerCell.prepare(buttonText: "더 보러가기") {
             // 나의 미라클모닝 목록으로 이동(네비게이션)
-            let myRecentMorningController = UIStoryboard(name: "MyMornings", bundle: nil)
-                .instantiateViewController(withIdentifier: "MyMornings")
-            
-            self.navigationController?.pushViewController(myRecentMorningController, animated: true)
+            self.navigate(boardName: "MyMornings", vcId: "MyMornings")
         }
         
         return footerCell
+    }
+    
+    private func navigate(boardName: String, vcId: String) {
+        let board = UIStoryboard(name: boardName, bundle: nil)
+        let vc = board.instantiateViewController(withIdentifier: vcId)
+        
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

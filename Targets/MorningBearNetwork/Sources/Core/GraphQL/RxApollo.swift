@@ -23,9 +23,12 @@ public struct RxApollo {
     private let client: ApolloClient
     
     /// GraphQL에서 `query`에 해당하는 요청을 실행하고 결과를 `RxSwift.Observable` 타입으로 반환
-    public func fetch<T>(query: T) -> Single<GraphQLResult<T.Data>> where T: GraphQLQuery {
+    public func fetch<T>(
+        query: T,
+        cachePolicy: CachePolicy = .fetchIgnoringCacheData
+    ) -> Single<GraphQLResult<T.Data>> where T: GraphQLQuery {
         let observable = Observable.createFromResultCallback { resultClosure in
-            client.fetch(query: query, resultHandler: resultClosure)
+            client.fetch(query: query, cachePolicy: cachePolicy, resultHandler: resultClosure)
         }
         
         return observable.asSingle()

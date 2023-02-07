@@ -46,46 +46,15 @@ final class GraphQLRequestTests: XCTestCase {
         wait(for: [expectation], timeout: 5)
     }
     
-    func test__RxApollo_fetch() throws {
-        let expectation = XCTestExpectation(description: "graphQL")
+    func test__Mock_transport_layer() {
+        let mockTransport = MockNetworkTransport(body: Mock(bloggerlink: "kk")._data)
+        let mockClient = ApolloClient(networkTransport: mockTransport, store: ApolloStore())
         
-        Network.shared.apolloTest.rx.fetch(query: FindLoginInfoQuery())
-            .subscribe(
-                onSuccess: { data in
-                    print(data.data?.allFilms?.films as Any)
-                    expectation.fulfill()
-                }, onFailure: { error in
-                    XCTFail("Test get failed: \(error)")
-                })
-            .disposed(by: bag)
-        
-        wait(for: [expectation], timeout: 5)
-    }
-    
-    func test__Mocking() throws {
-        let mock = Mock(allFilms:
-                            Mock(films: [
-                                Mock(title: "1"),
-                                Mock(title: "2"),
-                                Mock(title: nil),
-                                nil
-                            ]
-                                )
-        )
-        
-        guard
-            let allFilms = Query.Data.from(mock).allFilms,
-            let films = allFilms.films
-        else {
-            XCTFail("Model nil")
-            return
+        let expect = XCTestExpectation()
+        mockClient.fetch(query: SearchArticleQuery(input: .some(10))) { result in
+            expect.fulfill()
         }
         
-        let titles = films
-            .compactMap { $0 }
-            .compactMap { $0.title }
-        
-        XCTAssertEqual(titles.count, 2)
-        XCTAssertTrue(titles.contains("1") && titles.contains("2"))
+        wait(for: [expect], timeout: 3)
     }
 }

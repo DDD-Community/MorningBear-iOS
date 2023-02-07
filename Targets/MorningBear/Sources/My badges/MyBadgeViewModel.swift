@@ -15,7 +15,7 @@ class MyBadgeViewModel {
     private let dateProvider: MyBadgeDataProvider
     var badges: [Badge]
     
-    init(_ dataProvider: MyBadgeDataProvider = MyBadgeDataProvider()) {
+    public init(_ dataProvider: MyBadgeDataProvider = MyBadgeDataProvider()) {
         self.dateProvider = dataProvider
         
         self.badges = dataProvider.fetchBadges()

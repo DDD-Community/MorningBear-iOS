@@ -23,6 +23,8 @@ class RegisterMorningViewController: UIViewController {
     // For category collection view
     var categoryCollectionViewProvider: HorizontalScrollCollectionViewProvider<CapsuleCell, String>?
     
+    private var popAction: (() -> Void)!
+    
     // MARK: View components
     @IBOutlet weak var scrollView: UIScrollView!
     
@@ -146,17 +148,23 @@ class RegisterMorningViewController: UIViewController {
         }
         
         bindButtons()
+        bindObservables()
     }
 }
 
 // MARK: - Public tools
 extension RegisterMorningViewController {
-    func prepare(startTime: Date, image: UIImage?) {
+    /// 기록이 이상하면 에러 튕김
+    ///
+    /// 지금은 1분 미만이면 튕김
+    func prepare(startTime: Date, image: UIImage?, popAction: @escaping () -> Void) {
         startTimeText = viewModel.timeFormatter.string(from: startTime)
         
         if let image {
             morningImage = image
-        } 
+        }
+        
+        self.popAction = popAction
     }
 }
 
@@ -164,6 +172,18 @@ extension RegisterMorningViewController {
 private extension RegisterMorningViewController {
     func designNavigationBar() {
         navigationItem.title = "오늘의 미라클모닝"
+    }
+    
+    func bindObservables() {
+        viewModel.isNetworking
+            .asDriver(onErrorJustReturn: false)
+            .drive(onNext: { [weak self] value in
+                guard let self else { return }
+                
+                self.registerButton.isEnabled = value ? false : true
+                self.registerButton.alpha = value ? 0.5 : 1.0
+            })
+            .disposed(by: bag)
     }
     
     func bindButtons() {
@@ -174,16 +194,16 @@ private extension RegisterMorningViewController {
                 // 고른 카테고리 텍스트 가져오고(선택 안하면 에러)
                 let category = try self.getCategoryTextInsideCell()
                 
-                // 시간 정상적으로 있는지 체크
+                // 시간 파싱 가능한지 체크
                 guard let startTimeText = self.startTimeTextField.text,
                       let endTimeText = self.endTimeTextField.text
                 else {
-                    throw RegisterMorningViewModel.DataError.emptyData
+                    throw RegisterMorningViewError.emptyData
                 }
                 
                 // 이미지 정상인지 체크
                 guard let image = self.imageWrapperView.toUIImage else {
-                    throw RegisterMorningViewModel.DataError.emptyData
+                    throw RegisterMorningViewError.emptyData
                 }
                 
                 let commentText = self.commentTextView.text ?? ""
@@ -191,10 +211,14 @@ private extension RegisterMorningViewController {
                 // 정보 등록
                 self.viewModel
                     .registerMorningInformation(image, category, startTimeText, endTimeText, commentText)
-                    .subscribe(onFailure: { [weak self] error in
-                        guard let self else { return }
-                        self.showAlert(error)
-                    })
+                    .subscribe(
+                        onSuccess: { _ in
+                            self.navigationController?.popViewController(animated: true)
+                            self.popAction()
+                        },
+                        onFailure: { error in
+                            self.showAlert(error)
+                        })
                     .disposed(by: self.bag)
                 
             } catch let error {
@@ -204,24 +228,25 @@ private extension RegisterMorningViewController {
         .disposed(by: bag)
     }
     
-    func getCategoryTextInsideCell() throws -> String {
+    func getCategoryTextInsideCell() throws -> Int {
         guard let categoryCollectionViewProvider else {
             fatalError("카테고리 콜렉션 뷰가 설정되지 않음")
         }
         
         guard let selectedCategoryIndexPath = categoryCollectionViewProvider.currentSelectedIndexPath else {
-            throw RegisterMorningViewModel.DataError.emptyCategory
+            throw RegisterMorningViewError.emptyCategory
         }
         
-        guard let cell = categoryCollectionView.cellForItem(at: selectedCategoryIndexPath) as? CapsuleCell else {
-            fatalError("셀을 불러올 수 없음")
+        return selectedCategoryIndexPath.row
+    }
+    
+    /// 시간 정상적인지 체크
+    func canSubmitDate(date: Date) -> Bool {
+        if date.timeIntervalSinceNow > -60 {
+            return false
+        } else {
+            return true
         }
-        
-        guard let categoryText = cell.contentText, !categoryText.isEmpty else {
-            fatalError("비어있는 셀 텍스트")
-        }
-        
-        return categoryText
     }
 }
 
@@ -263,7 +288,6 @@ extension RegisterMorningViewController: CollectionViewCompositionable {
 // MARK: - Keyboard avoidance 설정
 extension RegisterMorningViewController {
     func setKeyboardObserver() {
-        print("Reg")
 
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow),
                                                name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -278,7 +302,6 @@ extension RegisterMorningViewController {
         var keyboardFrame:CGRect = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
         
-        print("WTF")
 
         var contentInset: UIEdgeInsets = self.scrollView.contentInset
         contentInset.bottom = keyboardFrame.size.height
@@ -287,8 +310,6 @@ extension RegisterMorningViewController {
     }
 
     @objc func keyboardWillHide(notification:NSNotification){
-        
-        print("Gone")
         let contentInset:UIEdgeInsets = UIEdgeInsets.zero
         scrollView.contentInset = contentInset
     }

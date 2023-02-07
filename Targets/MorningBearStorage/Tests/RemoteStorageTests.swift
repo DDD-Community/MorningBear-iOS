@@ -12,7 +12,7 @@ import XCTest
 import RxSwift
 
 final class RemoteStorageTests: XCTestCase {
-    private var storageManager: RemoteStorageManager<MockRemoteStorage>!
+    private var storageManager: (any RemoteStoraging)!
     private var bag: DisposeBag!
     
     

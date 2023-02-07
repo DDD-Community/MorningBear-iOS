@@ -8,12 +8,16 @@
 
 import UIKit
 
+import RxSwift
+
 import MorningBearUI
 
-class MyMorningsViewController: UIViewController {
-    typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, RecentMorning>
+class MyMorningsViewController: UIViewController, DiffableDataSourcing {
+    typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, MyMorning>
     
     private let viewModel = MyMorningsViewModel()
+    private let bag = DisposeBag()
+    
     var diffableDataSource: DiffableDataSource!
     
     @IBOutlet weak var collectionView: UICollectionView! {
@@ -28,17 +32,12 @@ class MyMorningsViewController: UIViewController {
         navigationController?.navigationBar.topItem?.backButtonTitle = ""
         navigationItem.title = "나의 미라클모닝"
         
-        diffableDataSource = configureDiffableDataSource(with: collectionView)
-        diffableDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
-            switch kind {
-            case UICollectionView.elementKindSectionHeader:
-                return self.properHeaderCell(for: indexPath)
-            default:
-                return UICollectionReusableView()
-            }
-        }
+        diffableDataSource = makeDiffableDataSource(with: collectionView)
+        diffableDataSource.initDataSource(allSection: Section.allCases)
         
-        diffableDataSource.updateDataSource(in: .main, with: viewModel.myMornings)
+        commit(diffableDataSource)
+        
+        viewModel.fetchNewMorning()
     }
 }
 
@@ -80,28 +79,53 @@ extension MyMorningsViewController: CollectionViewCompositionable {
 
 extension MyMorningsViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.row > viewModel.myMornings.count - 3 {
-            let newMornings = viewModel.fetchNewMorning()
-            diffableDataSource.updateDataSource(in: .main, with: newMornings)
+        if indexPath.row > viewModel.myMornings.count - 4 { // 끝에서 4개 전에 새로운 이미지 요청
+            viewModel.fetchNewMorning()
         }
     }
 }
 
-extension MyMorningsViewController: DiffableDataSourcing {
-    func configureDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
-        let dataSource = makeDiffableDataSource(with: collectionView) { collectionView, indexPath, model in
+extension MyMorningsViewController {
+    func bindDataSourceWithObservable(_ dataSource: DiffableDataSource) {
+        viewModel.$myMornings
+            .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            .asDriver(onErrorJustReturn: [])
+            .drive(onNext: { [weak self] newMorningData in
+                guard let self else { return }
+                
+                self.diffableDataSource.replaceDataSource(in: .main, to: newMorningData)
+            })
+            .disposed(by: bag)
+    }
+        
+    func makeDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
+        let dataSource = configureDiffableDataSource(with: collectionView) { [weak self] collectionView, indexPath, model in
+            guard let self else { return UICollectionViewCell() }
+            
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: "RecentMorningCell", for: indexPath
             ) as! RecentMorningCell
             
-            cell.prepare(RecentMorning(image: UIColor.random.image(), title: "kkk", desc: "kkk"))
+            let item = self.viewModel.myMornings[indexPath.row]
+            cell.prepare(item)
             return cell
         }
         
         return dataSource
     }
     
-    enum Section {
+    func addSupplementaryView(_ diffableDataSource: DiffableDataSource) {
+        diffableDataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+            switch kind {
+            case UICollectionView.elementKindSectionHeader:
+                return self.properHeaderCell(for: indexPath)
+            default:
+                return UICollectionReusableView()
+            }
+        }
+    }
+    
+    enum Section: Hashable, CaseIterable {
         case main
     }
 }
@@ -110,8 +134,6 @@ extension MyMorningsViewController: DiffableDataSourcing {
 // MARK: - Internal tools
 extension MyMorningsViewController {
     /// 섹션 별로 적절한 헤더 뷰를 제공
-    ///
-    /// 현재로서는 버튼 유무만 조정
     private func properHeaderCell(for indexPath: IndexPath) -> HomeSectionHeaderCell {
         let headerCell = collectionView.dequeueReusableSupplementaryView(
             ofKind: UICollectionView.elementKindSectionHeader,
@@ -119,15 +141,19 @@ extension MyMorningsViewController {
             for: indexPath
         ) as! HomeSectionHeaderCell
         
+        let menuItems: [UIAction] = {
+            return [
+                UIAction(title: "최신순", image: UIImage(systemName: "arrow.down.circle"), handler: { _ in
+                    self.viewModel.fetchNewMorning(sort: .desc)
+                }),
+                UIAction(title: "오래된순", image: UIImage(systemName: "arrow.up.circle"), handler: { _ in
+                    self.viewModel.fetchNewMorning(sort: .asc)
+                }),
+            ]
+        }()
         
-        headerCell.prepare(title: "나의 최근 미라클 모닝", buttonText: "정렬 방식") { [weak self] in
-            guard let self else {
-                return
-            }
-            
-            // do something
-            print("정렬")
-        }
+        let menu = UIMenu(title: "정렬 방식", children: menuItems)
+        headerCell.prepare(title: "나의 최근 미라클 모닝", buttonText: "정렬 방식", menu: menu)
         
         return headerCell
     }

@@ -9,7 +9,9 @@
 import XCTest
 
 import Nimble
+
 @testable import MorningBear
+@testable import MorningBearDataProvider
 
 final class HomeDataProviderTests: XCTestCase {
     private var homeDataProvider: HomeViewDataProvider!
@@ -17,7 +19,7 @@ final class HomeDataProviderTests: XCTestCase {
 
     override func setUpWithError() throws {
         mockLocalStorage = UserDefaults(suiteName: "homeDataTest")
-        homeDataProvider = HomeViewDataProvider(mockLocalStorage)
+        homeDataProvider = HomeViewDataProvider(localStorage: mockLocalStorage)
     }
 
     override func tearDownWithError() throws {

@@ -10,7 +10,11 @@ import UIKit
 
 import MorningBearData
 
-public class BadgeCell: UICollectionViewCell {
+public class BadgeCell: UICollectionViewCell, CustomCellType {
+    public static let filename = "BadgeCell"
+    public static let reuseIdentifier = "BadgeCell"
+    public static let bundle = MorningBearUIResources.bundle
+    
     @IBOutlet weak var imageWrapperView: UIView! {
         didSet {
             imageWrapperView.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
@@ -55,6 +59,10 @@ public class BadgeCell: UICollectionViewCell {
         super.draw(rect)
 
         imageWrapperView.layer.mask = circleMaskLayer(frame: imageWrapperView.frame)
+    }
+    
+    public func prepare(_ data: Badge) {
+        self.prepare(badge: data)
     }
     
     public func prepare(badge: Badge?) {

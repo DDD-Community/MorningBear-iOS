@@ -12,6 +12,8 @@ public class Query: MockObject {
   public struct MockFields {
     @Field<String>("encode") public var encode
     @Field<[Login?]>("findLoginInfo") public var findLoginInfo
+    @Field<User>("findMyInfo") public var findMyInfo
+    @Field<[Photo?]>("findPhotoByOrderType") public var findPhotoByOrderType
     @Field<[Article?]>("searchArticle") public var searchArticle
   }
 }
@@ -20,11 +22,15 @@ public extension Mock where O == Query {
   convenience init(
     encode: String? = nil,
     findLoginInfo: [Mock<Login>?]? = nil,
+    findMyInfo: Mock<User>? = nil,
+    findPhotoByOrderType: [Mock<Photo>?]? = nil,
     searchArticle: [Mock<Article>?]? = nil
   ) {
     self.init()
     self.encode = encode
     self.findLoginInfo = findLoginInfo
+    self.findMyInfo = findMyInfo
+    self.findPhotoByOrderType = findPhotoByOrderType
     self.searchArticle = searchArticle
   }
 }

@@ -7,10 +7,13 @@
 //
 
 import Foundation
+
+import RxKakaoSDKCommon
 import RxKakaoSDKUser
 import KakaoSDKUser
 import RxKakaoSDKAuth
 import KakaoSDKAuth
+
 import RxSwift
 
 import MorningBearNetwork
@@ -94,5 +97,8 @@ public final class KakaoLoginManager {
     
     public init() {
         self.tokenManager = TokenManager()
+        
+        let KAKAO_APP_KEY: String = "338eeb478a5cce01fe713b9100d0f42e"
+        RxKakaoSDK.initSDK(appKey: KAKAO_APP_KEY)
     }
 }

@@ -86,7 +86,7 @@
                 <outlet property="imageView" destination="g3w-xg-dPf" id="SHf-ou-bAF"/>
                 <outlet property="imageWrapperView" destination="uAn-1F-LtK" id="y5k-r7-fLt"/>
             </connections>
-            <point key="canvasLocation" x="756.15384615384608" y="270.49763033175356"/>
+            <point key="canvasLocation" x="754.61538461538464" y="270.49763033175356"/>
         </collectionViewCell>
     </objects>
     <resources>

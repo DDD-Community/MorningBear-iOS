@@ -1,0 +1,12 @@
+
+query MyInfoForHome {
+  findMyInfo {
+    reportInfo {
+      totalTime
+      countSucc
+    },
+    badgeList {
+      badgeId
+    }
+  }
+}
