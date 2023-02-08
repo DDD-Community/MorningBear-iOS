@@ -7,3 +7,12 @@
 //
 
 import Foundation
+
+//FIXME: this
+import MorningBearData
+import MorningBearUI
+
+class MyPageSettingViewModel {
+    let profile = Profile(image: MorningBearUIAsset.Images.streakThree.image, nickname: "ss", postCount: 1, supportCount: 2, badgeCount: 3)
+//    let 
+}

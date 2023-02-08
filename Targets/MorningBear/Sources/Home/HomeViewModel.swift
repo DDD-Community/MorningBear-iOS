@@ -81,7 +81,7 @@ extension HomeViewModel {
             self.articles = values.3
         }, errorHandler: { error in
             print("Error")
-        } , disposeHandler: {
+        }, disposeHandler: {
             self.isNetworking = false
         })
     }
