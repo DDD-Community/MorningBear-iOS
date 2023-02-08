@@ -17,16 +17,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ivs-60-TIq">
-                                <rect key="frame" x="20" y="724" width="350" height="56"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="56" id="982-dw-THy"/>
-                                </constraints>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                            </button>
-                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="Pch-3R-q4m">
-                                <rect key="frame" x="137" y="612" width="116" height="26"/>
-                            </pageControl>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Ec6-dI-WLa">
                                 <rect key="frame" x="0.0" y="0.0" width="390" height="810"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -38,16 +28,26 @@
                                 </collectionViewFlowLayout>
                                 <cells/>
                             </collectionView>
+                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="Pch-3R-q4m">
+                                <rect key="frame" x="137" y="612" width="116" height="26"/>
+                            </pageControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gP2-7f-Kaq">
+                                <rect key="frame" x="20" y="724" width="350" height="56"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="56" id="0VH-b6-uup"/>
+                                </constraints>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="Ivs-60-TIq" secondAttribute="trailing" constant="20" id="Cu1-jr-q81"/>
-                            <constraint firstItem="Ivs-60-TIq" firstAttribute="top" secondItem="Pch-3R-q4m" secondAttribute="bottom" constant="86" id="Qcz-Xn-dY3"/>
+                            <constraint firstItem="gP2-7f-Kaq" firstAttribute="top" secondItem="Pch-3R-q4m" secondAttribute="bottom" constant="86" id="HmB-E7-Wff"/>
+                            <constraint firstItem="gP2-7f-Kaq" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="KW0-i9-7Sg"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="gP2-7f-Kaq" secondAttribute="bottom" constant="30" id="Qn2-WK-Ku1"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="gP2-7f-Kaq" secondAttribute="trailing" constant="20" id="auF-12-apF"/>
                             <constraint firstItem="Ec6-dI-WLa" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="bya-dl-4WD"/>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="Ivs-60-TIq" secondAttribute="bottom" constant="30" id="doQ-1Z-Wfa"/>
                             <constraint firstItem="Ec6-dI-WLa" firstAttribute="bottom" secondItem="vDu-zF-Fre" secondAttribute="bottom" id="ici-wd-8cU"/>
-                            <constraint firstItem="Ivs-60-TIq" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="kmD-dj-HO4"/>
                             <constraint firstItem="Ec6-dI-WLa" firstAttribute="trailing" secondItem="vDu-zF-Fre" secondAttribute="trailing" id="nXq-bK-ppb"/>
                             <constraint firstItem="Pch-3R-q4m" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="yEQ-f5-f3N"/>
                             <constraint firstItem="Ec6-dI-WLa" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="zar-3x-DC7"/>
@@ -56,7 +56,7 @@
                     <connections>
                         <outlet property="onboardingCollectionView" destination="Ec6-dI-WLa" id="30z-ju-AVP"/>
                         <outlet property="pageControl" destination="Pch-3R-q4m" id="gAf-50-Kwv"/>
-                        <outlet property="startButton" destination="Ivs-60-TIq" id="cOz-As-9eK"/>
+                        <outlet property="startButton" destination="gP2-7f-Kaq" id="2GJ-s2-73T"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

@@ -33,11 +33,14 @@ class OnboardingViewController: UIViewController {
     }
     @IBOutlet weak var startButton: UIButton! {
         didSet {
-            startButton.backgroundColor = MorningBearUIAsset.Colors.primaryDefault.color
+            startButton.backgroundColor = MorningBearUIAsset.Colors.gray800.color
             startButton.titleLabel?.font = MorningBearUIFontFamily.Pretendard.Typography.headSmall.font
-            startButton.titleLabel?.textColor = .white
+            startButton.setTitleColor(.white, for: .normal)
+            startButton.setTitleColor(MorningBearUIAsset.Colors.captionText.color, for: .disabled)
+            startButton.setTitleColor(.white.withAlphaComponent(0.5), for: .highlighted)
             startButton.setTitle("시작하기", for: .normal)
             startButton.layer.cornerRadius = 8
+            startButton.isEnabled = false
         }
     }
     
@@ -49,6 +52,7 @@ class OnboardingViewController: UIViewController {
         
         setDelegate()
         registerCells()
+        bindCurrentIndexWithView()
         bindButton()
         
         view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
@@ -65,11 +69,28 @@ class OnboardingViewController: UIViewController {
         onboardingCollectionView.register(cellNib, forCellWithReuseIdentifier: OnboardingCell.reuseIdentifier)
     }
     
+    private func bindCurrentIndexWithView() {
+        onboardingViewModel.currentIndex.withUnretained(self)
+            .bind { owner, index in
+                owner.pageControl.currentPage = index
+                
+                if index == owner.onboardingViewModel.onboardingData.count - 1 {
+                    owner.startButton.backgroundColor = MorningBearUIAsset.Colors.primaryDefault.color
+                    owner.startButton.isEnabled = true
+                } else {
+                    owner.startButton.backgroundColor = MorningBearUIAsset.Colors.gray800.color
+                    owner.startButton.isEnabled = false
+                }
+            }
+            .disposed(by: bag)
+    }
+    
     private func bindButton() {
-        startButton.rx.tap.bind { _ in
-            
-        }
-        .disposed(by: bag)
+        startButton.rx.tap.withUnretained(self)
+            .bind { owner, _ in
+                print("go to login view")
+            }
+            .disposed(by: bag)
     }
 }
 
@@ -93,7 +114,7 @@ extension OnboardingViewController: UICollectionViewDataSource {
 extension OnboardingViewController: UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let currentPage = Int(Double(onboardingCollectionView.contentOffset.x / onboardingCollectionView.frame.width).rounded())
-        pageControl.currentPage = currentPage
+        onboardingViewModel.currentIndex.accept(currentPage)
     }
 }
 
