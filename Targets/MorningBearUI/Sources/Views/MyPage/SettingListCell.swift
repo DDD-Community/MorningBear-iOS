@@ -8,6 +8,8 @@
 
 import UIKit
 
+@_exported import MorningBearData
+
 public class SettingListCell: UICollectionViewListCell, CustomCellType {
     public static let filename: String = String(describing: SettingListCell.self)
     public static let reuseIdentifier: String = "SettingListCell"
@@ -22,8 +24,8 @@ public class SettingListCell: UICollectionViewListCell, CustomCellType {
         }
     }
     
-    public func prepare(_ data: Accessory) {
-        let config = data.configuration(frame: self.frame)
+    public func prepare(_ data: AccessoryConfiguration) {
+        let config = data
         
         titleLabel.text = config.label
         self.accessories = [config.accessory].compactMap({$0})
@@ -32,8 +34,12 @@ public class SettingListCell: UICollectionViewListCell, CustomCellType {
     
     public override func awakeFromNib() {
         super.awakeFromNib()
-        
         self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(cellAction)))
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        self.contentView.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
     }
     
     @objc
@@ -48,44 +54,13 @@ public class SettingListCell: UICollectionViewListCell, CustomCellType {
 }
 
 public extension SettingListCell {
-    struct AccessoryConfiguration {
-        let label: String
-        let accessory: UICellAccessory?
-        let accessoryAction: () -> Void
-    }
     
-    enum Accessory {
-        public typealias Action = () -> Void
+    private func controlSwitch(frame: CGRect) -> UISwitch {
+        let swicth: UISwitch = UISwitch()
+        swicth.layer.position = CGPoint(x: frame.width/2, y: frame.height - 200)
+        swicth.tintColor = UIColor.orange
+        swicth.isOn = true
         
-        case toggle(label: String, action: Action)
-        case navigate(label: String, action: Action)
-        case plain(label: String, action: Action)
-        
-        func configuration(frame: CGRect) -> AccessoryConfiguration {
-            switch self {
-            case .toggle(let label, let action):
-                let config = AccessoryConfiguration(
-                    label: label,
-                    accessory: .customView(
-                        configuration: UICellAccessory.CustomViewConfiguration(customView: controlSwitch(frame: frame), placement: .trailing())
-                    ),
-                    accessoryAction: action
-                )
-                return config
-            case .navigate(let label, let action):
-                return AccessoryConfiguration(label: label, accessory: .disclosureIndicator(), accessoryAction: action)
-            case .plain(let label, let action):
-                return AccessoryConfiguration(label: label, accessory: nil, accessoryAction: action)
-            }
-        }
-        
-        func controlSwitch(frame: CGRect) -> UISwitch {
-            let swicth: UISwitch = UISwitch()
-            swicth.layer.position = CGPoint(x: frame.width/2, y: frame.height - 200)
-            swicth.tintColor = UIColor.orange
-            swicth.isOn = true
-            
-            return swicth
-        }
+        return swicth
     }
 }
