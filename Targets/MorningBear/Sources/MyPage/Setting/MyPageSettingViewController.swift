@@ -17,15 +17,23 @@ class MyPageSettingViewController: UIViewController {
     
     private let bag = DisposeBag()
     
+    private let viewModel = MyPageSettingViewModel()
+    private var dataSource: UICollectionViewDiffableDataSource<MyPageSettingSection, AnyHashable>!
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
+        self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
+
+        // set collection view
+        let (_collectionView, _dataSource) = collectionViewBuilder.build()
+        self.collectionView = _collectionView
+        self.dataSource = _dataSource
     }
 }
 
 private extension MyPageSettingViewController {
-    enum MyPageSettingSection: Hashable, CaseIterable {
+    enum MyPageSettingSection: Int, Hashable, CaseIterable {
         case profile
         case divider
         case settings
@@ -37,41 +45,53 @@ private extension MyPageSettingViewController {
         
         return .init(
             base: self.collectionView,
-            sections: [],
-            cellTypes: [ProfileCell.self, CategoryCell.self, DividerCell.self, CapsuleCell.self, RecentMorningCell.self],
+            sections: [.profile, .divider, .settings],
+            cellTypes: [ProfileCell.self, DividerCell.self, SettingListCell.self],
             supplementarycellTypes: [.header(HomeSectionHeaderCell.self)],
             cellProvider: { [weak self] collectionView, indexPath, _ in
                 guard let self else { return UICollectionViewCell() }
-                return UICollectionViewCell()
-            },
-            supplementaryViewProvider: { collectionView, elementKind, indexPath in
-                switch elementKind {
-                case UICollectionView.elementKindSectionHeader:
-//                    return self.properHeaderCell(for: indexPath)
-                    return UICollectionReusableView()
-                default:
-                    return UICollectionReusableView()
+                
+                switch MyPageSettingSection(rawValue: indexPath.section) {
+                case .profile:
+                    return ProfileCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: self.viewModel.profile)
+                case .divider:
+                    return DividerCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: ())
+                case .settings:
+                    return SettingListCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: .navigate(label: "ding", action: {print("SS")}))
+                case .none:
+                    fatalError("가질 수 없는 섹션 인덱스")
                 }
             },
-            observableProvider: { section in
-                return .replace(Observable.of([""]))
+            observableProvider: { [weak self] section in
+                guard let self else {
+                    return .replace(Observable.of([""]))
+                }
                 
-                //                switch section {
-                //                case .state:
-                //                    return .replace(Observable.of([self.viewModel.profile]))
-                //                case .category:
-                //                    return .replace(Observable.of([self.viewModel.category]))
-                //                case .divider:
-                //                case .themeSelection:
-                //                    return .replace(Observable.of(self.viewModel.themes))
-                //                case .myMorning:
-                //                    return .replace(Observable.of(self.viewModel.recentMorning))
-                //                }
+                switch section {
+                case .profile:
+                    return .replace(Observable.of([self.viewModel.profile]))
+                case .divider:
+                    return .replace(Observable.of([""])) // Empty single value
+                case .settings:
+                    return .replace(Observable.of(["wow1owow", "wowow2ow", "wowow3ow", "wowo1wow"])) // Empty single value
+                }
             },
             layoutSectionProvider: { section, _ in
                 let provider = CompositionalLayoutProvider()
                 
-                return provider.divier()
+                switch MyPageSettingSection(rawValue: section) {
+                case .profile:
+                    let layout = provider.plainLayoutSection(height: 100)
+                    layout.contentInsets = .init(top: 17, leading: 18, bottom: 0, trailing: 18)
+                    
+                    return layout
+                case .divider:
+                    return provider.divier(height: 6)
+                case .settings:
+                    return provider.verticalScrollLayoutSection(showItemCount: 8)
+                case .none:
+                    fatalError("가질 수 없는 섹션 인덱스")
+                }
             },
             layoutConfiguration: layoutConfig,
             delegate: self,

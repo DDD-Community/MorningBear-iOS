@@ -128,7 +128,14 @@ private extension MyPageViewController {
         
         // Bind buttons
         settingButton.rx.tap.bind { _ in
-            print("tapped")
+            // FIXME: move somehwere
+            guard let settingViewController = UIStoryboard(name: "MyPageSetting", bundle: nil)
+                .instantiateViewController(withIdentifier: "MyPageSetting") as? MyPageSettingViewController else {
+
+                fatalError("뷰 컨트롤러를 불러올 수 없음")
+            }
+            
+            self.navigationController?.pushViewController(settingViewController, animated: true)
         }
         .disposed(by: bag)
     }
