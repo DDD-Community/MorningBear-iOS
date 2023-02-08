@@ -36,6 +36,10 @@ public class ProfileCell: UICollectionViewCell, CustomCellType {
             postTitileLabel.textColor = .white
         }
     }
+    
+    // MARK: - Counter contexts
+    @IBOutlet weak var countHorizontalStack: UIStackView!
+    
     @IBOutlet weak var postCountLabel: UILabel! {
         didSet {
             postCountLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 14)
@@ -71,9 +75,20 @@ public class ProfileCell: UICollectionViewCell, CustomCellType {
         }
     }
     
+    // MARK: - Button context
+    @IBOutlet weak var actionButton: UIButton! {
+        didSet {
+            actionButton.setTitleColor(.white, for: .normal)
+            actionButton.titleLabel?.font = MorningBearUIFontFamily.Pretendard.regular.font(size: 12)
+            actionButton.titleEdgeInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
+        }
+    }
+    private var buttonAction: (() -> Void)!
+    
+    // MARK: - View methods
     public override func prepareForReuse() {
         super.prepareForReuse()
-        prepareCell()
+        clearCell()
     }
     
     public override func draw(_ rect: CGRect) {
@@ -84,40 +99,75 @@ public class ProfileCell: UICollectionViewCell, CustomCellType {
     
     public override func awakeFromNib() {
         super.awakeFromNib()
-        backgroundColor = MorningBearUIAsset.Colors.gray900.color
         layer.cornerRadius = 8
-        
-        prepareCell() 
     }
 }
 
 public extension ProfileCell {
     func prepare(_ data: Profile) {
-        self.prepare(image: data.image,
-                     nickname: data.nickname,
-                     postCount: data.postCount,
-                     supportCount: data.supportCount,
-                     badgeCount: data.badgeCount)
-    }
-    
-    func prepare(image: UIImage, nickname: String, postCount: Int, supportCount: Int, badgeCount: Int) {
-        profileImageView.image = image
-        
-        nicknameLabel.text = nickname
-        postCountLabel.text = String(postCount)
-        supportCountLabel.text = String(supportCount)
-        badgeCountLabel.text = String(badgeCount)
+        if let buttonContext = data.buttonContext {
+            self.prepare(
+                image: data.image,
+                nickname: data.nickname,
+                buttonText: buttonContext.buttonText,
+                buttonAction: buttonContext.buttonAction
+            )
+        } else if let countContext = data.countContext {
+            self.prepare(
+                image: data.image,
+                nickname: data.nickname,
+                postCount: countContext.postCount,
+                supportCount: countContext.supportCount,
+                badgeCount: countContext.badgeCount
+            )
+        }
     }
 }
 
 private extension ProfileCell {
-    func prepareCell() {
+    func prepare(image: UIImage, nickname: String, postCount: Int, supportCount: Int, badgeCount: Int) {
+        actionButton.isHidden = true
+        countHorizontalStack.isHidden = false
+        
+        backgroundColor = MorningBearUIAsset.Colors.gray900.color
+
+        profileImageView.image = image
+        nicknameLabel.text = nickname
+        
+        postCountLabel.text = String(postCount)
+        supportCountLabel.text = String(supportCount)
+        badgeCountLabel.text = String(badgeCount)
+    }
+    
+    func prepare(image: UIImage, nickname: String, buttonText: String, buttonAction: @escaping () -> Void) {
+        countHorizontalStack.isHidden = true
+        actionButton.isHidden = false
+        
+        backgroundColor = .clear
+        
+        profileImageView.image = image
+        nicknameLabel.text = nickname
+        
+        self.buttonAction = buttonAction
+        actionButton.setTitle(buttonText, for: .normal)
+        actionButton.addTarget(self, action: #selector(buttonActionWrapper), for: .touchUpInside)
+    }
+    
+    @objc
+    func buttonActionWrapper() {
+        buttonAction()
+    }
+    
+    func clearCell() {
         profileImageView.image = nil
         
         nicknameLabel.text = nil
         postCountLabel.text = nil
         supportCountLabel.text = nil
         badgeCountLabel.text = nil
+        
+        actionButton.setTitle(nil, for: .normal)
+        buttonAction = nil
     }
     
     func circleMaskLayer(frame: CGRect) -> CAShapeLayer {

@@ -13,7 +13,13 @@ import MorningBearData
 import MorningBearUI
 
 class MyPageSettingViewModel {
-    let profile = Profile(image: MorningBearUIAsset.Images.streakThree.image, nickname: "ss", postCount: 1, supportCount: 2, badgeCount: 3)
+    let profile = Profile(
+        image: MorningBearUIAsset.Images.streakThree.image,
+        nickname: "ss",
+        buttonText: Profile.ButtonContext(buttonText: "정보 수정하기", buttonAction: {
+            print("Tapped")
+        })
+    )
 
     let settings: [AccessoryConfiguration] = [
         .init(label: "로그아웃", accessory: .disclosureIndicator(), accessoryAction: {}),

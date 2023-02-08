@@ -10,11 +10,16 @@ import Foundation
 
 import UIKit
 import MorningBearUI
+
+// FIXME: remove this
 import MorningBearData
 
 class MyPageViewModel {
-    let profile = Profile(image: MorningBearUIAsset.Images.streakThree.image,
-                          nickname: "sss", postCount: 1, supportCount: 23, badgeCount: 3)
+    let profile = Profile(
+        image: MorningBearUIAsset.Images.streakThree.image,
+        nickname: "sss",
+        counts: Profile.CountContext(postCount: 1, supportCount: 2, badgeCount: 3)
+    )
     
     let category = Category.emotion
     
