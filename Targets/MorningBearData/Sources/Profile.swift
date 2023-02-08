@@ -8,18 +8,62 @@
 
 import UIKit
 
-public struct Profile: Hashable {
+public struct Profile {
+    private let id = UUID()
+    
     public let image: UIImage
     public let nickname: String
-    public let postCount: Int
-    public let supportCount: Int
-    public let badgeCount: Int
     
-    public init(image: UIImage, nickname: String, postCount: Int, supportCount: Int, badgeCount: Int) {
+    public let countContext: CountContext?
+    public let buttonContext: ButtonContext?
+
+    public init(image: UIImage, nickname: String, counts: CountContext) {
         self.image = image
         self.nickname = nickname
-        self.postCount = postCount
-        self.supportCount = supportCount
-        self.badgeCount = badgeCount
+        self.countContext = counts
+        
+        self.buttonContext = nil
+    }
+    
+    public init(image: UIImage, nickname: String, buttonText: ButtonContext) {
+        self.image = image
+        self.nickname = nickname
+        self.buttonContext = buttonText
+        
+        self.countContext = nil
+    }
+}
+
+public extension Profile {
+    struct CountContext {
+        public let postCount: Int
+        public let supportCount: Int
+        public let badgeCount: Int
+        
+        public init(postCount: Int, supportCount: Int, badgeCount: Int) {
+            self.postCount = postCount
+            self.supportCount = supportCount
+            self.badgeCount = badgeCount
+        }
+    }
+    
+    struct ButtonContext {
+        public let buttonText: String
+        public let buttonAction: () -> Void
+        
+        public init(buttonText: String, buttonAction: @escaping () -> Void) {
+            self.buttonText = buttonText
+            self.buttonAction = buttonAction
+        }
+    }
+}
+
+extension Profile: Hashable {
+    public static func == (lhs: Profile, rhs: Profile) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
