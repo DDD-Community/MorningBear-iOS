@@ -29,6 +29,7 @@ class OnboardingViewController: UIViewController {
             pageControl.pageIndicatorTintColor = MorningBearUIAsset.Colors.primary100.color
             pageControl.currentPageIndicatorTintColor = MorningBearUIAsset.Colors.primaryDefault.color
             pageControl.backgroundColor = .clear
+            pageControl.isUserInteractionEnabled = false
         }
     }
     @IBOutlet weak var startButton: UIButton! {
