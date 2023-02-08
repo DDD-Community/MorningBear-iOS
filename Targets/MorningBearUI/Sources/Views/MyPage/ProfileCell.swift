@@ -16,8 +16,9 @@ public class ProfileCell: UICollectionViewCell, CustomCellType {
 
     @IBOutlet weak var profileImageView: UIImageView! {
         didSet {
+            profileImageView.backgroundColor = .clear
             profileImageView.contentMode = .scaleAspectFit
-            clipsToBounds = true
+            profileImageView.clipsToBounds = true
         }
     }
     

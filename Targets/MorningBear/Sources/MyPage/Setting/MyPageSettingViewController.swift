@@ -24,6 +24,7 @@ class MyPageSettingViewController: UIViewController {
         super.viewDidLoad()
 
         self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
+        navigationController?.navigationBar.topItem?.backButtonTitle = ""
 
         // set collection view
         let (_collectionView, _dataSource) = collectionViewBuilder.build()
@@ -57,7 +58,7 @@ private extension MyPageSettingViewController {
                 case .divider:
                     return DividerCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: ())
                 case .settings:
-                    return SettingListCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: .navigate(label: "ding", action: {print("SS")}))
+                    return SettingListCell.dequeueAndPrepare(from: collectionView, at: indexPath, sources: self.viewModel.settings)
                 case .none:
                     fatalError("가질 수 없는 섹션 인덱스")
                 }
@@ -73,7 +74,7 @@ private extension MyPageSettingViewController {
                 case .divider:
                     return .replace(Observable.of([""])) // Empty single value
                 case .settings:
-                    return .replace(Observable.of(["wow1owow", "wowow2ow", "wowow3ow", "wowo1wow"])) // Empty single value
+                    return .replace(Observable.of(self.viewModel.settings))
                 }
             },
             layoutSectionProvider: { section, _ in
