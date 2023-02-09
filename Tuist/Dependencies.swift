@@ -43,6 +43,10 @@ let dependencies = Dependencies(
             url: "https://github.com/onevcat/Kingfisher",
             requirement: .upToNextMajor(from: "7.5.0")
         ),
+        .remote(
+            url: "https://github.com/slackhq/PanModal.git",
+            requirement: .exact("1.2.6")
+        ),
         .local(path: .relativeToRoot("Local/GraphQL/MorningBearAPI"))
     ],
     platforms: [.iOS]
