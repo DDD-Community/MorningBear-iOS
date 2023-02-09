@@ -75,6 +75,7 @@ extension Project {
                         .external(name: "Quick"),
                         .external(name: "Nimble"),
                         .external(name: "Kingfisher"),
+                        .external(name: "PanModal"),
                         .target(name: "MorningBearData"),
                         .target(name: "MorningBearKit")
                        ]),

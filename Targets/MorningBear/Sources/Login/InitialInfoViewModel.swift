@@ -38,6 +38,6 @@ class InitialInfoViewModel {
     
     init() {
         self.currentIndex = BehaviorRelay(value: 0)
-        self.canGoNext = BehaviorRelay(value: [true, false, false, false])
+        self.canGoNext = BehaviorRelay(value: [false, false, false, false])
     }
 }

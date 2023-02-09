@@ -25,6 +25,17 @@ public struct MorningBearDateFormatter {
         return formatter
     }
     
+    /// datePicker에서 사용되는 형식으로 파싱하는 포매터
+    ///
+    /// ex. "오전  03 : 30"
+    public static var datePickerTimeFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "a  hh : mm"
+        formatter.locale = Locale(identifier: "ko")
+        
+        return formatter
+    }
+    
     /// 서버에 요청하는 형식인 hhmm으로 파싱하는 포매터
     ///
     /// ex. "오전 3:30"
