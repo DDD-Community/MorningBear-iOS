@@ -11,6 +11,7 @@ import MorningBearUI
 
 import RxSwift
 import RxCocoa
+import PanModal
 
 class SetWakeupTimeViewController: UIViewController {
     
@@ -60,11 +61,26 @@ class SetWakeupTimeViewController: UIViewController {
     }
     
     private func bindButton() {
-        timePickerPopUpButton.rx.tap
-            .withUnretained(self)
+        timePickerPopUpButton.rx.tap.withUnretained(self)
             .bind { owner, _ in
-               // TODO: picker view with half modal
+                let datePickerVC = owner.storyboard?.instantiateViewController(
+                    withIdentifier: "DatePickerVC"
+                ) as! DatePickerViewController
+                datePickerVC.delegate = owner
+                
+                owner.presentPanModal(datePickerVC)
             }
             .disposed(by: bag)
+    }
+}
+
+extension SetWakeupTimeViewController: SendDateDelegate {
+    func sendDate(date: String) {
+        timeLabel.textColor  = .white
+        timeLabel.text = date
+        
+        var value = viewModel.canGoNext.value
+        value[viewModel.currentIndex.value] = true
+        viewModel.canGoNext.accept(value)
     }
 }

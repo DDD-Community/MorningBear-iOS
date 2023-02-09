@@ -52,13 +52,13 @@ class InitialInfoViewController: UIViewController {
     @IBOutlet weak var nextButton: UIButton! {
         didSet {
             nextButton.layer.cornerRadius = 12
-            nextButton.titleLabel?.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 16)
+            nextButton.titleLabel?.font = MorningBearUIFontFamily.Pretendard.Typography.headSmall.font
             nextButton.setTitle("다음", for: .normal)
         }
     }
     @IBOutlet weak var titleLabel: UILabel! {
         didSet {
-            titleLabel.font = MorningBearUIFontFamily.Pretendard.bold.font(size: 20)
+            titleLabel.font = MorningBearUIFontFamily.Pretendard.Typography.headMedium.font
             titleLabel.text = "회원가입"
         }
     }
