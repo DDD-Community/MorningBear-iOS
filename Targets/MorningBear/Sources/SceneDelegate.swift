@@ -26,15 +26,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         self.window = window
         
+        let initialViewController = TabBarController()
+        window.rootViewController = initialViewController
+        
 //        let viewController = UIStoryboard(name: "Onboarding", bundle: nil).instantiateViewController(withIdentifier: "OnboardingVC")
 //        let mainViewController = UIStoryboard(name: "Login", bundle: nil).instantiateViewController(withIdentifier: "Login")
-        let mainViewController = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "Home")
-        let navigationController = UINavigationController(
-            rootViewController: mainViewController
-        ).configureMorningBearDefaultNavigationController()
-        
+//        let mainViewController = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "Home")
+//
+//
+//        let navigationController = UINavigationController(
+//            rootViewController: mainViewController
+//        ).configureMorningBearDefaultNavigationController()
+//
         // Set root view
-        window.rootViewController = navigationController // 루트 뷰컨트롤러 생성
+//        window.rootViewController = navigationController // 루트 뷰컨트롤러 생성
         window.makeKeyAndVisible()
     }
     
