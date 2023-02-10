@@ -18,31 +18,51 @@ class TabBarController: UITabBarController {
         //        let viewController = UIStoryboard(name: "Onboarding", bundle: nil).instantiateViewController(withIdentifier: "OnboardingVC")
         //        let mainViewController = UIStoryboard(name: "Login", bundle: nil).instantiateViewController(withIdentifier: "Login")
         
+        self.tabBar.tintColor = .white
+        
         let loginVC = UIStoryboard(name: "Login", bundle: nil).instantiateViewController(withIdentifier: "Login")
-        let homeVC = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "Home")
-        let myPageVC = UIStoryboard(name: "MyPage", bundle: nil).instantiateViewController(withIdentifier: "MyPage")
         
         let loginNavigationController = UINavigationController(
             rootViewController: loginVC
         ).configureMorningBearDefaultNavigationController()
         loginNavigationController.tabBarItem.image = MorningBearUIAsset.Images.bonfire.image
         
-        let homeNavigationController = UINavigationController(
-            rootViewController: homeVC
-        ).configureMorningBearDefaultNavigationController()
-        homeNavigationController.tabBarItem.image = MorningBearUIAsset.Images.exercise.image
-        
-        let myPageNavigationController = UINavigationController(
-            rootViewController: myPageVC
-        ).configureMorningBearDefaultNavigationController()
-        homeNavigationController.tabBarItem.image = MorningBearUIAsset.Images.exercise.image
         
         
         self.viewControllers = [
             loginVC,
-            homeNavigationController,
-            myPageNavigationController
+            homeView(),
+            myPageview()
         ]
+    }
+}
+
+private extension TabBarController {
+    func homeView() -> UIViewController {
+        let homeVC = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "Home")
+
+        homeVC.tabBarItem.image = MorningBearUIAsset.Images.tabHomeInactive.image.withRenderingMode(.alwaysOriginal)
+        homeVC.tabBarItem.selectedImage = MorningBearUIAsset.Images.tabHomeActive.image.withRenderingMode(.alwaysOriginal)
+        homeVC.tabBarItem.title = "홈"
+        
+        let homeNavigationController = UINavigationController(
+            rootViewController: homeVC
+        ).configureMorningBearDefaultNavigationController()
+        
+        return homeNavigationController
+    }
+    
+    func myPageview() -> UIViewController{
+        let myPageVC = UIStoryboard(name: "MyPage", bundle: nil).instantiateViewController(withIdentifier: "MyPage")
+        
+        myPageVC.tabBarItem.image = MorningBearUIAsset.Images.tabMypageInactive.image.withRenderingMode(.alwaysOriginal)
+        myPageVC.tabBarItem.selectedImage = MorningBearUIAsset.Images.tabMypageActive.image.withRenderingMode(.alwaysOriginal)
+        myPageVC.tabBarItem.title = "마이페이지"
+        let myPageNavigationController = UINavigationController(
+            rootViewController: myPageVC
+        ).configureMorningBearDefaultNavigationController()
+        
+        return myPageNavigationController
     }
 }
 
