@@ -26,20 +26,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         self.window = window
         
-        let initialViewController = TabBarController()
-        window.rootViewController = initialViewController
-        
-//        let viewController = UIStoryboard(name: "Onboarding", bundle: nil).instantiateViewController(withIdentifier: "OnboardingVC")
-//        let mainViewController = UIStoryboard(name: "Login", bundle: nil).instantiateViewController(withIdentifier: "Login")
-//        let mainViewController = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "Home")
-//
-//
-//        let navigationController = UINavigationController(
-//            rootViewController: mainViewController
-//        ).configureMorningBearDefaultNavigationController()
-//
-        // Set root view
-//        window.rootViewController = navigationController // 루트 뷰컨트롤러 생성
+        let tabbarController = TabBarController()
+        let navigationControlller = UINavigationController(
+            rootViewController: tabbarController
+        ).configureMorningBearDefaultNavigationController()
+
+        window.rootViewController = navigationControlller
         window.makeKeyAndVisible()
     }
     
@@ -69,7 +61,7 @@ private extension UINavigationController {
 
         self.navigationBar.standardAppearance = appearance
         self.navigationBar.topItem?.backButtonTitle = "" // 안 하면 뒤로가기 버튼에 글자 생김
-        
+            
         // TODO: TBD
 //        self.hidesBarsOnSwipe = true
 
