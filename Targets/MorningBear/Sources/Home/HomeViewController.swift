@@ -81,8 +81,7 @@ extension HomeViewController {
                 let myInfo = self.viewModel.myInfo
                 
                 cell.prepare(state: state, myInfo: myInfo) {
-                    // FIXME: Navigate for test
-                    self.navigate(boardName: "MyPage", vcId: "MyPage")
+                    
                 }
                 
                 return cell
@@ -288,6 +287,7 @@ private extension HomeViewController {
                 self.viewModel.fetchRemoteData()
             })
             
+            registerMorningViewController.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(registerMorningViewController, animated: true)
             
             // 버튼 전환
@@ -402,6 +402,7 @@ extension HomeViewController: UIImagePickerControllerDelegate, UINavigationContr
             if case .recording(startDate: let savedStartDate) = viewModel.isMyMorningRecording {
                 do {
                     registerMorningViewController.prepare(startTime: savedStartDate, image: takenPhoto, popAction: {})
+                    registerMorningViewController.hidesBottomBarWhenPushed = true
                     self.navigationController?.pushViewController(registerMorningViewController, animated: true)
                 } catch let error {
                     self.showAlert(error)
@@ -452,10 +453,7 @@ extension HomeViewController {
                 }
                 
                 // 내가 모은 배지 목록으로 이동(네비게이션)
-                let myBadgeViewController = UIStoryboard(name: "MyBadges", bundle: nil)
-                    .instantiateViewController(withIdentifier: "MyBadges")
-                
-                self.navigationController?.pushViewController(myBadgeViewController, animated: true)
+                self.navigate(boardName: "MyBadges", vcId: "MyBadges")
             }
         case .articles:
             headerCell.prepare(title: "지금 읽기 딱 좋은 아티클", buttonText: "모두 보기>") { [weak self] in
@@ -498,6 +496,7 @@ extension HomeViewController {
         let board = UIStoryboard(name: boardName, bundle: nil)
         let vc = board.instantiateViewController(withIdentifier: vcId)
         
+        vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

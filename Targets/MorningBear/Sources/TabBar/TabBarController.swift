@@ -17,8 +17,10 @@ class TabBarController: UITabBarController {
         
         //        let viewController = UIStoryboard(name: "Onboarding", bundle: nil).instantiateViewController(withIdentifier: "OnboardingVC")
         //        let mainViewController = UIStoryboard(name: "Login", bundle: nil).instantiateViewController(withIdentifier: "Login")
+        
         let loginVC = UIStoryboard(name: "Login", bundle: nil).instantiateViewController(withIdentifier: "Login")
         let homeVC = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "Home")
+        let myPageVC = UIStoryboard(name: "MyPage", bundle: nil).instantiateViewController(withIdentifier: "MyPage")
         
         let loginNavigationController = UINavigationController(
             rootViewController: loginVC
@@ -30,9 +32,16 @@ class TabBarController: UITabBarController {
         ).configureMorningBearDefaultNavigationController()
         homeNavigationController.tabBarItem.image = MorningBearUIAsset.Images.exercise.image
         
+        let myPageNavigationController = UINavigationController(
+            rootViewController: myPageVC
+        ).configureMorningBearDefaultNavigationController()
+        homeNavigationController.tabBarItem.image = MorningBearUIAsset.Images.exercise.image
+        
+        
         self.viewControllers = [
             loginVC,
-            homeNavigationController
+            homeNavigationController,
+            myPageNavigationController
         ]
     }
 }
