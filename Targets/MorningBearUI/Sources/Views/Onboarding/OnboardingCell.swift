@@ -15,7 +15,7 @@ public class OnboardingCell: UICollectionViewCell {
     
     @IBOutlet weak var imageView: UIImageView! {
         didSet {
-            imageView.contentMode = .scaleAspectFit
+            imageView.contentMode = .scaleAspectFill
         }
     }
     @IBOutlet weak var titleLabel: UILabel! {
@@ -30,7 +30,6 @@ public class OnboardingCell: UICollectionViewCell {
             descriptionLabel.textColor = .white
             descriptionLabel.numberOfLines = 2
             descriptionLabel.textAlignment = .center
-            
         }
     }
     
