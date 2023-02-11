@@ -7,7 +7,6 @@
 //
 
 import MorningBearUI
-import MorningBearData
 
 import RxSwift
 import RxRelay
