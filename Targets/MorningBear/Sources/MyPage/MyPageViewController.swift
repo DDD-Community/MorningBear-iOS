@@ -119,8 +119,6 @@ class MyPageViewController: UIViewController {
 private extension MyPageViewController {
     func designNavigationBar() {
         // Configure bar items
-        self.navigationController?.isNavigationBarHidden = false
-        
         self.navigationItem.leftBarButtonItem = MorningBearBarButtonItem.textButton("마이페이지")
         self.navigationItem.leftBarButtonItem?.tintColor = .black
         self.navigationItem.hidesSearchBarWhenScrolling = true
