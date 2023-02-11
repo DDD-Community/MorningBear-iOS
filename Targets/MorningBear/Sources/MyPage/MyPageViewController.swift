@@ -79,7 +79,7 @@ class MyPageViewController: UIViewController {
                 case .themeSelection:
                     return .replace(Observable.of(self.viewModel.themes))
                 case .myMorning:
-                    return .replace(Observable.of(self.viewModel.recentMorning))
+                    return .append(self.viewModel.$recentMorning.eraseToAnyHasable)
                 }
             },
             layoutSectionProvider: { section, _ in

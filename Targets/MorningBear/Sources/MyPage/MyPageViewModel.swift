@@ -7,14 +7,23 @@
 //
 
 import Foundation
-
 import UIKit
+
+import RxSwift
+
 import MorningBearUI
+import MorningBearDataProvider
+import MorningBearKit
 
 // FIXME: remove this
 import MorningBearData
 
 class MyPageViewModel {
+    private let dataProvider: DefaultProvider
+    private let bag = DisposeBag()
+    
+    @Bound private(set) var recentMorning: [MyMorning] = []
+    
     let profile = Profile(
         image: MorningBearUIAsset.Images.streakThree.image,
         nickname: "sss",
@@ -25,10 +34,17 @@ class MyPageViewModel {
     
     let themes = Category.allCases.map { $0.description }
     
-    let recentMorning = [
-        MyMorning(imageURL: URL(string: "www.naver1.com")!),
-        MyMorning(imageURL: URL(string: "www.naver2.com")!),
-        MyMorning(imageURL: URL(string: "www.naver3.com")!),
-        MyMorning(imageURL: URL(string: "www.naver4.com")!)
-    ]
+    func fetch() {
+        dataProvider.fetch(MyMorningQuery(useCache: true))
+            .customSubscribe(completionHandler: { mornings in
+                self.recentMorning = mornings
+            })
+            .disposed(by: bag)
+    }
+    
+    init(dataProvider: DefaultProvider = DefaultProvider.shared) {
+        self.dataProvider = dataProvider
+        
+        fetch()
+    }
 }

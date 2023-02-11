@@ -14,7 +14,7 @@ import RxRelay
 import MorningBearDataProvider
 import MorningBearKit
 
-class HomeViewModel<Provider: DataProviding> {
+class HomeViewModel {
     private var dataProvider: HomeViewDataProvider // FIXME: 로컬 저장소 관련 분리할 것
     
     private var bag = DisposeBag()
@@ -52,7 +52,7 @@ class HomeViewModel<Provider: DataProviding> {
     }
     
     // MARK: - 생성자
-    init(_ dataProvider: Provider = HomeViewDataProvider()) {
+    init(_ dataProvider: HomeViewDataProvider = HomeViewDataProvider()) {
         self.dataProvider = dataProvider as! HomeViewDataProvider
         
         self.elapsedTimeRelay = BehaviorRelay<String>(value: "00:00:00")

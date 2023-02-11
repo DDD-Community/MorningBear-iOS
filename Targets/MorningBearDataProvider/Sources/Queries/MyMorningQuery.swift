@@ -44,13 +44,7 @@ public struct MyMorningQuery: Queryable {
         .retry(2)
     }
     
-    public init() {
-        self.size = 4
-        self.sort = .desc
-        self.useCache = false
-    }
-    
-    public init(size: Int, sort: Sort, useCache: Bool) {
+    public init(size: Int = 4, sort: Sort = .desc, useCache: Bool = false) {
         self.size = size
         self.sort = sort
         self.useCache = useCache
