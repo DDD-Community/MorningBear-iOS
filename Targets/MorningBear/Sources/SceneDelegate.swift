@@ -27,11 +27,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = window
         
         let tabbarController = TabBarController()
-        let navigationControlller = UINavigationController(
-            rootViewController: tabbarController
-        ).configureMorningBearDefaultNavigationController()
-
-        window.rootViewController = navigationControlller
+        window.rootViewController = tabbarController
         window.makeKeyAndVisible()
     }
     
@@ -41,30 +37,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 _ = AuthController.rx.handleOpenUrl(url: url)
             }
         }
-    }
-}
-
-private extension UINavigationController {
-    func configureMorningBearDefaultNavigationController() -> UINavigationController {
-        // Design navigation controller
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
-        
-        // 네비게이션 타이틀 텍스트 설정
-        appearance.titleTextAttributes = [
-            .font: MorningBearUIFontFamily.Pretendard.bold.font(size: 20)
-        ]
-        
-        let backButton = MorningBearUIAsset.Images.backArrow.image.withTintColor(.white, renderingMode: .alwaysOriginal)
-        appearance.setBackIndicatorImage(backButton, transitionMaskImage: backButton)
-
-        self.navigationBar.standardAppearance = appearance
-        self.navigationBar.topItem?.backButtonTitle = "" // 안 하면 뒤로가기 버튼에 글자 생김
-            
-        // TODO: TBD
-//        self.hidesBarsOnSwipe = true
-
-        return self
     }
 }
