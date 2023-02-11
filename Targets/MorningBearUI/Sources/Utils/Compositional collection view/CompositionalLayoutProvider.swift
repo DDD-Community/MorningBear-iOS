@@ -37,7 +37,7 @@ public struct CompositionalLayoutProvider {
         return section
     }
     
-    public func horizontalScrollLayoutSection(showItemCount count: Int) -> NSCollectionLayoutSection {
+    public func horizontalScrollLayoutSection(showItemCount count: Int, height: CGFloat? = nil) -> NSCollectionLayoutSection {
         // item
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
@@ -48,7 +48,7 @@ public struct CompositionalLayoutProvider {
         // group
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0 / CGFloat(count)),
-            heightDimension: .fractionalHeight(1)
+            heightDimension: height == nil ? .fractionalHeight(1) : .estimated(height!)
         )
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
@@ -61,37 +61,35 @@ public struct CompositionalLayoutProvider {
         return section
     }
     
-    public func horizontalScrollLayoutSection(showItemCount count: Int, height: CGFloat) -> NSCollectionLayoutSection {
-        // item
-        let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1),
-            heightDimension: .fractionalHeight(1)
-        )
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        
-        // group
-        let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0 / CGFloat(count)),
-            heightDimension: .estimated(height)
-        )
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        
-        // section
-        let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .continuous
-        
-        section.interGroupSpacing = 6
+    public func horizontalLayoutSection(
+        option: CompositionalHorizontalLayoutOption,
+        subviewOption: CompositionalLayoutSubviewOption?
+    ) -> NSCollectionLayoutSection {
+        let section = horizontalScrollLayoutSection(showItemCount: option.showCount, height: option.height)
+
+        if let subviewOption {
+            if let headerHeight = subviewOption.headerHeight {
+                section.boundarySupplementaryItems = [
+                    header(height: headerHeight)
+                ]
+            }
+            
+            if let _ = subviewOption.backgroundColor {
+                section.decorationItems = [
+                   NSCollectionLayoutDecorationItem.background(elementKind: "BackgroundReusableView")
+                ]
+            }
+        }
         
         return section
     }
     
     public func horizontalScrollLayoutSectionWithHeader(showItemCount count: Int, height: CGFloat) -> NSCollectionLayoutSection {
         let section = horizontalScrollLayoutSection(showItemCount: count, height: height)
-        section.boundarySupplementaryItems.append(commonHeader)
-        section.decorationItems = [
-           NSCollectionLayoutDecorationItem.background(elementKind: "BackgroundReusableView")
+        section.boundarySupplementaryItems = [
+            commonHeader
         ]
-        
+
         return section
     }
     
@@ -405,9 +403,13 @@ extension CompositionalLayoutProvider {
     
     /// 공용으로 쓰이는 헤더 래핑한 것
     private var commonHeader: NSCollectionLayoutBoundarySupplementaryItem {
+        return header(height: 45)
+    }
+    
+    private func header(height: CGFloat) -> NSCollectionLayoutBoundarySupplementaryItem {
         let headerSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .estimated(45)
+            heightDimension: .absolute(height)
         )
         let header = NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: headerSize,
@@ -419,8 +421,25 @@ extension CompositionalLayoutProvider {
     }
 }
 
-public struct CompositionalLayoutOption {
-    let heihgt: CGFloat
-    let width: CGFloat
+public struct CompositionalHorizontalLayoutOption {
+    let showCount: Int
+    let height: CGFloat
+    let inset: UIEdgeInsets
     
+    public init(showCount: Int, height: CGFloat, inset: UIEdgeInsets = .zero) {
+        self.showCount = showCount
+        self.height = height
+        self.inset = inset
+    }
 }
+
+public struct CompositionalLayoutSubviewOption {
+    let backgroundColor: UIColor?
+    let headerHeight: CGFloat?
+    
+    public init(backgroundColor: UIColor? = nil, headerHeight: CGFloat? = nil) {
+        self.backgroundColor = backgroundColor
+        self.headerHeight = headerHeight
+    }
+}
+ 

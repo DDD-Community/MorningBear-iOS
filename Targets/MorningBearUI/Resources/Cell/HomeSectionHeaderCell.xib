@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -16,24 +16,24 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="HomeSectionHeaderCell" id="gTV-IL-0wX" customClass="HomeSectionHeaderCell" customModule="MorningBear" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="119" height="82"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="HomeSectionHeaderCell" id="gTV-IL-0wX" customClass="HomeSectionHeaderCell" customModule="MorningBearUI" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="353" height="137"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="119" height="82"/>
+                <rect key="frame" x="0.0" y="0.0" width="353" height="137"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <stackView opaque="NO" contentMode="scaleToFill" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="u9H-YT-sNm">
-                        <rect key="frame" x="0.0" y="0.0" width="119" height="30"/>
+                        <rect key="frame" x="0.0" y="0.0" width="353" height="137"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="749" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kvJ-rl-oMr">
-                                <rect key="frame" x="0.0" y="0.0" width="65" height="30"/>
+                                <rect key="frame" x="0.0" y="0.0" width="299" height="137"/>
                                 <fontDescription key="fontDescription" name="Pretendard-Bold" family="Pretendard" pointSize="16"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3ri-xQ-EDz">
-                                <rect key="frame" x="73" y="0.0" width="46" height="30"/>
+                                <rect key="frame" x="307" y="0.0" width="46" height="137"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" title="Button"/>
                             </button>
@@ -44,16 +44,18 @@
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <constraints>
                 <constraint firstItem="u9H-YT-sNm" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="CjO-eM-9bA"/>
+                <constraint firstAttribute="bottom" secondItem="u9H-YT-sNm" secondAttribute="bottom" id="OZI-nd-ps7"/>
+                <constraint firstItem="u9H-YT-sNm" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="YMO-fg-Z2F"/>
                 <constraint firstAttribute="trailing" secondItem="u9H-YT-sNm" secondAttribute="trailing" id="Ybd-6g-Dl0"/>
                 <constraint firstItem="u9H-YT-sNm" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="mp0-Za-yGs"/>
             </constraints>
-            <size key="customSize" width="119" height="82"/>
+            <size key="customSize" width="353" height="137"/>
             <connections>
                 <outlet property="moreButton" destination="3ri-xQ-EDz" id="tbM-re-OAe"/>
                 <outlet property="stackView" destination="u9H-YT-sNm" id="ZtM-Vs-tCc"/>
                 <outlet property="titleLabel" destination="kvJ-rl-oMr" id="gAu-Xv-UmN"/>
             </connections>
-            <point key="canvasLocation" x="185.38461538461539" y="28.436018957345969"/>
+            <point key="canvasLocation" x="363.84615384615381" y="47.274881516587676"/>
         </collectionViewCell>
     </objects>
 </document>

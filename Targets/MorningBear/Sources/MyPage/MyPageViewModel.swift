@@ -35,8 +35,13 @@ class MyPageViewModel {
     let themes = Category.allCases.map { $0.description }
     
     func fetch() {
-        dataProvider.fetch(MyMorningQuery(useCache: true))
-            .customSubscribe(completionHandler: { mornings in
+        fetchMyMorning()
+        
+    }
+    
+    func fetchMyMorning() {
+        dataProvider.fetch(MyMorningQuery(size: 20, sort: .desc, useCache: true))
+            .concurrentSubscribe(completionHandler: { mornings in
                 self.recentMorning = mornings
             })
             .disposed(by: bag)

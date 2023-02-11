@@ -92,9 +92,12 @@ class MyPageViewController: UIViewController {
                     
                     return layout
                 case .category:
-                    let layout = provider.horizontalScrollLayoutSectionWithHeader(showItemCount: 4, height: 71)
-                    layout.contentInsets = .init(top: 0, leading: 18, bottom: 0, trailing: 18)
+                    let option = CompositionalHorizontalLayoutOption(showCount: 5, height: 85)
+                    let subviewOption = CompositionalLayoutSubviewOption(backgroundColor: .white, headerHeight: 80)
                     
+                    let layout = provider.horizontalLayoutSection(option: option, subviewOption: subviewOption)
+                    layout.contentInsets = .init(top: 0, leading: 18*2, bottom: 20, trailing: 18*2)
+                
                     return layout
                 case .divider:
                     return provider.divier(height: 6)
@@ -163,7 +166,15 @@ private extension MyPageViewController {
     }
 }
 
-extension MyPageViewController: UICollectionViewDelegate {}
+extension MyPageViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        print(indexPath)
+        if indexPath.row > viewModel.recentMorning.count - 6 {
+//            viewModel.fetchMyMorning()
+        }
+    }
+}
+
 extension MyPageViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)

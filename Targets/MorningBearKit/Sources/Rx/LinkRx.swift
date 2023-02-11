@@ -36,7 +36,7 @@ public func linkRx<Value>(
 }
 
 public extension PrimitiveSequenceType where Trait == SingleTrait {
-    func customSubscribe(
+    func concurrentSubscribe(
         scheduler: SchedulerType = ConcurrentDispatchQueueScheduler(qos: .userInitiated),
         completionHandler: @escaping (Element) -> Void,
         errorHandler: ((Error) -> Void)? = nil,
