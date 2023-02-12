@@ -16,9 +16,7 @@ import MorningBearUI
 import MorningBearAPI
 import MorningBearNetwork
 
-public struct MyPageQuery  {
-    public typealias ResultType = String
-    
+public struct MyPageQuery: Queryable {
     public let singleTrait = Network.shared.apollo.rx.fetch(query: GetMyPageDataQuery())
         .map { data -> GetMyPageDataQuery.Data.FindMyInfo in
             guard let data = data.data else {
@@ -32,7 +30,7 @@ public struct MyPageQuery  {
             return findMyInfo
         }
         .map { findMyInfo -> MyPageData in
-            findMyInfo.toNativeType()
+            try findMyInfo.toNativeType()
         }
     
     public init() {}
@@ -41,9 +39,9 @@ public struct MyPageQuery  {
 extension GetMyPageDataQuery.Data.FindMyInfo: ApolloAdaptable {
     typealias Category = MorningBearData.Category
     
-    public func toNativeType() -> MyPageData {
+    public func toNativeType() throws -> MyPageData {
         let profile = Profile(
-            image: UIImage(systemName: "person")!,
+            imageURL: URL(string: "www.naver.com")!,
             nickname: "추가할 것",
             counts: Profile.CountContext(
                 postCount: self.reportInfo?.countSucc ?? 0,
@@ -52,17 +50,17 @@ extension GetMyPageDataQuery.Data.FindMyInfo: ApolloAdaptable {
             )
         )
         
-        let categories: [Category] = (self.categoryList ?? []).compactMap { categorySet -> Category in
+        let categories: [Category] = try (self.categoryList ?? []).compactMap { categorySet throws -> Category in
             guard let categorySet else {
-                return .emotion
+                throw DataProviderError.invalidPayloadData(message: "잘못된 응답")
             }
             
             guard let stringId = categorySet.categoryId else {
-                return .emotion
+                throw DataProviderError.invalidPayloadData(message: "잘못된 카테고리 아이디")
             }
             
             guard let category = Category.fromId(stringId) else {
-                return .emotion
+                throw DataProviderError.invalidPayloadData(message: "잘못된 카테고리 정보")
             }
             
             return category
@@ -70,10 +68,10 @@ extension GetMyPageDataQuery.Data.FindMyInfo: ApolloAdaptable {
         
         let unwrappedPhotoInfoByCategory = (self.photoInfoByCategory ?? []).compactMap { $0 }
         
-        var photos = [Category: [URL]]()
-        unwrappedPhotoInfoByCategory.forEach { photoInfoByCategory in
+        var photos = MyPageData.PhotoDictionary()
+        try unwrappedPhotoInfoByCategory.forEach { photoInfoByCategory throws in
             guard var photoInfos = photoInfoByCategory.photoInfo else {
-                return
+                throw DataProviderError.invalidPayloadData(message: "잘못된 사진 정보")
             }
             
             photoInfos = photoInfos.compactMap { $0 }
@@ -81,13 +79,16 @@ extension GetMyPageDataQuery.Data.FindMyInfo: ApolloAdaptable {
             photoInfos.forEach { photoInfo in
                 guard let link = photoInfo?.photoLink,
                       let url = URL(string: link),
+                      let photoId = photoInfo?.photoId,
                       let categoryId = photoInfo?.categoryId,
                       let category = Category.fromId(categoryId)
                 else {
                     return
                 }
                 
-                photos[category, default: []].append(url)
+                let morning = MyMorning(id: photoId, imageURL: url)
+                
+                photos[category, default: []].append(morning)
             }
         }
         

@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Kingfisher
+
 @_exported import MorningBearData
 
 public class ProfileCell: UICollectionViewCell, CustomCellType {
@@ -107,14 +109,14 @@ public extension ProfileCell {
     func prepare(_ data: Profile) {
         if let buttonContext = data.buttonContext {
             self.prepare(
-                image: data.image,
+                imageURL: data.imageURL,
                 nickname: data.nickname,
                 buttonText: buttonContext.buttonText,
                 buttonAction: buttonContext.buttonAction
             )
         } else if let countContext = data.countContext {
             self.prepare(
-                image: data.image,
+                imageURL: data.imageURL,
                 nickname: data.nickname,
                 postCount: countContext.postCount,
                 supportCount: countContext.supportCount,
@@ -125,13 +127,13 @@ public extension ProfileCell {
 }
 
 private extension ProfileCell {
-    func prepare(image: UIImage, nickname: String, postCount: Int, supportCount: Int, badgeCount: Int) {
+    func prepare(imageURL: URL?, nickname: String, postCount: Int, supportCount: Int, badgeCount: Int) {
         actionButton.isHidden = true
         countHorizontalStack.isHidden = false
         
         backgroundColor = MorningBearUIAsset.Colors.gray900.color
 
-        profileImageView.image = image
+        setImage(url: imageURL)
         nicknameLabel.text = nickname
         
         postCountLabel.text = String(postCount)
@@ -139,18 +141,22 @@ private extension ProfileCell {
         badgeCountLabel.text = String(badgeCount)
     }
     
-    func prepare(image: UIImage, nickname: String, buttonText: String, buttonAction: @escaping () -> Void) {
+    func prepare(imageURL: URL?, nickname: String, buttonText: String, buttonAction: @escaping () -> Void) {
         countHorizontalStack.isHidden = true
         actionButton.isHidden = false
         
         backgroundColor = .clear
         
-        profileImageView.image = image
+        setImage(url: imageURL)
         nicknameLabel.text = nickname
         
         self.buttonAction = buttonAction
         actionButton.setTitle(buttonText, for: .normal)
         actionButton.addTarget(self, action: #selector(buttonActionWrapper), for: .touchUpInside)
+    }
+    
+    func setImage(url: URL?) {
+        self.profileImageView.kf.setImage(with: url)
     }
     
     @objc

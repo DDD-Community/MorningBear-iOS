@@ -49,11 +49,11 @@ class MyPageViewController: UIViewController {
                 case .state:
                     return ProfileCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: self.viewModel.profile)
                 case .category:
-                    return CategoryCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: self.viewModel.category)
+                    return CategoryCell.dequeueAndPrepare(from: collectionView, at: indexPath, sources: self.viewModel.categories)
                 case .divider:
                     return DividerCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: ())
                 case .themeSelection:
-                    return CapsuleCell.dequeueAndPrepare(from: collectionView, at: indexPath, sources: self.viewModel.themes)
+                    return CapsuleCell.dequeueAndPrepare(from: collectionView, at: indexPath, sources: self.viewModel.categoryOptions)
                 case .myMorning:
                     return RecentMorningCell.dequeueAndPrepare(from: collectionView, at: indexPath, sources: self.viewModel.recentMorning)
                 case .none:
@@ -71,15 +71,15 @@ class MyPageViewController: UIViewController {
             observableProvider: { section in
                 switch section {
                 case .state:
-                    return .replace(Observable.of([self.viewModel.profile]))
+                    return .replace(self.viewModel.$profile.map{ [$0.eraseToAnyHasable] })
                 case .category:
-                    return .replace(Observable.of([self.viewModel.category]))
+                    return .replace(self.viewModel.$categories.map{ $0.eraseToAnyHasable })
                 case .divider:
                     return .replace(Observable.of([""]))
                 case .themeSelection:
-                    return .replace(Observable.of(self.viewModel.themes))
+                    return .replace(Observable.of(self.viewModel.categoryOptions))
                 case .myMorning:
-                    return .append(self.viewModel.$recentMorning.eraseToAnyHasable)
+                    return .append(self.viewModel.$recentMorning.map{ $0.eraseToAnyHasable })
                 }
             },
             layoutSectionProvider: { section, _ in

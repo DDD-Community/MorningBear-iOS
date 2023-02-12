@@ -6,15 +6,15 @@
 //  Copyright © 2023 com.dache. All rights reserved.
 //
 
+import Foundation
 
 //FIXME: this
 import MorningBearData
-
 import MorningBearUI
 
 class MyPageSettingViewModel {
     let profile = Profile(
-        image: MorningBearUIAsset.Images.streakThree.image,
+        imageURL: URL(string: "www.naver.com")!,
         nickname: "ss",
         buttonText: Profile.ButtonContext(buttonText: "정보 수정하기", buttonAction: {
             print("Tapped")

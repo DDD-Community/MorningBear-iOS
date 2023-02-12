@@ -11,5 +11,5 @@ import ApolloAPI
 public protocol ApolloAdaptable: SelectionSet {
     associatedtype NativeType: Hashable
     
-    func toNativeType() -> NativeType
+    func toNativeType() throws -> NativeType
 }

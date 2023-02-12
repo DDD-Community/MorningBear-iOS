@@ -9,11 +9,13 @@
 import Foundation
 
 public struct MyPageData: Hashable {
+    public typealias PhotoDictionary =  [MorningBearData.Category: [MyMorning]]
+    
     public let profile: Profile
     public let favoriteCategories: [Category]
-    public var photos: [MorningBearData.Category: [URL]]
+    public var photos: PhotoDictionary
     
-    public init(profile: Profile, favoriteCategories: [Category], photos: [MorningBearData.Category : [URL]]) {
+    public init(profile: Profile, favoriteCategories: [Category], photos: PhotoDictionary) {
         self.profile = profile
         self.favoriteCategories = favoriteCategories
         self.photos = photos

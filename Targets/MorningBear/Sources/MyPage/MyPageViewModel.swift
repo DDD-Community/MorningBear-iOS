@@ -15,28 +15,31 @@ import MorningBearUI
 import MorningBearDataProvider
 import MorningBearKit
 
-// FIXME: remove this
-import MorningBearData
-
 class MyPageViewModel {
+    typealias Category = MorningBearDataProvider.Category
+    
     private let dataProvider: DefaultProvider
     private let bag = DisposeBag()
     
+    @Bound private(set) var profile: Profile = Profile(imageURL: URL(string: "www.naver.com")!,
+                                                       nickname: "s",
+                                                       counts: .init(postCount: 0, supportCount: 0, badgeCount: 0))
+    @Bound private(set) var categories: [Category] = []
     @Bound private(set) var recentMorning: [MyMorning] = []
     
-    let profile = Profile(
-        image: MorningBearUIAsset.Images.streakThree.image,
-        nickname: "sss",
-        counts: Profile.CountContext(postCount: 1, supportCount: 2, badgeCount: 3)
-    )
-    
-    let category = Category.emotion
-    
-    let themes = Category.allCases.map { $0.description }
+    let categoryOptions = Category.allCases.map { $0.description }
     
     func fetch() {
-        fetchMyMorning()
-        
+        dataProvider.fetch(MyPageQuery())
+            .concurrentSubscribe { mypageData in
+                self.profile = mypageData.profile
+                self.categories = mypageData.favoriteCategories
+                
+                if let morningData = mypageData.photos[Category.exercies] {
+                    self.recentMorning = morningData
+                }
+            }
+            .disposed(by: bag)
     }
     
     func fetchMyMorning() {

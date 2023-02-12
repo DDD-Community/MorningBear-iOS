@@ -13,8 +13,7 @@ import MorningBearAPI
 public struct Profile {
     private let id = UUID()
     
-    public let image: UIImage
-//    public let imageURL: URL
+    public let imageURL: URL
     public let nickname: String
     
     public let countContext: CountContext?
@@ -23,16 +22,16 @@ public struct Profile {
 
 // MARK: Initializers
 public extension Profile {
-    public init(image: UIImage, nickname: String, counts: CountContext) {
-        self.image = image
+    init(imageURL: URL, nickname: String, counts: CountContext) {
+        self.imageURL = imageURL
         self.nickname = nickname
         self.countContext = counts
         
         self.buttonContext = nil
     }
     
-    public init(image: UIImage, nickname: String, buttonText: ButtonContext) {
-        self.image = image
+    init(imageURL: URL, nickname: String, buttonText: ButtonContext) {
+        self.imageURL = imageURL
         self.nickname = nickname
         self.buttonContext = buttonText
         

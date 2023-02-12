@@ -61,12 +61,14 @@ public extension PrimitiveSequenceType where Trait == SingleTrait {
     }
 }
 
-public extension Observable where Element: Hashable {
-    var eraseToAnyHasable: Observable<[AnyHashable]> {
-        let erased = self.map {
-            return $0 as! [AnyHashable]
-        }
-        
-        return erased
+public extension Hashable {
+    var eraseToAnyHasable: AnyHashable {
+        return AnyHashable(self)
+    }
+}
+
+public extension Array where Element: Hashable {
+    var eraseToAnyHasable: [AnyHashable] {
+        return self.map { $0.eraseToAnyHasable }
     }
 }
