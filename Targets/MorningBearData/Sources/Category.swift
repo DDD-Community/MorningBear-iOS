@@ -46,6 +46,20 @@ public enum Category: Int, CaseIterable {
     }
 }
 
+public extension Category {
+    static func fromId(_ id: String) -> Self? {
+        guard id.count == 2 else {
+            return nil
+        }
+        
+        guard let idNumber = Int(id.suffix(1)) else {
+            return nil
+        }
+        
+        return Category(rawValue: idNumber - 1)
+    }
+}
+
 extension Category: Hashable {
     public static func == (lhs: Category, rhs: Category) -> Bool {
         lhs.id == rhs.id

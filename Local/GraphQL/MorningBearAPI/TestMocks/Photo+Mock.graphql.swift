@@ -10,6 +10,7 @@ public class Photo: MockObject {
   public typealias MockValueCollectionType = Array<Mock<Photo>>
 
   public struct MockFields {
+    @Field<String>("categoryId") public var categoryId
     @Field<String>("createdAt") public var createdAt
     @Field<String>("photoDesc") public var photoDesc
     @Field<String>("photoId") public var photoId
@@ -20,6 +21,7 @@ public class Photo: MockObject {
 
 public extension Mock where O == Photo {
   convenience init(
+    categoryId: String? = nil,
     createdAt: String? = nil,
     photoDesc: String? = nil,
     photoId: String? = nil,
@@ -27,6 +29,7 @@ public extension Mock where O == Photo {
     updatedBadge: [Mock<Badge>?]? = nil
   ) {
     self.init()
+    self.categoryId = categoryId
     self.createdAt = createdAt
     self.photoDesc = photoDesc
     self.photoId = photoId

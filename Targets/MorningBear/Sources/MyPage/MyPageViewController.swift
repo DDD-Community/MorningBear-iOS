@@ -168,7 +168,6 @@ private extension MyPageViewController {
 
 extension MyPageViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        print(indexPath)
         if indexPath.row > viewModel.recentMorning.count - 6 {
 //            viewModel.fetchMyMorning()
         }
