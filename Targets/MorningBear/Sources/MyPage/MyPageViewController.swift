@@ -93,7 +93,7 @@ class MyPageViewController: UIViewController {
                     return layout
                 case .category:
                     let option = CompositionalHorizontalLayoutOption(showCount: 5, height: 85)
-                    let subviewOption = CompositionalLayoutSubviewOption(backgroundColor: .white, headerHeight: 80)
+                    let subviewOption = CompositionalLayoutSubviewOption(backgroundColor: .white, headerHeight: 70)
                     
                     let layout = provider.horizontalLayoutSection(option: option, subviewOption: subviewOption)
                     layout.contentInsets = .init(top: 0, leading: 18*2, bottom: 20, trailing: 18*2)
@@ -160,8 +160,17 @@ private extension MyPageViewController {
             withReuseIdentifier: "HomeSectionHeaderCell",
             for: indexPath
         ) as! HomeSectionHeaderCell
+        
+        
+        switch MyPageSection(rawValue: indexPath.section) {
+        case .category:
+            headerCell.prepare(title: "카테고리", buttonText: "수정", buttonAction: { print("수정") })
+        case .themeSelection:
+            headerCell.prepare(title: "나의 미라클모닝 목록")
+        default:
+            break
+        }
 
-        headerCell.prepare(title: "나의 미라클모닝 목록")
         return headerCell
     }
 }

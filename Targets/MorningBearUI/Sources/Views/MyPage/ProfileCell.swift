@@ -156,7 +156,7 @@ private extension ProfileCell {
     }
     
     func setImage(url: URL?) {
-        self.profileImageView.kf.setImage(with: url)
+        self.profileImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person")?.withTintColor(.gray).withRenderingMode(.alwaysOriginal))
     }
     
     @objc
