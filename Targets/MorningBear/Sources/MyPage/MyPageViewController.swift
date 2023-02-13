@@ -19,6 +19,7 @@ class MyPageViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
+            collectionView.cellForItem(at: IndexPath(row: 0, section: 3))?.isSelected = true
             collectionView.refreshControl = self.refreshControl
         }
     }
@@ -65,7 +66,7 @@ class MyPageViewController: UIViewController {
             sections: [.state, .category, .divider, .themeSelection, .myMorning],
             cellTypes: [ProfileCell.self, CategoryCell.self, DividerCell.self, CapsuleCell.self, RecentMorningCell.self],
             supplementarycellTypes: [.header(HomeSectionHeaderCell.self)],
-            cellProvider: { [weak self] collectionView, indexPath, _ in
+            cellProvider: { [weak self] collectionView, indexPath, model in
                 guard let self else { return UICollectionViewCell() }
 
                 switch MyPageSection(rawValue: indexPath.section) {
@@ -78,7 +79,8 @@ class MyPageViewController: UIViewController {
                 case .themeSelection:
                     return CapsuleCell.dequeueAndPrepare(from: collectionView, at: indexPath, sources: self.viewModel.categoryOptions)
                 case .myMorning:
-                    return RecentMorningCell.dequeueAndPrepare(from: collectionView, at: indexPath, sources: self.viewModel.recentMorning)
+                    print(model)
+                    return RecentMorningCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: model as! MyMorning)
                 case .none:
                     fatalError("가질 수 없는 섹션 인덱스")
                 }
@@ -91,7 +93,9 @@ class MyPageViewController: UIViewController {
                     return UICollectionReusableView()
                 }
             },
-            observableProvider: { section in
+            observableProvider: { [weak self] section in
+                guard let self else { return .replace(Observable.of([])) }
+                
                 switch section {
                 case .state:
                     return .replace(self.viewModel.$profile.map{ [$0.eraseToAnyHasable] })
@@ -102,7 +106,7 @@ class MyPageViewController: UIViewController {
                 case .themeSelection:
                     return .replace(Observable.of(self.viewModel.categoryOptions))
                 case .myMorning:
-                    return .append(self.viewModel.$recentMorning.map{ $0.eraseToAnyHasable })
+                    return .replace(self.viewModel.$recentMorning.map{ $0.eraseToAnyHasable })
                 }
             },
             layoutSectionProvider: { section, _ in
@@ -200,6 +204,18 @@ private extension MyPageViewController {
 }
 
 extension MyPageViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if case .themeSelection = MyPageSection(rawValue: indexPath.section) {
+            DispatchQueue.main.async {
+                guard let category = Category(rawValue: indexPath.row) else {
+                    return
+                }
+                
+                self.viewModel.fetchMyMorning(category: category)
+            }
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if indexPath.row > viewModel.recentMorning.count - 6 {
 //            viewModel.fetchMyMorning()

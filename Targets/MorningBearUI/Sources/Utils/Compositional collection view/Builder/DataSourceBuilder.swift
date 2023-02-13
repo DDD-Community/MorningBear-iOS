@@ -121,7 +121,9 @@ public extension UICollectionViewDiffableDataSource {
         var snapshot = self.snapshot()
         
         if snapshot.sectionIdentifiers.contains(section), snapshot.numberOfItems(inSection: section) > 0 {
-            snapshot.reloadSections([section])
+            snapshot.deleteItems(snapshot.itemIdentifiers(inSection: section))
+            snapshot.appendItems(newData)
+            
             self.apply(snapshot, animatingDifferences: animate)
         } else {
             updateDataSource(in: section, with: newData)

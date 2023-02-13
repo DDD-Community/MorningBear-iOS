@@ -29,6 +29,8 @@ class MyPageViewModel {
     @Bound private(set) var categories: [Category] = []
     @Bound private(set) var recentMorning: [MyMorning] = []
     
+    private var recentMorningDictionary: [Category: [MyMorning]] = [:]
+    
     let categoryOptions = Category.allCases.map { $0.description }
     
     func fetch() {
@@ -40,9 +42,8 @@ class MyPageViewModel {
                     self.profile = mypageData.profile
                     self.categories = mypageData.favoriteCategories
                     
-                    if let morningData = mypageData.photos[Category.exercies] {
-                        self.recentMorning = morningData
-                    }
+                    self.recentMorningDictionary = mypageData.photos
+                    self.fetchMyMorning(category: .emotion)
                 },
                 disposeHandler: {
                     self.isNetworking = false
@@ -50,12 +51,12 @@ class MyPageViewModel {
             .disposed(by: bag)
     }
     
-    func fetchMyMorning() {
-        dataProvider.fetch(MyMorningQuery(size: 20, sort: .desc, useCache: true))
-            .concurrentSubscribe(completionHandler: { mornings in
-                self.recentMorning = mornings
-            })
-            .disposed(by: bag)
+    func fetchMyMorning(category: Category) {
+        guard let recentMorning = recentMorningDictionary[category] else {
+            return
+        }
+        
+        self.recentMorning = recentMorning
     }
     
     init(dataProvider: DefaultProvider = DefaultProvider.shared) {
