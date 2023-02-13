@@ -112,7 +112,7 @@ public struct CompositionalLayoutProvider {
         // item
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
-            heightDimension: .estimated(1)
+            heightDimension: .estimated(height)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
