@@ -17,20 +17,43 @@ class MyPageViewController: UIViewController {
     private let bag = DisposeBag()
     private let viewModel = MyPageViewModel()
     
-    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var collectionView: UICollectionView! {
+        didSet {
+            collectionView.refreshControl = self.refreshControl
+        }
+    }
+    
     private var dataSource: UICollectionViewDiffableDataSource<MyPageSection, AnyHashable>!
+    private let refreshControl = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // set collection view
-        let (_collectionView, _dataSource) = collectionViewBuilder.build()
+        let (_collectionView, _dataSource) = collectionViewBuilder
+            .addRefreshControl(refreshControl, action: { [weak self] in
+                guard let self else { return }
+                self.viewModel.fetch()
+            })
+            .build()
+        
         self.collectionView = _collectionView
         self.dataSource = _dataSource
         
         // Set design
         self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
         designNavigationBar()
+        
+        // Bind network flag
+        viewModel.$isNetworking.asDriver(onErrorJustReturn: false)
+            .drive(onNext: { [weak self] value in
+                guard let self else { return }
+                
+                if value == false {
+                    self.refreshControl.endRefreshing()
+                }
+            })
+            .disposed(by: bag)
     }
     
     private var collectionViewBuilder: CollectionViewBuilder<MyPageSection, AnyHashable> {

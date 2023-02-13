@@ -16,8 +16,8 @@ public struct Profile {
     public let imageURL: URL
     public let nickname: String
     
-    public let countContext: CountContext?
-    public let buttonContext: ButtonContext?
+    public var countContext: CountContext?
+    public var buttonContext: ButtonContext?
 }
 
 // MARK: Initializers
@@ -60,6 +60,14 @@ public extension Profile {
             self.buttonText = buttonText
             self.buttonAction = buttonAction
         }
+    }
+    
+    func eraseToButtonContext(text: String, action: @escaping () -> Void) -> Self {
+        var newValue = self
+        newValue.countContext = nil
+        newValue.buttonContext = ButtonContext(buttonText: text, buttonAction: action)
+        
+        return newValue
     }
 }
 

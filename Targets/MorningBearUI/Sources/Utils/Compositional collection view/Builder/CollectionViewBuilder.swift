@@ -162,6 +162,17 @@ extension CollectionViewBuilder {
     private func configureDelegate() {
         base.delegate = delegate
     }
+    
+    private func configureRefreshControl(_ refreshControl: UIRefreshControl, action: @escaping () -> Void) {
+        refreshControl.rx.controlEvent(.valueChanged)
+            .withUnretained(self)
+            .bind { weakSelf, _ in
+                action()
+            }
+            .disposed(by: bag)
+        
+        base.refreshControl = refreshControl
+    }
 }
 
 public extension CollectionViewBuilder {
@@ -178,6 +189,12 @@ public extension CollectionViewBuilder {
         configureObservables()
         
         return (collectionView: base, dataSource: dataSource)
+    }
+    
+    func addRefreshControl(_ refreshControl: UIRefreshControl, action: @escaping () -> Void) -> CollectionViewBuilder {
+        self.configureRefreshControl(refreshControl, action: action)
+        
+        return self
     }
     
     enum UpdatePolicy {

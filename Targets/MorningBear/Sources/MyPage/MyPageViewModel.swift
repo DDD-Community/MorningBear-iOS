@@ -21,6 +21,8 @@ class MyPageViewModel {
     private let dataProvider: DefaultProvider
     private let bag = DisposeBag()
     
+    @Bound private(set) var isNetworking: Bool = false
+    
     @Bound private(set) var profile: Profile = Profile(imageURL: URL(string: "www.naver.com")!,
                                                        nickname: "s",
                                                        counts: .init(postCount: 0, supportCount: 0, badgeCount: 0))
@@ -30,15 +32,21 @@ class MyPageViewModel {
     let categoryOptions = Category.allCases.map { $0.description }
     
     func fetch() {
+        isNetworking = true
+        
         dataProvider.fetch(MyPageQuery())
-            .concurrentSubscribe { mypageData in
-                self.profile = mypageData.profile
-                self.categories = mypageData.favoriteCategories
-                
-                if let morningData = mypageData.photos[Category.exercies] {
-                    self.recentMorning = morningData
-                }
-            }
+            .concurrentSubscribe(
+                completionHandler: { mypageData in
+                    self.profile = mypageData.profile
+                    self.categories = mypageData.favoriteCategories
+                    
+                    if let morningData = mypageData.photos[Category.exercies] {
+                        self.recentMorning = morningData
+                    }
+                },
+                disposeHandler: {
+                    self.isNetworking = false
+                })
             .disposed(by: bag)
     }
     
