@@ -43,7 +43,7 @@ class MyPageViewModel {
                     self.categories = mypageData.favoriteCategories
                     
                     self.recentMorningDictionary = mypageData.photos
-                    self.fetchMyMorning(category: .emotion)
+                    self.fetchMyMorning(category: .exercies)
                 },
                 disposeHandler: {
                     self.isNetworking = false

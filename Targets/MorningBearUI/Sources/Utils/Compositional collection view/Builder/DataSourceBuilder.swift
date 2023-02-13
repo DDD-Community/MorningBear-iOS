@@ -122,7 +122,7 @@ public extension UICollectionViewDiffableDataSource {
         
         if snapshot.sectionIdentifiers.contains(section), snapshot.numberOfItems(inSection: section) > 0 {
             snapshot.deleteItems(snapshot.itemIdentifiers(inSection: section))
-            snapshot.appendItems(newData)
+            snapshot.appendItems(newData, toSection: section)
             
             self.apply(snapshot, animatingDifferences: animate)
         } else {

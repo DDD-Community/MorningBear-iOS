@@ -19,7 +19,6 @@ class MyPageViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView! {
         didSet {
-            collectionView.cellForItem(at: IndexPath(row: 0, section: 3))?.isSelected = true
             collectionView.refreshControl = self.refreshControl
         }
     }
@@ -79,7 +78,6 @@ class MyPageViewController: UIViewController {
                 case .themeSelection:
                     return CapsuleCell.dequeueAndPrepare(from: collectionView, at: indexPath, sources: self.viewModel.categoryOptions)
                 case .myMorning:
-                    print(model)
                     return RecentMorningCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: model as! MyMorning)
                 case .none:
                     fatalError("가질 수 없는 섹션 인덱스")
