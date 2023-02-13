@@ -17,6 +17,7 @@ class MyPageSettingViewController: UIViewController {
     
     private let bag = DisposeBag()
     
+    private var environmentViewModel: MyPageViewModel!
     private let viewModel = MyPageSettingViewModel()
     private var dataSource: UICollectionViewDiffableDataSource<MyPageSettingSection, AnyHashable>!
 
@@ -30,6 +31,12 @@ class MyPageSettingViewController: UIViewController {
         let (_collectionView, _dataSource) = collectionViewBuilder.build()
         self.collectionView = _collectionView
         self.dataSource = _dataSource
+    }
+}
+
+extension MyPageSettingViewController {
+    func prepare(environmentViewModel: MyPageViewModel) {
+        self.environmentViewModel = environmentViewModel
     }
 }
 
@@ -54,7 +61,7 @@ private extension MyPageSettingViewController {
                 
                 switch MyPageSettingSection(rawValue: indexPath.section) {
                 case .profile:
-                    return ProfileCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: self.viewModel.profile)
+                    return ProfileCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: self.environmentViewModel.profile)
                 case .divider:
                     return DividerCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: ())
                 case .settings:

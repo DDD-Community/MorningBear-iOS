@@ -139,6 +139,7 @@ private extension MyPageViewController {
             }
             
             settingViewController.hidesBottomBarWhenPushed = true
+            settingViewController.prepare(environmentViewModel: self.viewModel)
             self.navigationController?.pushViewController(settingViewController, animated: true)
         }
         .disposed(by: bag)

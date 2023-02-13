@@ -40,9 +40,13 @@ extension GetMyPageDataQuery.Data.FindMyInfo: ApolloAdaptable {
     typealias Category = MorningBearData.Category
     
     public func toNativeType() throws -> MyPageData {
+        guard let photoLink, let profileImageURL = URL(string: photoLink), let nickName else {
+            throw DataProviderError.invalidPayloadData(message: "프로필을 불러올 수 없음")
+        }
+        
         let profile = Profile(
-            imageURL: URL(string: "www.naver.com")!,
-            nickname: "추가할 것",
+            imageURL: profileImageURL,
+            nickname: nickName,
             counts: Profile.CountContext(
                 postCount: self.reportInfo?.countSucc ?? 0,
                 supportCount: self.takenLikeCnt ?? 0,

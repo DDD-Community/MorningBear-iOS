@@ -12,6 +12,8 @@ public class GetMyPageDataQuery: GraphQLQuery {
         findMyInfo(sizeInput: {totalSize: 10, categorySize: 10}) {
           __typename
           takenLikeCnt
+          photoLink
+          nickName
           categoryList {
             __typename
             categoryId
@@ -66,6 +68,8 @@ public class GetMyPageDataQuery: GraphQLQuery {
       public static var __parentType: ParentType { MorningBearAPI.Objects.User }
       public static var __selections: [Selection] { [
         .field("takenLikeCnt", Int?.self),
+        .field("photoLink", String?.self),
+        .field("nickName", String?.self),
         .field("categoryList", [CategoryList?]?.self),
         .field("badgeList", [BadgeList?]?.self),
         .field("reportInfo", ReportInfo?.self),
@@ -74,6 +78,10 @@ public class GetMyPageDataQuery: GraphQLQuery {
 
       ///  받은 응원하기 리스트 Count 
       public var takenLikeCnt: Int? { __data["takenLikeCnt"] }
+      ///  프로필사진 링크 
+      public var photoLink: String? { __data["photoLink"] }
+      ///  닉네임 
+      public var nickName: String? { __data["nickName"] }
       ///  설정한 카테고리 리스트 
       public var categoryList: [CategoryList?]? { __data["categoryList"] }
       ///  획득 뱃지 리스트 

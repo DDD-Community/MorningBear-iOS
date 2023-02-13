@@ -1,6 +1,8 @@
 query GetMyPageData {
   findMyInfo(sizeInput: {totalSize:10, categorySize:10}) {
-    takenLikeCnt, 
+    takenLikeCnt,
+    photoLink,
+    nickName,
     categoryList {
       categoryId, 
       categoryDesc
