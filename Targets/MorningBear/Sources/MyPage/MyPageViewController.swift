@@ -40,6 +40,9 @@ class MyPageViewController: UIViewController {
         self.collectionView = _collectionView
         self.dataSource = _dataSource
         
+        // Set little padding at the bottm
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 90, right: 0)
+    
         // Set design
         self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
         designNavigationBar()
@@ -72,7 +75,7 @@ class MyPageViewController: UIViewController {
                 case .state:
                     return ProfileCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: self.viewModel.profile)
                 case .category:
-                    return CategoryCell.dequeueAndPrepare(from: collectionView, at: indexPath, sources: self.viewModel.categories)
+                    return CategoryCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: model as! MorningBearData.Category)
                 case .divider:
                     return DividerCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: ())
                 case .themeSelection:
@@ -117,11 +120,12 @@ class MyPageViewController: UIViewController {
                     
                     return layout
                 case .category:
-                    let option = CompositionalHorizontalLayoutOption(showCount: 5, height: 85)
+                    let option = CompositionalHorizontalLayoutOption(showCount: 6, height: 85)
                     let subviewOption = CompositionalLayoutSubviewOption(backgroundColor: .white, headerHeight: 70)
                     
                     let layout = provider.horizontalLayoutSection(option: option, subviewOption: subviewOption)
                     layout.contentInsets = .init(top: 0, leading: 18*2, bottom: 20, trailing: 18*2)
+                    layout.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
                 
                     return layout
                 case .divider:

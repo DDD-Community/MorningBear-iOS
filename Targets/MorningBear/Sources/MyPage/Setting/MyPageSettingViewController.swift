@@ -97,7 +97,7 @@ private extension MyPageSettingViewController {
                 case .divider:
                     return provider.divier(height: 6)
                 case .settings:
-                    return provider.verticalScrollLayoutSection(showItemCount: 8)
+                    return provider.verticalScrollLayoutSection(showItemCount: 10)
                 case .none:
                     fatalError("가질 수 없는 섹션 인덱스")
                 }

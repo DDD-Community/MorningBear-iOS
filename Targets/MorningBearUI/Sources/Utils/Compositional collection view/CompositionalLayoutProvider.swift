@@ -76,7 +76,7 @@ public struct CompositionalLayoutProvider {
             
             if let _ = subviewOption.backgroundColor {
                 section.decorationItems = [
-                   NSCollectionLayoutDecorationItem.background(elementKind: "BackgroundReusableView")
+                    NSCollectionLayoutDecorationItem.background(elementKind: "BackgroundReusableView")
                 ]
             }
         }
@@ -424,12 +424,12 @@ extension CompositionalLayoutProvider {
 public struct CompositionalHorizontalLayoutOption {
     let showCount: Int
     let height: CGFloat
-    let inset: UIEdgeInsets
+    let sectionInset: UIEdgeInsets
     
-    public init(showCount: Int, height: CGFloat, inset: UIEdgeInsets = .zero) {
+    public init(showCount: Int, height: CGFloat, sectionInset: UIEdgeInsets = .zero) {
         self.showCount = showCount
         self.height = height
-        self.inset = inset
+        self.sectionInset = sectionInset
     }
 }
 

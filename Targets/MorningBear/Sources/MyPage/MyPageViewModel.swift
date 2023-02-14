@@ -26,6 +26,8 @@ class MyPageViewModel {
     @Bound private(set) var profile: Profile = Profile(imageURL: URL(string: "www.naver.com")!,
                                                        nickname: "s",
                                                        counts: .init(postCount: 0, supportCount: 0, badgeCount: 0))
+
+    @Bound private(set) var selectedCatagory: Category = .exercies
     @Bound private(set) var categories: [Category] = []
     @Bound private(set) var recentMorning: [MyMorning] = []
     
@@ -43,7 +45,7 @@ class MyPageViewModel {
                     self.categories = mypageData.favoriteCategories
                     
                     self.recentMorningDictionary = mypageData.photos
-                    self.fetchMyMorning(category: .exercies)
+                    self.fetchMyMorning(category: self.selectedCatagory)
                 },
                 disposeHandler: {
                     self.isNetworking = false
@@ -52,6 +54,7 @@ class MyPageViewModel {
     }
     
     func fetchMyMorning(category: Category) {
+        selectedCatagory = category
         guard let recentMorning = recentMorningDictionary[category] else {
             return
         }
