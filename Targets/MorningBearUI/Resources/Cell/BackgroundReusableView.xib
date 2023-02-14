@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -15,25 +16,29 @@
             <rect key="frame" x="0.0" y="0.0" width="341" height="151"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="55B-AR-i8d">
-                    <rect key="frame" x="0.0" y="0.0" width="341" height="151"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xjJ-7D-eDp">
+                    <rect key="frame" x="18" y="0.0" width="305" height="151"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="VXr-Tz-HHm"/>
+            <color key="backgroundColor" name="Gray 50"/>
             <constraints>
-                <constraint firstItem="VXr-Tz-HHm" firstAttribute="trailing" secondItem="55B-AR-i8d" secondAttribute="trailing" id="Qqu-C1-qr7"/>
-                <constraint firstItem="55B-AR-i8d" firstAttribute="top" secondItem="U6b-Vx-4bR" secondAttribute="top" id="cPT-fD-DZN"/>
-                <constraint firstItem="55B-AR-i8d" firstAttribute="leading" secondItem="VXr-Tz-HHm" secondAttribute="leading" id="jyF-St-MiI"/>
-                <constraint firstItem="VXr-Tz-HHm" firstAttribute="bottom" secondItem="55B-AR-i8d" secondAttribute="bottom" id="sjQ-Ko-y1s"/>
+                <constraint firstItem="xjJ-7D-eDp" firstAttribute="bottom" secondItem="VXr-Tz-HHm" secondAttribute="bottom" id="3p7-v5-Ch6"/>
+                <constraint firstItem="xjJ-7D-eDp" firstAttribute="leading" secondItem="VXr-Tz-HHm" secondAttribute="leading" constant="18" id="dZ8-IH-ssh"/>
+                <constraint firstItem="xjJ-7D-eDp" firstAttribute="top" secondItem="U6b-Vx-4bR" secondAttribute="top" id="gWw-ad-Tfr"/>
+                <constraint firstAttribute="trailing" secondItem="xjJ-7D-eDp" secondAttribute="trailing" constant="18" id="uPY-vB-SbN"/>
             </constraints>
             <connections>
-                <outlet property="backgroundView" destination="55B-AR-i8d" id="giG-yg-rhv"/>
+                <outlet property="backgroundView" destination="xjJ-7D-eDp" id="5kT-7Y-Pzt"/>
             </connections>
             <point key="canvasLocation" x="154.96183206106869" y="-15.845070422535212"/>
         </collectionReusableView>
     </objects>
     <resources>
+        <namedColor name="Gray 50">
+            <color red="0.98431372549019602" green="0.98431372549019602" blue="0.98431372549019602" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

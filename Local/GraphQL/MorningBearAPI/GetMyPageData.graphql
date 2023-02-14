@@ -1,0 +1,24 @@
+query GetMyPageData {
+  findMyInfo(sizeInput: {totalSize:10, categorySize:10}) {
+    takenLikeCnt,
+    photoLink,
+    nickName,
+    categoryList {
+      categoryId, 
+      categoryDesc
+    },
+		badgeList {
+      badgeId
+    },
+    reportInfo {
+      countSucc
+    },
+    photoInfoByCategory {
+      photoInfo {
+        categoryId,
+        photoId,
+        photoLink
+      }
+    }
+  }
+}

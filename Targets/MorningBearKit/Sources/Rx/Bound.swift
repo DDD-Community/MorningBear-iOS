@@ -39,4 +39,8 @@ public class Bound<Value> {
         
         relay.accept(initValue)
     }
+    
+    public convenience init(wrappedValue: Value) {
+        self.init(initValue: wrappedValue)
+    }
 }

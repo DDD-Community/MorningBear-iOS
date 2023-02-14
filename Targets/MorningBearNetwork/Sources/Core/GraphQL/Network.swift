@@ -21,7 +21,12 @@ public class Network {
         let cache = InMemoryNormalizedCache()
         let store = ApolloStore(cache: cache)
         
-        let sessionClient = URLSessionClient(sessionConfiguration: .default, callbackQueue: nil)
+        let config = URLSessionConfiguration.default
+        config.httpAdditionalHeaders = [
+            "Authorization" : "Bearer uf0nunkIUWJNPcOY8IDdu+eErBkZW0SXEQCMtz+x/IKVWvHkxD8U7cm5ERJQw0grLVhpYYHb6LPimRjjUigzaQ=="
+        ]
+        
+        let sessionClient = URLSessionClient(sessionConfiguration: config, callbackQueue: nil)
         let provider = NetworkInterceptorProvider(client: sessionClient,
                                                   shouldInvalidateClientOnDeinit: true,
                                                   store: store)
@@ -43,7 +48,6 @@ fileprivate final class NetworkInterceptorProvider: DefaultInterceptorProvider {
     override func interceptors<Operation: GraphQLOperation>(for operation: Operation) -> [ApolloInterceptor] {
         var interceptors = super.interceptors(for: operation)
         
-        interceptors += [HeaderInterceptor()]
         interceptors += [RequestLoggingInterceptor()]
         
         return interceptors
@@ -80,20 +84,5 @@ fileprivate final class RequestLoggingInterceptor: ApolloInterceptor {
             }
             
             chain.proceedAsync(request: request, response: response, completion: completion)
-        }
-}
-
-/// 헤더에 필요한 정보를 더한다
-fileprivate final class HeaderInterceptor: ApolloInterceptor {
-    func interceptAsync<Operation: GraphQLOperation>(
-        chain: RequestChain,
-        request: HTTPRequest<Operation>,
-        response: HTTPResponse<Operation>?,
-        completion: @escaping (Swift.Result<GraphQLResult<Operation.Data>, Error>) -> Void) {
-            
-            request.addHeader(name: "Authorization",
-                              value: "Bearer 7DtsFUQV/p45ZWxy+ygag93GxafNrhQKw7Bm/4AxcUWPEykKpVTlLG6xJhAnRXZcFeh3qv2ITN/dkjIclGOIQg==")
-            
-            chain.proceedAsync(request: request, response: response,completion: completion)
         }
 }

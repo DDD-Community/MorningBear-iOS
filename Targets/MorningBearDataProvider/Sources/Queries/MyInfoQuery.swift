@@ -8,9 +8,6 @@
 
 import Foundation
 
-
-import UIKit
-
 import RxSwift
 
 @_exported import MorningBearData

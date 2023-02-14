@@ -35,3 +35,40 @@ public func linkRx<Value>(
         .disposed(by: bag)
 }
 
+public extension PrimitiveSequenceType where Trait == SingleTrait {
+    func concurrentSubscribe(
+        scheduler: SchedulerType = ConcurrentDispatchQueueScheduler(qos: .userInitiated),
+        completionHandler: @escaping (Element) -> Void,
+        errorHandler: ((Error) -> Void)? = nil,
+        disposeHandler: (() -> Void)? = nil
+    ) -> Disposable {
+        return self.primitiveSequence
+            .subscribe(on: scheduler)
+            .retry(2)
+            .subscribe(
+                onSuccess: { data in
+                    print(data)
+                    completionHandler(data)
+                },
+                onFailure: {
+                    errorHandler?($0)
+                    MorningBearLogger.track($0)
+                },
+                onDisposed: {
+                    disposeHandler?()
+                }
+            )
+    }
+}
+
+public extension Hashable {
+    var eraseToAnyHasable: AnyHashable {
+        return AnyHashable(self)
+    }
+}
+
+public extension Array where Element: Hashable {
+    var eraseToAnyHasable: [AnyHashable] {
+        return self.map { $0.eraseToAnyHasable }
+    }
+}

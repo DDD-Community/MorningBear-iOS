@@ -7,28 +7,64 @@
 //
 
 import Foundation
-
 import UIKit
-import MorningBearUI
 
-// FIXME: remove this
-import MorningBearData
+import RxSwift
+
+import MorningBearUI
+import MorningBearDataProvider
+import MorningBearKit
 
 class MyPageViewModel {
-    let profile = Profile(
-        image: MorningBearUIAsset.Images.streakThree.image,
-        nickname: "sss",
-        counts: Profile.CountContext(postCount: 1, supportCount: 2, badgeCount: 3)
-    )
+    typealias Category = MorningBearDataProvider.Category
     
-    let category = Category.emotion
+    private let dataProvider: DefaultProvider
+    private let bag = DisposeBag()
     
-    let themes = Category.allCases.map { $0.description }
+    @Bound private(set) var isNetworking: Bool = false
     
-    let recentMorning = [
-        MyMorning(imageURL: URL(string: "www.naver1.com")!),
-        MyMorning(imageURL: URL(string: "www.naver2.com")!),
-        MyMorning(imageURL: URL(string: "www.naver3.com")!),
-        MyMorning(imageURL: URL(string: "www.naver4.com")!)
-    ]
+    @Bound private(set) var profile: Profile = Profile(imageURL: URL(string: "www.naver.com")!,
+                                                       nickname: "s",
+                                                       counts: .init(postCount: 0, supportCount: 0, badgeCount: 0))
+
+    @Bound private(set) var selectedCatagory: Category = .exercies
+    @Bound private(set) var categories: [Category] = []
+    @Bound private(set) var recentMorning: [MyMorning] = []
+    
+    private var recentMorningDictionary: [Category: [MyMorning]] = [:]
+    
+    let categoryOptions = Category.allCases.map { $0.description }
+    
+    func fetch() {
+        isNetworking = true
+        
+        dataProvider.fetch(MyPageQuery())
+            .concurrentSubscribe(
+                completionHandler: { mypageData in
+                    self.profile = mypageData.profile
+                    self.categories = mypageData.favoriteCategories
+                    
+                    self.recentMorningDictionary = mypageData.photos
+                    self.fetchMyMorning(category: self.selectedCatagory)
+                },
+                disposeHandler: {
+                    self.isNetworking = false
+                })
+            .disposed(by: bag)
+    }
+    
+    func fetchMyMorning(category: Category) {
+        selectedCatagory = category
+        guard let recentMorning = recentMorningDictionary[category] else {
+            return
+        }
+        
+        self.recentMorning = recentMorning
+    }
+    
+    init(dataProvider: DefaultProvider = DefaultProvider.shared) {
+        self.dataProvider = dataProvider
+        
+        fetch()
+    }
 }

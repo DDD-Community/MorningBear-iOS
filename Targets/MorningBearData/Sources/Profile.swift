@@ -8,25 +8,30 @@
 
 import UIKit
 
+import MorningBearAPI
+
 public struct Profile {
     private let id = UUID()
     
-    public let image: UIImage
+    public let imageURL: URL
     public let nickname: String
     
-    public let countContext: CountContext?
-    public let buttonContext: ButtonContext?
+    public var countContext: CountContext?
+    public var buttonContext: ButtonContext?
+}
 
-    public init(image: UIImage, nickname: String, counts: CountContext) {
-        self.image = image
+// MARK: Initializers
+public extension Profile {
+    init(imageURL: URL, nickname: String, counts: CountContext) {
+        self.imageURL = imageURL
         self.nickname = nickname
         self.countContext = counts
         
         self.buttonContext = nil
     }
     
-    public init(image: UIImage, nickname: String, buttonText: ButtonContext) {
-        self.image = image
+    init(imageURL: URL, nickname: String, buttonText: ButtonContext) {
+        self.imageURL = imageURL
         self.nickname = nickname
         self.buttonContext = buttonText
         
@@ -55,6 +60,14 @@ public extension Profile {
             self.buttonText = buttonText
             self.buttonAction = buttonAction
         }
+    }
+    
+    func eraseToButtonContext(text: String, action: @escaping () -> Void) -> Self {
+        var newValue = self
+        newValue.countContext = nil
+        newValue.buttonContext = ButtonContext(buttonText: text, buttonAction: action)
+        
+        return newValue
     }
 }
 

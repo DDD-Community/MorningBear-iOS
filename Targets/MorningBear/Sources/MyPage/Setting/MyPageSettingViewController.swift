@@ -17,6 +17,7 @@ class MyPageSettingViewController: UIViewController {
     
     private let bag = DisposeBag()
     
+    private var environmentViewModel: MyPageViewModel!
     private let viewModel = MyPageSettingViewModel()
     private var dataSource: UICollectionViewDiffableDataSource<MyPageSettingSection, AnyHashable>!
 
@@ -30,6 +31,12 @@ class MyPageSettingViewController: UIViewController {
         let (_collectionView, _dataSource) = collectionViewBuilder.build()
         self.collectionView = _collectionView
         self.dataSource = _dataSource
+    }
+}
+
+extension MyPageSettingViewController {
+    func prepare(environmentViewModel: MyPageViewModel) {
+        self.environmentViewModel = environmentViewModel
     }
 }
 
@@ -54,7 +61,8 @@ private extension MyPageSettingViewController {
                 
                 switch MyPageSettingSection(rawValue: indexPath.section) {
                 case .profile:
-                    return ProfileCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: self.viewModel.profile)
+                    let buttonProfile = self.environmentViewModel.profile.eraseToButtonContext(text: "정보 수정하기", action: { print("수정") })
+                    return ProfileCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: buttonProfile)
                 case .divider:
                     return DividerCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: ())
                 case .settings:
@@ -89,7 +97,7 @@ private extension MyPageSettingViewController {
                 case .divider:
                     return provider.divier(height: 6)
                 case .settings:
-                    return provider.verticalScrollLayoutSection(showItemCount: 8)
+                    return provider.verticalScrollLayoutSection(showItemCount: 10)
                 case .none:
                     fatalError("가질 수 없는 섹션 인덱스")
                 }
