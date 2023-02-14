@@ -69,7 +69,7 @@ final class MorningBearDateFormatterTests: XCTestCase {
     func test__shortime_format() {
         formatter = MorningBearDateFormatter.shortimeFormatter
         
-        let dateStrings = ["오전 01:30", "오전 12:02", "오전 03:02", "오후 11:39"]
+        let dateStrings = ["0130", "1202", "0302", "1139"]
 
         for dateString in dateStrings {
             guard let date = formatter.date(from: dateString) else {

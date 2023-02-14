@@ -20,19 +20,19 @@ import MorningBearNetwork
 import MorningBearKit
 import MorningBearStorage
 
+public typealias AnyFirebaseStorage = any RemoteStoraging<FirebaseStorageService>
+
 // MARK: - Editor body
 /// `MyMorningViewModel`에서 사용하는 데이터 에디터
 public struct MyMorningDataEditor: MyMorningDataEditing {
     public typealias ResultType = (photoLink: String, updateBadges: [Badge])
-    public typealias Firebase = FirebaseStorageService
-
-    private let remoteStorageManager: RemoteStorageManager<Firebase>
+    private let remoteStorageManager: AnyFirebaseStorage
 
     public func perform<Mutation: MyMorningMutable>(_ mutation: Mutation) -> Single<Mutation.ResultType> {
         return mutation.singleTrait
     }
     
-    public init(_ remoteStorageManager: RemoteStorageManager<Firebase> = RemoteStorageManager<Firebase>()) {
+    public init(_ remoteStorageManager: AnyFirebaseStorage = RemoteStorageManager<FirebaseStorageService>()) {
         self.remoteStorageManager = remoteStorageManager
     }
 }
@@ -48,11 +48,11 @@ public extension MyMorningDataEditor {
 /// 등록 정보를 만든다
 ///
 /// `RegisterMutation`이랑 헷갈리지 말 것. 얘는 네트워크 요청 안 하는 그냥 툴임
-fileprivate struct MorningRegistrationSingleTrait<RemoteStorage: RemoteStoraging>: Mutable {
+fileprivate struct MorningRegistrationSingleTrait: Mutable {
     typealias ResultType = (photoLink: String, updateBadges: [Badge])
 
     private let info: MorningRegistrationInfo
-    private let remoteStorageManager: RemoteStorage
+    private let remoteStorageManager: AnyFirebaseStorage
 
     var singleTrait: Single<ResultType> {
         let trait =  SavePhotoStorageMutation(image: info.image, remoteStorageManager)
@@ -70,7 +70,7 @@ fileprivate struct MorningRegistrationSingleTrait<RemoteStorage: RemoteStoraging
         return trait
     }
     
-    init(info: MorningRegistrationInfo, _ remoteStorageManager: RemoteStorage) {
+    init(info: MorningRegistrationInfo, _ remoteStorageManager: AnyFirebaseStorage) {
         self.info = info
         self.remoteStorageManager = remoteStorageManager
     }

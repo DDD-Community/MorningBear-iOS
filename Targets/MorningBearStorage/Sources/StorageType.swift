@@ -9,6 +9,8 @@
 import Foundation
 import RxSwift
 
+import MorningBearTestKit
+
 /// 다양한 종류의 저장소를 추상화해 관리할 수 있게 만든 프로토콜
 ///
 /// 원격 저장소, 로컬 저장소 상관 없이 같은 인터페이스를 따르게 해 관리와 테스트를 편리하게 하기 위함임
@@ -44,33 +46,4 @@ final class MockStorage: StorageType {
     func download(with url: URL) -> RxSwift.Single<Data> {
         download(url)
     }
-}
-
-
-
-public struct MockFunction<Argument, Result> {
-    public typealias Impl = (Argument) -> Result
-    
-    public var stub: Impl?
-    private var calls: [MockFunctionCall<Argument, Result>]
-    
-    public init(_ original: Impl) {
-        self.calls = []
-    }
-    
-    public mutating func callAsFunction(_ argument: Argument) -> Result {
-        guard let stub else {
-            fatalError("Implementation has not been given")
-        }
-        
-        let result = stub(argument)
-        calls.append(MockFunctionCall(argument: argument, result: result))
-        
-        return result
-    }
-}
-
-public struct MockFunctionCall<Argument, Result> {
-    public let argument: Argument
-    public let result: Result
 }

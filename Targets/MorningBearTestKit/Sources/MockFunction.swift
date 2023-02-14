@@ -12,10 +12,10 @@ public struct MockFunction<Argument, Result> {
     public typealias Impl = (Argument) -> Result
     
     public var stub: Impl?
-    private var calls: [MockFunctionCall<Argument, Result>]
+    private var calls: [MockFunctionCall<Argument, Result>] = []
     
-    public init(_ original: Impl) {
-        self.calls = []
+    public init(_ original: Impl, stubClosuer: Impl? = nil) {
+        self.stub = stubClosuer
     }
     
     public mutating func callAsFunction(_ argument: Argument) -> Result {
