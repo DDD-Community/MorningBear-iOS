@@ -10,6 +10,7 @@ import Foundation
 
 import UIKit
 import RxSwift
+import Apollo
 
 @_exported import MorningBearData
 import MorningBearUI
@@ -17,23 +18,29 @@ import MorningBearAPI
 import MorningBearNetwork
 
 public struct MyPageQuery: Queryable {
-    public let singleTrait = Network.shared.apollo.rx.fetch(query: GetMyPageDataQuery())
-        .map { data -> GetMyPageDataQuery.Data.FindMyInfo in
-            guard let data = data.data else {
-                throw DataProviderError.cannotGetResponseFromServer
-            }
-            
-            guard let findMyInfo = data.findMyInfo else {
-                throw DataProviderError.invalidPayloadData(message: "잘못된 쿼리 응답(\(#function)")
-            }
-            
-            return findMyInfo
-        }
-        .map { findMyInfo -> MyPageData in
-            try findMyInfo.toNativeType()
-        }
+    private let apolloClient: ApolloClient
     
-    public init() {}
+    public var singleTrait: Single<MyPageData> {
+        apolloClient.rx.fetch(query: GetMyPageDataQuery())
+            .map { data -> GetMyPageDataQuery.Data.FindMyInfo in
+                guard let data = data.data else {
+                    throw DataProviderError.cannotGetResponseFromServer
+                }
+                
+                guard let findMyInfo = data.findMyInfo else {
+                    throw DataProviderError.invalidPayloadData(message: "잘못된 쿼리 응답(\(#function)")
+                }
+                
+                return findMyInfo
+            }
+            .map { findMyInfo -> MyPageData in
+                try findMyInfo.toNativeType()
+            }
+    }
+    
+    public init(_ apolloClient: ApolloClient = Network.shared.apollo) {
+        self.apolloClient = apolloClient
+    }
 }
 
 extension GetMyPageDataQuery.Data.FindMyInfo: ApolloAdaptable {

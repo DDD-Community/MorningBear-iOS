@@ -9,8 +9,6 @@
 import Foundation
 import RxSwift
 
-import MorningBearTestKit
-
 /// 다양한 종류의 저장소를 추상화해 관리할 수 있게 만든 프로토콜
 ///
 /// 원격 저장소, 로컬 저장소 상관 없이 같은 인터페이스를 따르게 해 관리와 테스트를 편리하게 하기 위함임
@@ -29,21 +27,4 @@ public protocol StorageType {
     /// 로컬 스토리지의 경우에도 URL을 가지고 접근하는 것을 원칙으로 함.
     /// `UserDefault`같이 URL이 필요헚는 저장소를 사용하게 될 경우 메서드를 추가해서 사용할 것
     func download(with url: URL) -> Single<Data>
-}
-
-extension StorageType {
-    typealias Mock = MockStorage
-}
-
-final class MockStorage: StorageType {
-    lazy var save = MockFunction(save)
-    lazy var download = MockFunction(download)
-    
-    func save(data: Data, name: String?) -> RxSwift.Single<URL> {
-        save((data, name))
-    }
-    
-    func download(with url: URL) -> RxSwift.Single<Data> {
-        download(url)
-    }
 }
