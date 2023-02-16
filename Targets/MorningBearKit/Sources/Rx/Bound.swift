@@ -36,11 +36,40 @@ public class Bound<Value> {
     public init(initValue: Value) {
         self.relay = BehaviorRelay<Value>(value: initValue)
         wrappedValue = initValue
-        
-        relay.accept(initValue)
     }
     
     public convenience init(wrappedValue: Value) {
         self.init(initValue: wrappedValue)
     }
 }
+
+@propertyWrapper
+public class ColdBound<Value> {
+    private var value: Value
+    private let relay: PublishRelay<Value>
+    
+    public var wrappedValue: Value {
+        get {
+            return self.value
+        }
+        set {
+            self.relay.accept(newValue)
+        }
+    }
+    
+    public var projectedValue: PublishRelay<Value> {
+        return relay
+    }
+    
+    public init(initValue: Value) {
+        self.value = initValue
+        self.relay = PublishRelay<Value>()
+        
+        wrappedValue = initValue
+    }
+    
+    public convenience init(wrappedValue: Value) {
+        self.init(initValue: wrappedValue)
+    }
+}
+

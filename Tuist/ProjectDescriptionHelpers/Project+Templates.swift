@@ -23,7 +23,8 @@ extension Project {
                             Image: String,
                             DataProvider: String,
                             DataEditor: String,
-                            Test: String
+                            Test: String,
+                            Auth: String
                            )) -> Project {
         
         // MARK: - App level
@@ -35,7 +36,8 @@ extension Project {
                                         .target(name: additionalTargets.Network),
                                         .target(name: additionalTargets.Image),
                                         .target(name: additionalTargets.DataProvider),
-                                        .target(name: additionalTargets.DataEditor)
+                                        .target(name: additionalTargets.DataEditor),
+                                        .target(name: additionalTargets.Auth)
                                      ])
         
         targets += [
@@ -72,12 +74,14 @@ extension Project {
                        dependencies: [
                         .external(name: "RxSwift"),
                         .external(name: "RxCocoa"),
-                        .external(name: "Quick"),
-                        .external(name: "Nimble"),
                         .external(name: "Kingfisher"),
                         .external(name: "PanModal"),
                         .target(name: "MorningBearData"),
                         .target(name: "MorningBearKit")
+                       ],
+                       additionalTestTarget: [
+                        .external(name: "Quick"),
+                        .external(name: "Nimble"),
                        ]),
             makeTarget(name: additionalTargets.Network, platform: platform,
                        dependencies: [
@@ -108,7 +112,17 @@ extension Project {
                        ]),
             makeTarget(name: additionalTargets.Test, platform: platform,
                        dependencies: []
-                      )
+                      ),
+            makeTarget(name: additionalTargets.Auth,
+                       platform: platform,
+                       dependencies: [
+                        .target(name: "MorningBearKit"),
+                        .external(name: "RxSwift")
+                       ],
+                       additionalTestTarget: [
+                        .external(name: "Quick"),
+                        .external(name: "Nimble"),
+                       ])
         ].flatMap { $0 }
         
         return Project(
