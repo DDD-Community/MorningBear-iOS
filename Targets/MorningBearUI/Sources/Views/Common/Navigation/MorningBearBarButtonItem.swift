@@ -20,7 +20,7 @@ public struct MorningBearBarButtonItem {
         return button
     }
     
-    public static let titleButton =  UIBarButtonItem(image: MorningBearUIAsset.Images.tempLogo.image.withRenderingMode(.alwaysOriginal))
+    public static var titleButton: UIBarButtonItem = UIBarButtonItem(image: MorningBearUIAsset.Images.logoGray.image.withRenderingMode(.alwaysOriginal))
     public static let searchButton = UIBarButtonItem(systemItem: .search)
     public static let notificationButton = UIBarButtonItem(image: MorningBearUIAsset.Images.bell.image.withRenderingMode(.alwaysOriginal))
     

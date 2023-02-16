@@ -23,7 +23,7 @@ public class Network {
         
         let config = URLSessionConfiguration.default
         config.httpAdditionalHeaders = [
-            "Authorization" : "Bearer uf0nunkIUWJNPcOY8IDdu+eErBkZW0SXEQCMtz+x/IKVWvHkxD8U7cm5ERJQw0grLVhpYYHb6LPimRjjUigzaQ=="
+            "Authorization" : "Bearer z/IMdQW2oCC8zygw5EAxfUSFMVH42RIGE7ok3448jYjhEECEtdH6MF+HlJobGSm9iekc2qZ1gqTYWMUdR38DRQ===="
         ]
         
         let sessionClient = URLSessionClient(sessionConfiguration: config, callbackQueue: nil)

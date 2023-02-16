@@ -183,14 +183,15 @@ private extension HomeViewController {
         self.navigationItem.leftBarButtonItem?.tintColor = .black
         self.navigationItem.hidesSearchBarWhenScrolling = true
         
-        let alarmButton = MorningBearBarButtonItem.notificationButton
-        self.navigationItem.rightBarButtonItems = [alarmButton]
+        // TODO: 나중에 알람 추가되면 그때 
+//        let alarmButton = MorningBearBarButtonItem.notificationButton
+//        self.navigationItem.rightBarButtonItems = [alarmButton]
         
         // Bind buttons
-        alarmButton.rx.tap.bind { _ in
-            print("tapped")
-        }
-        .disposed(by: bag)
+//        alarmButton.rx.tap.bind { _ in
+//            print("tapped")
+//        }
+//        .disposed(by: bag)
     }
     
     /// 기록 상태에 따라 달라지는 뷰 행동의 정의

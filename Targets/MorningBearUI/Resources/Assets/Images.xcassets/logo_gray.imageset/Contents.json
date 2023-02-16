@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Group 7289.png",
+      "filename" : "logo_gray.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Group 7289@2x.png",
+      "filename" : "logo_gray@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Group 7289@3x.png",
+      "filename" : "logo_gray@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
