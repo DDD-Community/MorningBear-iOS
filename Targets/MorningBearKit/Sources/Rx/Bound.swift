@@ -44,16 +44,23 @@ public class Bound<Value> {
 }
 
 @propertyWrapper
-public class ColdBound<Value> {
+public class HotBound<Value> {
+    private let workQueue = DispatchQueue(label: "HotBound.Queue")
+    
     private var value: Value
     private let relay: PublishRelay<Value>
     
     public var wrappedValue: Value {
         get {
-            return self.value
+            return workQueue.sync {
+                return self.value
+            }
         }
         set {
-            self.relay.accept(newValue)
+            workQueue.sync {
+                self.value = newValue
+                self.relay.accept(newValue)
+            }
         }
     }
     

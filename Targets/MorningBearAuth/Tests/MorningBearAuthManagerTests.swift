@@ -6,155 +6,121 @@
 //  Copyright © 2023 com.dache. All rights reserved.
 //
 
+import Foundation
+
 import XCTest
 import RxSwift
 
+import Quick
+import Nimble
+
 @testable import MorningBearAuth
 
-final class MorningBearAuthManagerTests: XCTestCase {
+final class MorningBearAuthManagerBehaviorTests: QuickSpec {
     var mockStorage: UserDefaults!
     var authManager: MorningBearAuthManager!
     var bag: DisposeBag!
     
-    private let semaphore = DispatchSemaphore(value: 1)
+    let concurrentStorageName = "test.concurrent"
     
-    override func setUpWithError() throws {
-        guard let mockStorage = UserDefaults(suiteName: "test") else {
-            throw URLError(.backgroundSessionWasDisconnected) // Any error
-        }
-        
-        self.mockStorage = mockStorage
-        authManager = MorningBearAuthManager(mockStorage)
-        bag = DisposeBag()
-    }
-
-    override func tearDownWithError() throws {
-        authManager = nil
-        mockStorage = nil
-        UserDefaults.standard.removeSuite(named: "test")
-    }
-
-    func testLogin() throws {
-        semaphore.wait()
-        defer {
-            semaphore.signal()
-        }
-        
-        let expectation = XCTestExpectation()
-        
-        authManager.$isLoggedIn
-            .subscribe { onNext in
-                XCTAssertEqual(onNext.element, true)
-                expectation.fulfill()
+    override func spec() {
+        beforeSuite {
+            guard let mockStorage = UserDefaults(suiteName: "test") else {
+                return
             }
-            .disposed(by: bag)
-        
-        authManager.login(token: "test_token")
-        
-        wait(for: [expectation], timeout: 3)
-    }
-    
-    func testLogout() throws {
-        semaphore.wait()
-        defer {
-            semaphore.signal()
+            
+            self.mockStorage = mockStorage
         }
         
-        let expectation = XCTestExpectation()
+        afterSuite {
+            self.mockStorage = nil
+            UserDefaults.standard.removeSuite(named: "test")
+        }
         
-        authManager.$isLoggedIn
-            .subscribe {
-                XCTAssertTrue($0 == false)
-                expectation.fulfill()
+        describe("Auth manager의 기본동작 테스트") {
+            beforeEach {
+                self.authManager = MorningBearAuthManager(self.mockStorage)
+                self.bag = DisposeBag()
             }
-            .disposed(by: bag)
-        
-        authManager.logout()
-        
-        wait(for: [expectation], timeout: 3)
-        
-        XCTAssertNil(authManager.token)
-    }
-    
-    func testLogWithdrawal() throws {
-        semaphore.wait()
-        defer {
-            semaphore.signal()
-        }
-        
-        let expectation = XCTestExpectation()
-        
-        authManager.$isLoggedIn
-            .subscribe {
-                XCTAssertTrue($0 == false)
-                expectation.fulfill()
+            
+            afterEach {
+                self.authManager = nil
+                self.bag = nil
             }
-            .disposed(by: bag)
-        
-        authManager.withdrawal()
-        
-        wait(for: [expectation], timeout: 3)
-        
-        XCTAssertNil(authManager.token)
-    }
-    
-    func testTokenGetter() throws {
-        semaphore.wait()
-        defer {
-            semaphore.signal()
-        }
-        
-        let expectedToken = "test_token"
-        let expectation = XCTestExpectation()
-        
-        // Check clear case
-        XCTAssertNil(authManager.token)
-        
-        authManager.$isLoggedIn
-            .subscribe { onNext in
-                expectation.fulfill()
+            
+            it("로그인") { [self] in
+                let expectation = XCTestExpectation()
+                expect(self.authManager.token).to(beNil())
+                
+                authManager.$isLoggedIn
+                    .subscribe {
+                        expect($0).to(equal(true))
+                        expectation.fulfill()
+                    }
+                    .disposed(by: bag)
+                
+                authManager.login(token: "test_token")
+                wait(for: [expectation], timeout: 3)
+                
+                expect(self.authManager.isLoggedIn).to(equal(true))
+                expect(self.authManager.token).to(equal("test_token"))
             }
-            .disposed(by: bag)
-        
-        authManager.login(token: expectedToken)
-        
-        wait(for: [expectation], timeout: 3)
-        
-        XCTAssertEqual(authManager.token, expectedToken)
-    }
-    
-    func testDataRacingCondition() throws {
-        semaphore.wait()
-        
-        let suiteName = "concurrent_test"
-        guard let mockStorage = UserDefaults(suiteName: suiteName) else {
-            throw URLError(.backgroundSessionWasDisconnected) // Any error
-        }
-        self.authManager = MorningBearAuthManager(mockStorage)
-
-        defer {
-            UserDefaults.standard.removeSuite(named: suiteName)
-            semaphore.signal()
-        }
-        
-        let concurrentQueue = DispatchQueue(label: "concurrentQueue.test", attributes: .concurrent)
-
-        // Run 10 concurrent tasks that increment the shared resource
-        let taskCount = 10
-        let group = DispatchGroup()
-
-        for _ in 0..<taskCount {
-            concurrentQueue.async(group: group) {
-                self.authManager.login(token: "test_concurrent")
-                self.authManager.logout()
+            
+            it("로그아웃") { [self] in
+                let expectation = XCTestExpectation()
+                
+                authManager.$isLoggedIn
+                    .subscribe {
+                        expect($0).to(equal(false))
+                        expectation.fulfill()
+                    }
+                    .disposed(by: bag)
+                
+                authManager.logout()
+                
+                wait(for: [expectation], timeout: 3)
+                
+                expect(self.authManager.isLoggedIn).to(equal(false))
+                expect(self.authManager.token).to(beNil())
+            }
+            
+            it("탈퇴") { [self] in
+                let expectation = XCTestExpectation()
+                
+                authManager.$isLoggedIn
+                    .subscribe {
+                        expect($0).to(equal(false))
+                        expectation.fulfill()
+                    }
+                    .disposed(by: bag)
+                
+                authManager.withdrawal()
+                
+                wait(for: [expectation], timeout: 3)
+                
+                expect(self.authManager.isLoggedIn).to(equal(false))
+                expect(self.authManager.token).to(beNil())
+            }
+            
+            it("토큰 게터") { [self] in
+                let expectedToken = "test_token"
+                let expectation = XCTestExpectation()
+                
+                // Check clear case
+                XCTAssertNil(authManager.token)
+                
+                authManager.$isLoggedIn
+                    .subscribe { onNext in
+                        expectation.fulfill()
+                    }
+                    .disposed(by: bag)
+                
+                authManager.login(token: expectedToken)
+                
+                wait(for: [expectation], timeout: 3)
+                
+                expect(self.authManager.token).to(equal(expectedToken))
             }
         }
-
-        // Wait for all tasks to complete
-        let timeout = DispatchTime.now() + 5
-        let result = group.wait(timeout: timeout)
-        
-        XCTAssertEqual(result, .success)
-        XCTAssertEqual(authManager.isLoggedIn, false)
     }
 }

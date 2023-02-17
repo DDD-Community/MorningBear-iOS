@@ -14,51 +14,34 @@ public final class MorningBearAuthManager {
     public static let shared = MorningBearAuthManager()
     
     private let storage: UserDefaults
-    private let semaphore: DispatchSemaphore
+    private let operationQueue: OperationQueue
     
-    @ColdBound public private(set) var isLoggedIn: Bool = false
+    @HotBound public private(set) var isLoggedIn: Bool = false
     
     init(_ storage: UserDefaults = .standard) {
         self.storage = storage
-        self.semaphore = DispatchSemaphore(value: 1)
+        self.operationQueue = OperationQueue()
     }
 }
 
 public extension MorningBearAuthManager {
     func login(token: String) {
-        DispatchQueue.global().async {
-            self.semaphore.wait()
-            defer {
-                self.semaphore.signal()
-            }
-            
-            self.storage.set(token, forKey: self.storageTokenKey)
-            self.isLoggedIn = true
+        guard isLoggedIn == false else {
+            return
         }
+        
+        self.storage.set(token, forKey: self.storageTokenKey)
+        self.isLoggedIn = true
     }
     
     func logout() {
-        DispatchQueue.global().async {
-            self.semaphore.wait()
-            defer {
-                self.semaphore.signal()
-            }
-            
-            self.storage.removeObject(forKey: self.storageTokenKey)
-            self.isLoggedIn = false
-        }
+        self.storage.removeObject(forKey: self.storageTokenKey)
+        self.isLoggedIn = false
     }
     
     func withdrawal() {
-        DispatchQueue.global().async {
-            self.semaphore.wait()
-            defer {
-                self.semaphore.signal()
-            }
-            
-            self.storage.removeObject(forKey: self.storageTokenKey)
-            self.isLoggedIn = false
-        }
+        self.storage.removeObject(forKey: self.storageTokenKey)
+        self.isLoggedIn = false
     }
     
     var token: String? {

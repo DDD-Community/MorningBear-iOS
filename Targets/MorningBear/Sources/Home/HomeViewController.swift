@@ -183,7 +183,7 @@ private extension HomeViewController {
         self.navigationItem.leftBarButtonItem?.tintColor = .black
         self.navigationItem.hidesSearchBarWhenScrolling = true
         
-        // TODO: 나중에 알람 추가되면 그때 
+        // TODO: 나중에 알람 추가되면 그때
 //        let alarmButton = MorningBearBarButtonItem.notificationButton
 //        self.navigationItem.rightBarButtonItems = [alarmButton]
         
