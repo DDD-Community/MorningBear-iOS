@@ -82,12 +82,18 @@ extension Project {
                        additionalTestTarget: [
                         .external(name: "Quick"),
                         .external(name: "Nimble"),
+                        .external(name: "RxBlocking")
                        ]),
             makeTarget(name: additionalTargets.Network, platform: platform,
                        dependencies: [
                         .external(name: "Apollo"),
                         .external(name: "MorningBearAPI"),
                         .external(name: "MorningBearAPITestMocks"),
+                       ],
+                       additionalTestTarget: [
+                        .external(name: "Quick"),
+                        .external(name: "Nimble"),
+                        .external(name: "RxBlocking")
                        ]),
             makeTarget(name: additionalTargets.Image, platform: platform,
                        dependencies: []),
@@ -99,6 +105,11 @@ extension Project {
                         .target(name: "MorningBearUI"),
                         .target(name: "MorningBearNetwork"),
                         .target(name: "MorningBearStorage")
+                       ],
+                       additionalTestTarget: [
+                        .external(name: "Quick"),
+                        .external(name: "Nimble"),
+                        .external(name: "RxBlocking")
                        ]),
             makeTarget(name: additionalTargets.DataEditor, platform: platform,
                        dependencies: [
@@ -108,10 +119,17 @@ extension Project {
                         .target(name: "MorningBearStorage")
                        ],
                        additionalTestTarget: [
+                        .external(name: "Quick"),
+                        .external(name: "Nimble"),
                         .external(name: "RxBlocking")
                        ]),
             makeTarget(name: additionalTargets.Test, platform: platform,
-                       dependencies: []
+                       dependencies: [],
+                       additionalTestTarget: [
+                        .external(name: "Quick"),
+                        .external(name: "Nimble"),
+                        .external(name: "RxBlocking")
+                       ]
                       ),
             makeTarget(name: additionalTargets.Auth,
                        platform: platform,
@@ -122,6 +140,7 @@ extension Project {
                        additionalTestTarget: [
                         .external(name: "Quick"),
                         .external(name: "Nimble"),
+                        .external(name: "RxBlocking")
                        ])
         ].flatMap { $0 }
         
@@ -229,7 +248,10 @@ extension Project {
             infoPlist: .default,
             sources: ["Targets/\(name)/Tests/**"],
             dependencies: [
-                .target(name: "\(name)")
+                .target(name: "\(name)"),
+                .external(name: "RxBlocking"),
+                .external(name: "Nimble"),
+                .external(name: "Quick")
             ])
         return [mainTarget, testTarget]
     }
