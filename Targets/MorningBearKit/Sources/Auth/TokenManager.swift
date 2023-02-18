@@ -8,9 +8,11 @@
 
 import Foundation
 
+import RxSwift
+import KakaoSDKAuth
+
 import MorningBearNetwork
 import MorningBearAPI
-import KakaoSDKAuth
 
 public final class TokenManager {
     
@@ -28,7 +30,10 @@ public final class TokenManager {
     /// Apple 엑세스 토큰을 앱에서 사용되는 토큰으로 인코딩 후, UserDefault에 저장
     public func progressApple(token: String) {
         Network.shared.apollo
-            .fetch(query: EncodeQuery(state: GraphQLNullable(stringLiteral: AuthState.apple.rawValue), token: GraphQLNullable(stringLiteral: token))) { result in
+            .fetch(query: EncodeQuery(
+                state: .some(AuthState.apple.rawValue),
+                token: .some(token)
+            )) { result in
             switch result {
             case .success(let graphQLResult):
                 guard let encodedToken = graphQLResult.data?.encode else { return }
@@ -36,33 +41,37 @@ public final class TokenManager {
                 print("encodedToken is", encodedToken)
                 self.saveAuthStateAtLocal(.apple)
                 self.saveMorningBearTokenAtLocal(encodedToken)
-                
             case .failure(let error):
                 print(error)
             }
-        }
+            }
     }
     
     /// Kakao 로그인 후 엑세스 토큰에 필요한 프로세스를 진행합니다
     ///
     /// Kakao 엑세스 토큰을 앱에서 사용되는 토큰으로 인코딩 후, UserDefault에 저장.  만료일과 리프레시 토큰 또한 UserDefault에 별도로 저장
-    public func progressKakao(oauthToken: OAuthToken) {
-        Network.shared.apollo
-            .fetch(query: EncodeQuery(state: GraphQLNullable(stringLiteral: AuthState.kakao.rawValue), token: GraphQLNullable(stringLiteral: oauthToken.accessToken))) { result in
-            switch result {
-            case .success(let graphQLResult):
-                guard let encodedToken = graphQLResult.data?.encode else { return }
-                
-                print("encodedToken is", encodedToken)
-                self.saveAuthStateAtLocal(.kakao)
-                self.saveMorningBearTokenAtLocal(encodedToken)
-                self.saveKakaoRefreshTokenAtLocal(oauthToken.refreshToken)
-                self.saveKakaoExpirationDateAtLocal(oauthToken.expiredAt)
-                
-            case .failure(let error):
-                print(error)
+    public func progressKakao(oauthToken: OAuthToken) -> Maybe<String?> {
+        Network.shared.apollo.rx.fetch(
+            query: EncodeQuery(
+                state: .some(AuthState.kakao.rawValue),
+                token: .some(oauthToken.accessToken)
+            )
+        )
+        .map { graphQLResult -> String? in
+            guard let encodedToken = graphQLResult.data?.encode else {
+                return nil
             }
+            
+            print("encodedToken is", encodedToken)
+            
+            self.saveAuthStateAtLocal(.kakao)
+            self.saveMorningBearTokenAtLocal(encodedToken)
+            self.saveKakaoRefreshTokenAtLocal(oauthToken.refreshToken)
+            self.saveKakaoExpirationDateAtLocal(oauthToken.expiredAt)
+            
+            return encodedToken
         }
+        .asMaybe()
     }
     
     /// 로그인 시 사용한 서비스명을 로컬에 저장 (apple, kakao)

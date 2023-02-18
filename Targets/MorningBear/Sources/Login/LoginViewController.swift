@@ -8,6 +8,8 @@
 
 import UIKit
 import AuthenticationServices
+
+import MorningBearAuth
 import MorningBearKit
 import MorningBearUI
 
@@ -52,6 +54,8 @@ class LoginViewController: UIViewController {
     
     private let kakaoLoginManager: KakaoLoginManager = KakaoLoginManager()
     private let appleLoginManager: AppleLoginManager = AppleLoginManager()
+    private let appAuthManager: MorningBearAuthManager = .shared
+    
     private let bag = DisposeBag()
     
     override func viewDidLoad() {
@@ -64,11 +68,32 @@ class LoginViewController: UIViewController {
     }
     
     private func bindButtons() {
-        kakaoLoginButton.rx.tap.bind { [weak self] _ in
-            guard let self = self else { return }
-            self.kakaoLoginManager.login()
-        }
-        .disposed(by: bag)
+        kakaoLoginButton.rx.tap
+            .withUnretained(self)
+            .flatMap { weakSelf, _ in
+                return weakSelf.kakaoLoginManager.login()
+            }
+            .subscribe(onNext: { [weak self] token in
+                guard let self else {
+                    return
+                }
+                
+                guard let token = token else {
+                    self.showAlert(LoginError.failToLogin)
+                    return
+                }
+                
+                if self.appAuthManager.login(token: token) == false {
+                    // 실패하면 경고
+                    self.showAlert(LoginError.failToLogin)
+                } else {
+                    // 성공하면 다음 화면
+                    // TODO: Show next screen
+                }
+            }, onError: { error in
+                self.showAlert(error)
+            })
+            .disposed(by: bag)
         
         appleLoginButton.rx.tap.bind { [weak self] _ in
             guard let self = self else { return }
@@ -82,5 +107,16 @@ class LoginViewController: UIViewController {
 extension LoginViewController: ASAuthorizationControllerPresentationContextProviding {
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
         return self.view.window!
+    }
+}
+
+enum LoginError: LocalizedError {
+    case failToLogin
+    
+    var errorDescription: String? {
+        switch self {
+        case .failToLogin:
+            return "로그인에 실패했습니다. 다시 시도해주세요!"
+        }
     }
 }
