@@ -25,13 +25,15 @@ public final class MorningBearAuthManager {
 }
 
 public extension MorningBearAuthManager {
-    func login(token: String) {
+    func login(token: String) -> Bool {
         guard isLoggedIn == false else {
-            return
+            return false
         }
         
         self.storage.set(token, forKey: self.storageTokenKey)
         self.isLoggedIn = true
+        
+        return true
     }
     
     func logout() {

@@ -59,7 +59,7 @@ final class MorningBearAuthManagerBehaviorTests: QuickSpec {
                     }
                     .disposed(by: bag)
                 
-                authManager.login(token: "test_token")
+                XCTAssertTrue(authManager.login(token: "test_token"))
                 wait(for: [expectation], timeout: 3)
                 
                 expect(self.authManager.isLoggedIn).to(equal(true))
@@ -115,7 +115,7 @@ final class MorningBearAuthManagerBehaviorTests: QuickSpec {
                     }
                     .disposed(by: bag)
                 
-                authManager.login(token: expectedToken)
+                XCTAssertTrue(authManager.login(token: expectedToken))
                 
                 wait(for: [expectation], timeout: 3)
                 

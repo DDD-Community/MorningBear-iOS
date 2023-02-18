@@ -44,23 +44,25 @@ public class Bound<Value> {
 }
 
 @propertyWrapper
-public class HotBound<Value> {
-    private let workQueue = DispatchQueue(label: "HotBound.Queue")
+public final class HotBound<Value> {
+    private let semaphore = NSLock()
     
     private var value: Value
     private let relay: PublishRelay<Value>
     
     public var wrappedValue: Value {
         get {
-            return workQueue.sync {
-                return self.value
-            }
+            self.semaphore.lock()
+            defer { semaphore.unlock() }
+            
+            return self.value
         }
         set {
-            workQueue.sync {
-                self.value = newValue
-                self.relay.accept(newValue)
-            }
+            self.semaphore.lock()
+            defer { semaphore.unlock() }
+            
+            self.value = newValue
+            self.relay.accept(newValue)
         }
     }
     
