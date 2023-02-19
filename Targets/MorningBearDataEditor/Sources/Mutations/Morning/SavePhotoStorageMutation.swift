@@ -14,15 +14,15 @@ import RxSwift
 @_exported import MorningBearData
 import MorningBearStorage
 
-struct SavePhotoStorageMutation<RemoteStorage: RemoteStoraging>: Mutable {
-    private let remoteStorageManager: RemoteStorage
+struct SavePhotoStorageMutation: Mutable {
+    private let remoteStorageManager: AnyFirebaseStorage
     private let image: UIImage
     
     var singleTrait: Single<URL> {
         remoteStorageManager.saveImage(image)
     }
     
-    init(image: UIImage, _ remoteStorageManager: RemoteStorage) {
+    init(image: UIImage, _ remoteStorageManager: AnyFirebaseStorage) {
         self.image = image
         self.remoteStorageManager = remoteStorageManager
     }

@@ -20,9 +20,7 @@ class MyMorningsViewModel<Provider: DataProviding> {
     /// 데이터를 새로 덮어씌울지 페이징할지는 소트 타입이 바뀌는지를 보고 판단
     private var currentSortStatus: MyMorningQuery.Sort = .desc
     
-    @Bound(
-        initValue: []
-    ) private(set) var myMornings: [MyMorning]
+    @Bound private(set) var myMornings: [MyMorning] = []
     
     init(_ dataProvider: Provider = DefaultProvider.shared) {
         self.dataProvider = dataProvider

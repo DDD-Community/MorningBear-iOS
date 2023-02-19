@@ -80,7 +80,7 @@ extension MyMorningsViewController: CollectionViewCompositionable {
 extension MyMorningsViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if indexPath.row > viewModel.myMornings.count - 4 { // 끝에서 4개 전에 새로운 이미지 요청
-            viewModel.fetchNewMorning()
+//            viewModel.fetchNewMorning()
         }
     }
 }

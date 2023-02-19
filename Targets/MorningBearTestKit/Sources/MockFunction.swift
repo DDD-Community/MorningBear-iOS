@@ -12,10 +12,10 @@ public struct MockFunction<Argument, Result> {
     public typealias Impl = (Argument) -> Result
     
     public var stub: Impl?
-    private var calls: [MockFunctionCall<Argument, Result>]
+    private var _callCount: Int = 0
     
-    public init(_ original: Impl) {
-        self.calls = []
+    public init(_ original: Impl, stubClosuer: Impl? = nil) {
+        self.stub = stubClosuer
     }
     
     public mutating func callAsFunction(_ argument: Argument) -> Result {
@@ -24,14 +24,18 @@ public struct MockFunction<Argument, Result> {
         }
         
         let result = stub(argument)
-        calls.append(MockFunctionCall(argument: argument, result: result))
+        _callCount += 1
         
         return result
     }
 }
 
-public struct MockFunctionCall<Argument, Result> {
-    public let argument: Argument
-    public let result: Result
+public extension MockFunction {
+    var isCalled: Bool {
+        callCount >= 1
+    }
+    
+    var callCount: Int {
+        self._callCount
+    }
 }
-

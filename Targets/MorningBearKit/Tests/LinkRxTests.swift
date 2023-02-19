@@ -29,7 +29,6 @@ final class LinkRxTests: XCTestCase {
             .toBlocking()
             .materialize()
 
-        print(sampleObservableResult)
         switch sampleObservableResult {
         case .completed(elements: let result):
             XCTAssertEqual(result.first?.count, 3)
