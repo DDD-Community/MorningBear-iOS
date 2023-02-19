@@ -8,15 +8,15 @@
 
 import Foundation
 
-import FirebaseCore
-import FirebaseStorage
+@_exported import FirebaseCore
+@_exported import FirebaseStorage
 import RxSwift
 
 /// 파이어베이스 스토리지와 관련된 작업을 처리함
 ///
 /// - Warning: 초기화 시 파이어베이스가 configure 되므로  무조건 한 번만 초기화할 것
 public final class FirebaseStorageService: StorageType {
-    static let shared = FirebaseStorageService()
+    public static let shared = FirebaseStorageService()
     
     private var storage: Storage!
     
