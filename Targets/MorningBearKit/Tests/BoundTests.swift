@@ -25,8 +25,8 @@ final class BoundTests: XCTestCase {
         let concurrentQueue = DispatchQueue(label: "concurrent.test", attributes: .concurrent)
         
         XCTAssertEqual(mockBound, 0)
-        // It can resist some stress
-        // but please be aware that it doesn't assure of 100% success rate
+        // It can resist a small amount of stress
+        // but should aware that it doesn't ensure 100% success rate
         var expectations = [XCTestExpectation]()
         mockBound = 0
         
