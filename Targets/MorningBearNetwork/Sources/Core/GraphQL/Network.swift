@@ -30,20 +30,17 @@ public extension Network {
 
 private extension Network {
     func setClient() -> ApolloClient {
-        guard let token else {
-            MorningBearLogger.track(NetworkError.tokenNotRegistered)
-            
-            return ApolloClient(url: URL(string: "about:blank")!) // any url
-        }
-        
         let config = URLSessionConfiguration.default
-        config.httpAdditionalHeaders = [
-            "Authorization" : "Bearer \(token)"
-        ]
+        if let token {
+            config.httpAdditionalHeaders = [
+                "Authorization" : "Bearer \(token)"
+            ]
+        } else {
+            MorningBearLogger.track(NetworkError.tokenNotRegistered)
+        }
         
         let cache = InMemoryNormalizedCache()
         let store = ApolloStore(cache: cache)
-        
         
         let sessionClient = URLSessionClient(sessionConfiguration: config, callbackQueue: nil)
         let provider = NetworkInterceptorProvider(client: sessionClient,

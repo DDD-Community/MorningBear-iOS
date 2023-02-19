@@ -41,7 +41,7 @@ class RootViewViewController: UIViewController {
                 
                 if isLoggedIn == true {
                     guard let token = self.authManager.token else {
-                        fatalError("토큰이 왜 없음")
+                        fatalError("로그인 성공했는데 토큰이 왜 없음")
                     }
                     
                     self.loginSuccessful(token: token)
