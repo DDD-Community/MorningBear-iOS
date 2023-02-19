@@ -68,13 +68,19 @@ class LoginViewController: UIViewController {
     }
     
     private func bindButtons() {
-        kakaoLoginButton.rx.tap
-            .bind { [weak self] _ in
-                guard let self else { return }
-                self.processLogin(self.kakaoLoginManager.login)
-            }
-            .disposed(by: bag)
-        
+        handleTokenObservable(
+            kakaoLoginButton.rx.tap
+                .asObservable()
+                .flatMap { [weak self] _ in
+                    guard let self else {
+                        return Observable<String?>.empty()
+                    }
+                    
+                    return self.kakaoLoginManager.login
+                }
+        )
+        .disposed(by: bag)
+
         appleLoginButton.rx.tap.bind { [weak self] _ in
             guard let self = self else { return }
             
@@ -83,9 +89,10 @@ class LoginViewController: UIViewController {
         .disposed(by: bag)
     }
     
-    private func processLogin(_ loginTrait: Observable<String?>) {
-        loginTrait.subscribe(
-            onNext: { [weak self] token in
+    private func handleTokenObservable(_ tokenObservable: Observable<String?>) -> Disposable {
+        tokenObservable
+            .asDriver(onErrorJustReturn: nil)
+            .drive { [weak self] token in
                 guard let self else {
                     return
                 }
@@ -103,11 +110,7 @@ class LoginViewController: UIViewController {
                     // TODO: (회원가입 여부 판단해서 온보딩으로 넘기기)
                     // RootViewController에서 처리해도 됨
                 }
-            },
-            onError: { error in
-                self.showAlert(error)
-            })
-        .disposed(by: bag)
+            }
     }
 }
 
