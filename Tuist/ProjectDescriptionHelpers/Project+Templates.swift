@@ -69,7 +69,6 @@ extension Project {
                         .external(name: "RxSwift"),
                         .external(name: "RxKakaoSDK"),
                         .external(name: "MorningBearAPI"),
-                        .target(name: "MorningBearNetwork")
                        ]),
             makeTarget(name: additionalTargets.UI, platform: platform,
                        needsResource: true,
@@ -93,6 +92,7 @@ extension Project {
                         .external(name: "Apollo"),
                         .external(name: "MorningBearAPI"),
                         .external(name: "MorningBearAPITestMocks"),
+                        .target(name: "MorningBearKit")
                        ],
                        additionalTestTarget: [
                         .external(name: "Quick"),

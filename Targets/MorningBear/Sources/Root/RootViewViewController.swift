@@ -11,6 +11,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
+import MorningBearNetwork
 import MorningBearAuth
 
 class RootViewViewController: UIViewController {
@@ -26,19 +27,24 @@ class RootViewViewController: UIViewController {
             showTabVC()
         } else {
             showLoginVC()
+            bindLoginObservable()
         }
-        
-        bindLoginObservable()
     }
     
     private func bindLoginObservable() {
         authManager.$isLoggedIn
             .asDriver(onErrorJustReturn: false)
             .drive { [weak self] isLoggedIn in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 
                 if isLoggedIn == true {
-                    self.loginSuccessful()
+                    guard let token = self.authManager.token else {
+                        fatalError("토큰이 왜 없음")
+                    }
+                    
+                    self.loginSuccessful(token: token)
                 }
             }
             .disposed(by: bag)
@@ -68,7 +74,7 @@ private extension RootViewViewController {
     }
     
     /// Remove login view controller and show main view controller
-    func loginSuccessful() {
+    func loginSuccessful(token: String) {
         for childVC in children {
             if childVC is UINavigationController { // Find loginVC
                 childVC.willMove(toParent: nil)
@@ -77,6 +83,7 @@ private extension RootViewViewController {
             }
         }
         
+        Network.shared.registerToken(token: token)
         showTabVC()
     }
 }
