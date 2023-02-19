@@ -50,7 +50,10 @@ extension Project {
                         .external(name: "RxSwift"),
                        ],
                        additionalTestTarget: [
-                        .external(name: "RxBlocking")
+                        .external(name: "Quick"),
+                        .external(name: "Nimble"),
+                        .external(name: "RxBlocking"),
+                        .target(name: "MorningBearTestKit")
                        ],
                        settings: .settings(
                         base: [
@@ -82,7 +85,8 @@ extension Project {
                        additionalTestTarget: [
                         .external(name: "Quick"),
                         .external(name: "Nimble"),
-                        .external(name: "RxBlocking")
+                        .external(name: "RxBlocking"),
+                        .target(name: "MorningBearTestKit")
                        ]),
             makeTarget(name: additionalTargets.Network, platform: platform,
                        dependencies: [
@@ -109,7 +113,8 @@ extension Project {
                        additionalTestTarget: [
                         .external(name: "Quick"),
                         .external(name: "Nimble"),
-                        .external(name: "RxBlocking")
+                        .external(name: "RxBlocking"),
+                        .target(name: "MorningBearTestKit")
                        ]),
             makeTarget(name: additionalTargets.DataEditor, platform: platform,
                        dependencies: [
@@ -128,7 +133,7 @@ extension Project {
                        additionalTestTarget: [
                         .external(name: "Quick"),
                         .external(name: "Nimble"),
-                        .external(name: "RxBlocking")
+                        .external(name: "RxBlocking"),
                        ]
                       ),
             makeTarget(name: additionalTargets.Auth,
@@ -140,7 +145,8 @@ extension Project {
                        additionalTestTarget: [
                         .external(name: "Quick"),
                         .external(name: "Nimble"),
-                        .external(name: "RxBlocking")
+                        .external(name: "RxBlocking"),
+                        .target(name: "MorningBearTestKit")
                        ])
         ].flatMap { $0 }
         
