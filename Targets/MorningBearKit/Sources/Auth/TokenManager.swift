@@ -50,7 +50,7 @@ public final class TokenManager {
     /// Kakao 로그인 후 엑세스 토큰에 필요한 프로세스를 진행합니다
     ///
     /// Kakao 엑세스 토큰을 앱에서 사용되는 토큰으로 인코딩 후, UserDefault에 저장.  만료일과 리프레시 토큰 또한 UserDefault에 별도로 저장
-    public func progressKakao(oauthToken: OAuthToken) -> Maybe<String?> {
+    public func progressKakao(oauthToken: OAuthToken) -> Single<String?> {
         Network.shared.apollo.rx.fetch(
             query: EncodeQuery(
                 state: .some(AuthState.kakao.rawValue),
@@ -71,7 +71,6 @@ public final class TokenManager {
             
             return encodedToken
         }
-        .asMaybe()
     }
     
     /// 로그인 시 사용한 서비스명을 로컬에 저장 (apple, kakao)

@@ -48,12 +48,12 @@ extension Project {
                         .sdk(name: "c++", type: .library, status: .required),
                         .external(name: "FirebaseStorage"),
                         .external(name: "RxSwift"),
+                        .target(name: "MorningBearTestKit")
                        ],
                        additionalTestTarget: [
                         .external(name: "Quick"),
                         .external(name: "Nimble"),
                         .external(name: "RxBlocking"),
-                        .target(name: "MorningBearTestKit")
                        ],
                        settings: .settings(
                         base: [

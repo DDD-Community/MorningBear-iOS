@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 import RxSwift
 
-@testable import MorningBearStorage
 import MorningBearTestKit
 
 final class FirebaseStorageManagerMock: RemoteStoraging {

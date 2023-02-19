@@ -14,13 +14,20 @@ public final class MorningBearAuthManager {
     public static let shared = MorningBearAuthManager()
     
     private let storage: UserDefaults
-    private let operationQueue: OperationQueue
     
-    @HotBound public private(set) var isLoggedIn: Bool = false
+    @HotBound public private(set) var isLoggedIn: Bool?
     
     init(_ storage: UserDefaults = .standard) {
         self.storage = storage
-        self.operationQueue = OperationQueue()
+        
+        // FIXME: Debug
+        storage.removeObject(forKey: storageTokenKey)
+        
+        if isTokenAvailable {
+            isLoggedIn = true
+        } else {
+            isLoggedIn = false
+        }
     }
 }
 
@@ -53,6 +60,7 @@ public extension MorningBearAuthManager {
 
 private extension MorningBearAuthManager {
     var storageTokenKey: String { "Token_Key" }
+    var isTokenAvailable: Bool { storage.object(forKey: storageTokenKey) != nil }
 }
 
 

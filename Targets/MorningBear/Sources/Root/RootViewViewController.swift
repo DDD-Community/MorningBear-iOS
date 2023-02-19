@@ -8,25 +8,40 @@
 
 import UIKit
 
+import RxSwift
+import RxCocoa
+
 import MorningBearAuth
 
 class RootViewViewController: UIViewController {
     private let authManager: MorningBearAuthManager = .shared
+    private let bag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.view.backgroundColor = .blue
 
-        if authManager.isLoggedIn {
+        if authManager.isLoggedIn == true {
             showTabVC()
         } else {
             showLoginVC()
         }
+        
+        bindLoginObservable()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    private func bindLoginObservable() {
+        authManager.$isLoggedIn
+            .asDriver(onErrorJustReturn: false)
+            .drive { [weak self] isLoggedIn in
+                guard let self else { return }
+                
+                if isLoggedIn == true {
+                    self.loginSuccessful()
+                }
+            }
+            .disposed(by: bag)
     }
 }
 

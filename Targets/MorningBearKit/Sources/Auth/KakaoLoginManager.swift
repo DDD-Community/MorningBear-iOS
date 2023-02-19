@@ -24,7 +24,7 @@ public final class KakaoLoginManager {
     private let tokenManager: TokenManager
     private let bag = DisposeBag()
     
-    public func login() -> Maybe<String?> {
+    public var login: Observable<String?> {
         let loginObservable: Observable<OAuthToken>
         // 카카오톡 앱 실행 가능 여부 확인
         if (UserApi.isKakaoTalkLoginAvailable()) {
@@ -33,12 +33,11 @@ public final class KakaoLoginManager {
             loginObservable = UserApi.shared.rx.loginWithKakaoAccount()
         }
         
-        let encodedTokenResult: Maybe<String?> = loginObservable
+        let encodedTokenResult: Observable<String?> = loginObservable
             .withUnretained(self)
             .flatMap { weakSelf, oauthToken in
                 weakSelf.tokenManager.progressKakao(oauthToken: oauthToken)
             }
-            .asMaybe()
         
         return encodedTokenResult
     }

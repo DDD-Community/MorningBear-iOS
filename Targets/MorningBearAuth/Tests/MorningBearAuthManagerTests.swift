@@ -39,11 +39,19 @@ final class MorningBearAuthManagerBehaviorTests: QuickSpec {
         
         describe("Auth manager의 기본동작 테스트") {
             beforeEach {
+                guard let mockStorage = UserDefaults(suiteName: "test") else {
+                    return
+                }
+                
+                self.mockStorage = mockStorage
                 self.authManager = MorningBearAuthManager(self.mockStorage)
                 self.bag = DisposeBag()
             }
             
             afterEach {
+                UserDefaults.standard.removeSuite(named: "test")
+                
+                self.mockStorage = nil                
                 self.authManager = nil
                 self.bag = nil
             }

@@ -69,11 +69,23 @@ class LoginViewController: UIViewController {
     
     private func bindButtons() {
         kakaoLoginButton.rx.tap
-            .withUnretained(self)
-            .flatMap { weakSelf, _ in
-                return weakSelf.kakaoLoginManager.login()
+            .bind { [weak self] _ in
+                guard let self else { return }
+                self.processLogin(self.kakaoLoginManager.login)
             }
-            .subscribe(onNext: { [weak self] token in
+            .disposed(by: bag)
+        
+        appleLoginButton.rx.tap.bind { [weak self] _ in
+            guard let self = self else { return }
+            
+            self.appleLoginManager.login(presentWindow: self)
+        }
+        .disposed(by: bag)
+    }
+    
+    private func processLogin(_ loginTrait: Observable<String?>) {
+        loginTrait.subscribe(
+            onNext: { [weak self] token in
                 guard let self else {
                     return
                 }
@@ -87,19 +99,14 @@ class LoginViewController: UIViewController {
                     // 실패하면 경고
                     self.showAlert(LoginError.failToLogin)
                 } else {
-                    // 성공하면 다음 화면
-                    // TODO: Show next screen
+                    // 성공하면 다음 화면으로 push
+                    // TODO: (회원가입 여부 판단해서 온보딩으로 넘기기)
+                    // RootViewController에서 처리해도 됨
                 }
-            }, onError: { error in
+            },
+            onError: { error in
                 self.showAlert(error)
             })
-            .disposed(by: bag)
-        
-        appleLoginButton.rx.tap.bind { [weak self] _ in
-            guard let self = self else { return }
-            
-            self.appleLoginManager.login(presentWindow: self)
-        }
         .disposed(by: bag)
     }
 }
