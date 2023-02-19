@@ -45,6 +45,8 @@ class RootViewViewController: UIViewController {
                     }
                     
                     self.loginSuccessful(token: token)
+                } else {
+                    self.showLoginVC()
                 }
             }
             .disposed(by: bag)
