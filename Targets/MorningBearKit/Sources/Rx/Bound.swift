@@ -18,13 +18,20 @@ import RxRelay
 /// - warning: `struct`로 선언하면 메모리 접근 에러 발생함
 @propertyWrapper
 public class Bound<Value> {
+    private let lock = NSLock()
     private let relay: BehaviorRelay<Value>
     
     public var wrappedValue: Value {
         get {
+            self.lock.lock()
+            defer { lock.unlock() }
+            
             return self.relay.value
         }
         set {
+            self.lock.lock()
+            defer { lock.unlock() }
+            
             self.relay.accept(newValue)
         }
     }
@@ -47,22 +54,25 @@ public class Bound<Value> {
 public final class HotBound<Value> {
     private let semaphore = NSLock()
     
-    private var value: Value
+    private var value: Value {
+        didSet {
+            self.relay.accept(value)
+        }
+    }
     private let relay: PublishRelay<Value>
     
     public var wrappedValue: Value {
         get {
-            self.semaphore.lock()
-            defer { semaphore.unlock() }
+//            self.semaphore.lock()
+//            defer { semaphore.unlock() }
             
             return self.value
         }
         set {
-            self.semaphore.lock()
-            defer { semaphore.unlock() }
+//            self.semaphore.lock()
+//            defer { semaphore.unlock() }
             
             self.value = newValue
-            self.relay.accept(newValue)
         }
     }
     
@@ -81,4 +91,3 @@ public final class HotBound<Value> {
         self.init(initValue: wrappedValue)
     }
 }
-

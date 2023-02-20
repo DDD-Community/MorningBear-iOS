@@ -7,7 +7,7 @@
 //
 
 import XCTest
-
+import RxSwift
 @testable import MorningBearKit
 
 final class BoundTests: XCTestCase {
@@ -45,12 +45,4 @@ final class BoundTests: XCTestCase {
         wait(for: expectations, timeout: 5)
         XCTAssertEqual(mockBound, `repeat`)
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
 }
