@@ -17,6 +17,14 @@ import RxSwift
 import RxCocoa
 
 class LoginViewController: UIViewController {
+    @Bound var isNetworking = false
+    
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView! {
+        didSet {
+            activityIndicator.isHidden = true
+        }
+    }
+    
     @IBOutlet weak var logoImageView: UIImageView! {
         didSet {
             logoImageView.image = MorningBearUIAsset.Images.logo.image
@@ -61,56 +69,77 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         configureView()
         bindButtons()
+        bindObservables()
     }
     
     private func configureView() {
         self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
     }
     
-    private func bindButtons() {
-        handleTokenObservable(
-            kakaoLoginButton.rx.tap
-                .asObservable()
-                .flatMap { [weak self] _ in
-                    guard let self else {
-                        return Observable<String?>.empty()
-                    }
-                    
-                    return self.kakaoLoginManager.login
+    private func bindObservables() {
+        $isNetworking.asDriver(onErrorJustReturn: false)
+            .drive(onNext: { [weak self] value in
+                guard let self else { return }
+                
+                if value {
+                    // Now networking
+                    self.activityIndicator.isHidden = false
+                    self.activityIndicator.startAnimating()
+                    self.kakaoLoginButton.isEnabled = false
+                    self.appleLoginButton.isEnabled = false
+                } else {
+                    // Prepare networking
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
+                    self.kakaoLoginButton.isEnabled = true
+                    self.appleLoginButton.isEnabled = true
                 }
-        )
-        .disposed(by: bag)
-
+            })
+            .disposed(by: bag)
+    }
+    
+    private func bindButtons() {
+        kakaoLoginButton.rx.tap
+            .withUnretained(self)
+            .bind { weakSelf, _ in
+                weakSelf.isNetworking = true
+                
+                weakSelf.handleTokenObservable(
+                    weakSelf.kakaoLoginManager.login
+                )
+                .disposed(by: weakSelf.bag)
+            }
+            .disposed(by: bag)
+        
         appleLoginButton.rx.tap.bind { [weak self] _ in
             guard let self = self else { return }
             
+            print(self.bag)
             self.appleLoginManager.login(presentWindow: self)
         }
         .disposed(by: bag)
     }
     
     private func handleTokenObservable(_ tokenObservable: Observable<String?>) -> Disposable {
-        tokenObservable
+        return tokenObservable
             .asDriver(onErrorJustReturn: nil)
-            .drive { [weak self] token in
+            .debug()
+            .drive(onNext: { [weak self] token in
                 guard let self else {
                     return
                 }
                 
-                guard let token = token else {
-                    self.showAlert(LoginError.failToLogin)
-                    return
-                }
-                
-                if self.appAuthManager.login(token: token) == false {
-                    // 실패하면 경고
-                    self.showAlert(LoginError.failToLogin)
-                } else {
+                if let token = token, self.appAuthManager.login(token: token) {
                     // 성공하면 다음 화면으로 push
                     // TODO: (회원가입 여부 판단해서 온보딩으로 넘기기)
                     // RootViewController에서 처리해도 됨
+                } else {
+                    // 실패하면 경고
+                    self.showAlert(LoginError.failToLogin)
                 }
-            }
+                
+                self.isNetworking = false
+            })
     }
 }
 
