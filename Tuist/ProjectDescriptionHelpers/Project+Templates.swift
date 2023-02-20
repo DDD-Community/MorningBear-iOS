@@ -23,7 +23,8 @@ extension Project {
                             Image: String,
                             DataProvider: String,
                             DataEditor: String,
-                            Test: String
+                            Test: String,
+                            Auth: String
                            )) -> Project {
         
         // MARK: - App level
@@ -35,7 +36,8 @@ extension Project {
                                         .target(name: additionalTargets.Network),
                                         .target(name: additionalTargets.Image),
                                         .target(name: additionalTargets.DataProvider),
-                                        .target(name: additionalTargets.DataEditor)
+                                        .target(name: additionalTargets.DataEditor),
+                                        .target(name: additionalTargets.Auth)
                                      ])
         
         targets += [
@@ -46,9 +48,7 @@ extension Project {
                         .sdk(name: "c++", type: .library, status: .required),
                         .external(name: "FirebaseStorage"),
                         .external(name: "RxSwift"),
-                       ],
-                       additionalTestTarget: [
-                        .external(name: "RxBlocking")
+                        .target(name: "MorningBearTestKit")
                        ],
                        settings: .settings(
                         base: [
@@ -64,7 +64,6 @@ extension Project {
                         .external(name: "RxSwift"),
                         .external(name: "RxKakaoSDK"),
                         .external(name: "MorningBearAPI"),
-                        .target(name: "MorningBearNetwork")
                        ]),
             makeTarget(name: additionalTargets.UI, platform: platform,
                        needsResource: true,
@@ -72,18 +71,20 @@ extension Project {
                        dependencies: [
                         .external(name: "RxSwift"),
                         .external(name: "RxCocoa"),
-                        .external(name: "Quick"),
-                        .external(name: "Nimble"),
                         .external(name: "Kingfisher"),
                         .external(name: "PanModal"),
                         .target(name: "MorningBearData"),
                         .target(name: "MorningBearKit")
+                       ],
+                       additionalTestTarget: [
+                        .target(name: "MorningBearTestKit")
                        ]),
             makeTarget(name: additionalTargets.Network, platform: platform,
                        dependencies: [
                         .external(name: "Apollo"),
                         .external(name: "MorningBearAPI"),
                         .external(name: "MorningBearAPITestMocks"),
+                        .target(name: "MorningBearKit")
                        ]),
             makeTarget(name: additionalTargets.Image, platform: platform,
                        dependencies: []),
@@ -94,7 +95,10 @@ extension Project {
                         .target(name: "MorningBearData"),
                         .target(name: "MorningBearUI"),
                         .target(name: "MorningBearNetwork"),
-                        .target(name: "MorningBearStorage")
+                        .target(name: "MorningBearStorage"),
+                       ],
+                       additionalTestTarget: [
+                        .target(name: "MorningBearTestKit")
                        ]),
             makeTarget(name: additionalTargets.DataEditor, platform: platform,
                        dependencies: [
@@ -102,13 +106,19 @@ extension Project {
                         .target(name: "MorningBearUI"),
                         .target(name: "MorningBearNetwork"),
                         .target(name: "MorningBearStorage")
-                       ],
-                       additionalTestTarget: [
-                        .external(name: "RxBlocking")
                        ]),
             makeTarget(name: additionalTargets.Test, platform: platform,
-                       dependencies: []
-                      )
+                       dependencies: []),
+            makeTarget(name: additionalTargets.Auth,
+                       platform: platform,
+                       dependencies: [
+                        .target(name: "MorningBearKit"),
+                        .target(name: "MorningBearNetwork"),
+                        .external(name: "RxSwift")
+                       ],
+                       additionalTestTarget: [
+                        .target(name: "MorningBearTestKit")
+                       ])
         ].flatMap { $0 }
         
         return Project(
@@ -146,7 +156,11 @@ extension Project {
                            infoPlist: .default,
                            sources: ["Targets/\(name)/Tests/**"],
                            resources: needTestResource ?  ["Targets/\(name)/Tests/Resources/**"] : [],
-                           dependencies: testDependencies)
+                           dependencies: [
+                             .external(name: "Quick"),
+                             .external(name: "Nimble"),
+                             .external(name: "RxBlocking")
+                           ] + testDependencies)
         
         return [sources, tests]
     }
@@ -204,7 +218,12 @@ extension Project {
             sources: ["Targets/\(name)/Sources/**"],
             resources: ["Targets/\(name)/Resources/**"],
             entitlements: "Local/Entitlements/\(name).entitlements",
-            dependencies: dependencies
+            dependencies: dependencies,
+            settings: .settings(
+                base: [
+                    "OTHER_LDFLAGS": ["$(inherited)", "-ObjC"],
+                ]
+            )
         )
         
         let testTarget = Target(
@@ -215,7 +234,10 @@ extension Project {
             infoPlist: .default,
             sources: ["Targets/\(name)/Tests/**"],
             dependencies: [
-                .target(name: "\(name)")
+                .target(name: "\(name)"),
+                .external(name: "RxBlocking"),
+                .external(name: "Nimble"),
+                .external(name: "Quick")
             ])
         return [mainTarget, testTarget]
     }

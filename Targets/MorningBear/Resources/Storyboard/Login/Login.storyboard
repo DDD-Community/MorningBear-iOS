@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -62,6 +62,10 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="c5N-zE-flO">
+                                <rect key="frame" x="176.66666666666666" y="403.66666666666669" width="37" height="37"/>
+                                <color key="color" name="Primary 500"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -71,15 +75,18 @@
                             <constraint firstItem="3dH-TA-QaD" firstAttribute="top" secondItem="crS-TK-3rF" secondAttribute="bottom" constant="24" id="Rmx-m8-Ujw"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="3dH-TA-QaD" secondAttribute="bottom" constant="12" id="V1h-Wo-9tY"/>
                             <constraint firstItem="DrC-Mz-AO3" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="95" id="WQC-S5-aCy"/>
+                            <constraint firstItem="c5N-zE-flO" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="Z9m-mC-rAF"/>
                             <constraint firstItem="DrC-Mz-AO3" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" multiplier="0.85" id="jhL-Z4-Tac"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="crS-TK-3rF" secondAttribute="trailing" constant="20" id="n9a-0z-wgP"/>
                             <constraint firstItem="DrC-Mz-AO3" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="ua0-xc-CPB"/>
+                            <constraint firstItem="c5N-zE-flO" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" id="ufs-hq-J4t"/>
                             <constraint firstItem="XMT-ep-9XK" firstAttribute="top" secondItem="DrC-Mz-AO3" secondAttribute="bottom" constant="18" id="xmJ-fx-eTW"/>
                             <constraint firstItem="crS-TK-3rF" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="y6p-37-wrb"/>
                             <constraint firstItem="XMT-ep-9XK" firstAttribute="centerX" secondItem="DrC-Mz-AO3" secondAttribute="centerX" id="zPv-5V-Qv6"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="c5N-zE-flO" id="544-VW-vde"/>
                         <outlet property="appleLoginButton" destination="xYc-TP-q98" id="io4-g9-YIg"/>
                         <outlet property="kakaoLoginButton" destination="6Z0-8o-sQa" id="K5k-3n-b6d"/>
                         <outlet property="logoImageView" destination="DrC-Mz-AO3" id="uTZ-Mi-6fd"/>
@@ -95,6 +102,9 @@
     <resources>
         <namedColor name="Caption Text">
             <color red="0.47058823529411764" green="0.47058823529411764" blue="0.47058823529411764" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Primary 500">
+            <color red="0.85490196078431369" green="0.10980392156862745" blue="0.17647058823529413" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

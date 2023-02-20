@@ -8,6 +8,8 @@
 
 import UIKit
 import AuthenticationServices
+
+import MorningBearAuth
 import MorningBearKit
 import MorningBearUI
 
@@ -15,6 +17,14 @@ import RxSwift
 import RxCocoa
 
 class LoginViewController: UIViewController {
+    @Bound var isNetworking = false
+    
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView! {
+        didSet {
+            activityIndicator.isHidden = true
+        }
+    }
+    
     @IBOutlet weak var logoImageView: UIImageView! {
         didSet {
             logoImageView.image = MorningBearUIAsset.Images.logo.image
@@ -52,35 +62,100 @@ class LoginViewController: UIViewController {
     
     private let kakaoLoginManager: KakaoLoginManager = KakaoLoginManager()
     private let appleLoginManager: AppleLoginManager = AppleLoginManager()
+    private let appAuthManager: MorningBearAuthManager = .shared
+    
     private let bag = DisposeBag()
     
     override func viewDidLoad() {
         configureView()
         bindButtons()
+        bindObservables()
     }
     
     private func configureView() {
         self.view.backgroundColor = MorningBearUIAsset.Colors.primaryBackground.color
     }
     
+    private func bindObservables() {
+        $isNetworking.asDriver(onErrorJustReturn: false)
+            .drive(onNext: { [weak self] value in
+                guard let self else { return }
+                
+                if value {
+                    // Now networking
+                    self.activityIndicator.isHidden = false
+                    self.activityIndicator.startAnimating()
+                    self.kakaoLoginButton.isEnabled = false
+                    self.appleLoginButton.isEnabled = false
+                } else {
+                    // Prepare networking
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
+                    self.kakaoLoginButton.isEnabled = true
+                    self.appleLoginButton.isEnabled = true
+                }
+            })
+            .disposed(by: bag)
+    }
+    
     private func bindButtons() {
-        kakaoLoginButton.rx.tap.bind { [weak self] _ in
-            guard let self = self else { return }
-            self.kakaoLoginManager.login()
-        }
-        .disposed(by: bag)
+        kakaoLoginButton.rx.tap
+            .withUnretained(self)
+            .bind { weakSelf, _ in
+                weakSelf.isNetworking = true
+                
+                weakSelf.handleTokenObservable(
+                    weakSelf.kakaoLoginManager.login
+                )
+                .disposed(by: weakSelf.bag)
+            }
+            .disposed(by: bag)
         
         appleLoginButton.rx.tap.bind { [weak self] _ in
             guard let self = self else { return }
             
+            print(self.bag)
             self.appleLoginManager.login(presentWindow: self)
         }
         .disposed(by: bag)
+    }
+    
+    private func handleTokenObservable(_ tokenObservable: Observable<String?>) -> Disposable {
+        return tokenObservable
+            .asDriver(onErrorJustReturn: nil)
+            .debug()
+            .drive(onNext: { [weak self] token in
+                guard let self else {
+                    return
+                }
+                
+                if let token = token, self.appAuthManager.login(token: token) {
+                    // 성공하면 다음 화면으로 push
+                    // TODO: (회원가입 여부 판단해서 온보딩으로 넘기기)
+                    // RootViewController에서 처리해도 됨
+                } else {
+                    // 실패하면 경고
+                    self.showAlert(LoginError.failToLogin)
+                }
+                
+                self.isNetworking = false
+            })
     }
 }
 
 extension LoginViewController: ASAuthorizationControllerPresentationContextProviding {
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
         return self.view.window!
+    }
+}
+
+enum LoginError: LocalizedError {
+    case failToLogin
+    
+    var errorDescription: String? {
+        switch self {
+        case .failToLogin:
+            return "로그인에 실패했습니다. 다시 시도해주세요!"
+        }
     }
 }

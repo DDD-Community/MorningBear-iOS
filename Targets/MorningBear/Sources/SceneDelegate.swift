@@ -26,8 +26,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         self.window = window
         
-        let tabbarController = TabBarController()
-        window.rootViewController = tabbarController
+        let rootViewController = UIStoryboard(name: "Root", bundle: nil).instantiateViewController(withIdentifier: "Root")
+        
+//        let rootNavigationController = UINavigationController(
+//            rootViewController: rootViewController
+//        )
+        
+        window.rootViewController = rootViewController
         window.makeKeyAndVisible()
     }
     

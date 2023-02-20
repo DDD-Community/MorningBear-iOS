@@ -19,18 +19,7 @@ class TabBarController: UITabBarController {
         //        let mainViewController = UIStoryboard(name: "Login", bundle: nil).instantiateViewController(withIdentifier: "Login")
         
         self.tabBar.tintColor = .white
-        
-        let loginVC = UIStoryboard(name: "Login", bundle: nil).instantiateViewController(withIdentifier: "Login")
-        
-        let loginNavigationController = UINavigationController(
-            rootViewController: loginVC
-        ).configureMorningBearDefaultNavigationController()
-        loginNavigationController.tabBarItem.image = MorningBearUIAsset.Images.bonfire.image
-        
-        
-        
         self.viewControllers = [
-            loginVC,
             homeView(),
             myPageview()
         ]
@@ -58,6 +47,7 @@ private extension TabBarController {
         myPageVC.tabBarItem.image = MorningBearUIAsset.Images.tabMypageInactive.image.withRenderingMode(.alwaysOriginal)
         myPageVC.tabBarItem.selectedImage = MorningBearUIAsset.Images.tabMypageActive.image.withRenderingMode(.alwaysOriginal)
         myPageVC.tabBarItem.title = "마이페이지"
+        
         let myPageNavigationController = UINavigationController(
             rootViewController: myPageVC
         ).configureMorningBearDefaultNavigationController()

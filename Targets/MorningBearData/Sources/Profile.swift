@@ -8,8 +8,6 @@
 
 import UIKit
 
-import MorningBearAPI
-
 public struct Profile {
     private let id = UUID()
     

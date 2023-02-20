@@ -10,6 +10,7 @@ import Foundation
 
 import RxSwift
 
+@testable import MorningBearDataProvider
 import MorningBearTestKit
 
 class DataProviderMock: DataProviding {}

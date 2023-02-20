@@ -12,19 +12,35 @@ import Apollo
 import ApolloAPI
 import ApolloTestSupport
 
+import MorningBearKit
+
 public class Network {
     public static let shared = Network()
+    private var token: String?
     
-    public private(set) lazy var apollo = setClient()
-    
-    private func setClient() -> ApolloClient {
+    public private(set) lazy var apollo: ApolloClient = setClient()
+}
+
+public extension Network {
+    func registerToken(token: String) {
+        self.token = token
+        self.apollo = setClient()
+    }
+}
+
+private extension Network {
+    func setClient() -> ApolloClient {
+        let config = URLSessionConfiguration.default
+        if let token {
+            config.httpAdditionalHeaders = [
+                "Authorization" : "Bearer \(token)"
+            ]
+        } else {
+            MorningBearLogger.track(NetworkError.tokenNotRegistered)
+        }
+        
         let cache = InMemoryNormalizedCache()
         let store = ApolloStore(cache: cache)
-        
-        let config = URLSessionConfiguration.default
-        config.httpAdditionalHeaders = [
-            "Authorization" : "Bearer z/IMdQW2oCC8zygw5EAxfUSFMVH42RIGE7ok3448jYjhEECEtdH6MF+HlJobGSm9iekc2qZ1gqTYWMUdR38DRQ===="
-        ]
         
         let sessionClient = URLSessionClient(sessionConfiguration: config, callbackQueue: nil)
         let provider = NetworkInterceptorProvider(client: sessionClient,
@@ -85,4 +101,15 @@ fileprivate final class RequestLoggingInterceptor: ApolloInterceptor {
             
             chain.proceedAsync(request: request, response: response, completion: completion)
         }
+}
+
+enum NetworkError: LocalizedError {
+    case tokenNotRegistered
+    
+    var errorDescription: String? {
+        switch self {
+        case .tokenNotRegistered:
+            return "토큰이 등록되지 않았습니다"
+        }
+    }
 }

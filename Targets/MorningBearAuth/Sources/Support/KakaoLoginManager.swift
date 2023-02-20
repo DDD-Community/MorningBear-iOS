@@ -24,36 +24,22 @@ public final class KakaoLoginManager {
     private let tokenManager: TokenManager
     private let bag = DisposeBag()
     
-    public func login() {
+    public var login: Observable<String?> {
+        let loginObservable: Observable<OAuthToken>
         // 카카오톡 앱 실행 가능 여부 확인
         if (UserApi.isKakaoTalkLoginAvailable()) {
-            UserApi.shared.rx.loginWithKakaoTalk()
-                .subscribe(onNext:{ [weak self] oauthToken in
-                    guard let self = self else { return }
-                    
-                    print("loginWithKakaoTalk() success.")
-                    self.tokenManager.progressKakao(oauthToken: oauthToken)
-                    
-                }, onError: { error in
-                    print(error)
-                })
-                .disposed(by: bag)
+            loginObservable = UserApi.shared.rx.loginWithKakaoTalk()
+        } else {
+            loginObservable = UserApi.shared.rx.loginWithKakaoAccount()
         }
         
-        else {
-            print("--->[KakaoLoginManager] 카카오톡 설치 확인 실패, 카카오계정으로 로그인")
-            UserApi.shared.rx.loginWithKakaoAccount()
-                .subscribe(onNext:{ [weak self] oauthToken in
-                    guard let self = self else { return }
-                    
-                    print("loginWithKakaoAccount() success.")
-                    self.tokenManager.progressKakao(oauthToken: oauthToken)
-                    
-                }, onError: { error in
-                    print(error)
-                })
-                .disposed(by: bag)
-        }
+        let encodedTokenResult: Observable<String?> = loginObservable
+            .withUnretained(self)
+            .flatMap { weakSelf, oauthToken in
+                weakSelf.tokenManager.progressKakao(oauthToken: oauthToken)
+            }
+        
+        return encodedTokenResult
     }
     
     public func setUserInfo() {
