@@ -103,11 +103,10 @@ class LoginViewController: UIViewController {
             .withUnretained(self)
             .bind { weakSelf, _ in
                 weakSelf.isNetworking = true
-                
+
                 weakSelf.handleTokenObservable(
                     weakSelf.kakaoLoginManager.login
                 )
-                .disposed(by: weakSelf.bag)
             }
             .disposed(by: bag)
         
@@ -120,7 +119,7 @@ class LoginViewController: UIViewController {
         .disposed(by: bag)
     }
     
-    private func handleTokenObservable(_ tokenObservable: Observable<String?>) -> Disposable {
+    private func handleTokenObservable(_ tokenObservable: Observable<String?>) {
         return tokenObservable
             .asDriver(onErrorJustReturn: nil)
             .debug()
@@ -140,6 +139,7 @@ class LoginViewController: UIViewController {
                 
                 self.isNetworking = false
             })
+            .disposed(by: bag)
     }
 }
 
