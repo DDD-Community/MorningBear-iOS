@@ -94,7 +94,14 @@ private extension MyPageSettingViewController {
                 
                 switch MyPageSettingSection(rawValue: indexPath.section) {
                 case .profile:
-                    let buttonProfile = self.environmentViewModel.profile.eraseToButtonContext(text: "정보 수정하기", action: { print("수정") })
+                    let buttonProfile = self.environmentViewModel.profile.eraseToButtonContext(text: "정보 수정하기", action: {
+                        let storyboard = UIStoryboard(name: "InitialInfo", bundle: nil)
+                        let vc = storyboard.instantiateViewController(withIdentifier: "SetProfile") as! SetProfileViewController
+
+                        vc.viewModel = InitialInfoViewModel()
+                        self.show(vc, sender: self)
+                    })
+                    
                     return ProfileCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: buttonProfile)
                 case .divider:
                     return DividerCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: ())
