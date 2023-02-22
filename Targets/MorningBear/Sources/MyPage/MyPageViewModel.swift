@@ -65,6 +65,8 @@ class MyPageViewModel {
     init(dataProvider: DefaultProvider = DefaultProvider.shared) {
         self.dataProvider = dataProvider
         
+        super.init()
+        
         fetch()
     }
 }
