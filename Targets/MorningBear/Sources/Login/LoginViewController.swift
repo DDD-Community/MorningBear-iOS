@@ -70,6 +70,8 @@ class LoginViewController: UIViewController {
         configureView()
         bindButtons()
         bindObservables()
+        
+        appleLoginManager.delegate = self
     }
     
     private func configureView() {
@@ -110,13 +112,12 @@ class LoginViewController: UIViewController {
             }
             .disposed(by: bag)
         
-        appleLoginButton.rx.tap.bind { [weak self] _ in
-            guard let self = self else { return }
-            
-            print(self.bag)
-            self.appleLoginManager.login(presentWindow: self)
-        }
-        .disposed(by: bag)
+        appleLoginButton.rx.tap
+            .bind { [weak self] in
+                guard let self else { return }
+                self.appleLoginManager.login(contextProvider: self)
+            }
+            .disposed(by: bag)
     }
     
     private func handleTokenObservable(_ tokenObservable: Observable<String?>) {
@@ -140,6 +141,20 @@ class LoginViewController: UIViewController {
                 self.isNetworking = false
             })
             .disposed(by: bag)
+    }
+}
+
+extension LoginViewController: ASAuthorizationControllerDelegate {
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+            
+            let userIdentifier = appleIDCredential.user //userIdentifier
+            handleTokenObservable(Observable.of(userIdentifier))
+        }
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        self.showAlert(error)
     }
 }
 
