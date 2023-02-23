@@ -28,23 +28,24 @@ public final class TokenManager {
     /// Apple 로그인 후 엑세스 토큰에 필요한 프로세스를 진행합니다
     ///
     /// Apple 엑세스 토큰을 앱에서 사용되는 토큰으로 인코딩 후, UserDefault에 저장
-    public func progressApple(token: String) {
-        Network.shared.apollo
-            .fetch(query: EncodeQuery(
+    public func progressApple(token: String) -> Single<String?> {
+        Network.shared.apollo.rx.fetch(
+            query: EncodeQuery(
                 state: .some(AuthState.apple.rawValue),
                 token: .some(token)
-            )) { result in
-            switch result {
-            case .success(let graphQLResult):
-                guard let encodedToken = graphQLResult.data?.encode else { return }
-                
-                print("encodedToken is", encodedToken)
-                self.saveAuthStateAtLocal(.apple)
-                self.saveMorningBearTokenAtLocal(encodedToken)
-            case .failure(let error):
-                print(error)
+            ))
+        .map { graphQLResult -> String? in
+            guard let encodedToken = graphQLResult.data?.encode else {
+                throw TokenError.invalidResponse
             }
-            }
+            
+            print("encodedToken is", encodedToken)
+            
+            self.saveAuthStateAtLocal(.apple)
+            self.saveMorningBearTokenAtLocal(encodedToken)
+            
+            return encodedToken
+        }
     }
     
     /// Kakao 로그인 후 엑세스 토큰에 필요한 프로세스를 진행합니다
@@ -133,4 +134,8 @@ public final class TokenManager {
     func removeKakaoExpirationDateAtLocal() {
         AuthUserDefaultsManager.shared.expirationDate = nil
     }
+}
+
+enum TokenError: Error {
+    case invalidResponse
 }
