@@ -194,7 +194,15 @@ private extension MyPageViewController {
         
         switch MyPageSection(rawValue: indexPath.section) {
         case .category:
-            headerCell.prepare(title: "카테고리", buttonText: "수정", buttonAction: { print("수정") })
+            headerCell.prepare(title: "카테고리", buttonText: "수정", buttonAction: { [weak self] in
+                guard let self else { return }
+                
+                let storyboard = UIStoryboard(name: "InitialInfo", bundle: nil)
+                let vc = storyboard.instantiateViewController(withIdentifier: "SetActivity") as! SetActivityViewController
+                
+                vc.viewModel = InitialInfoViewModel()
+                self.show(vc, sender: self)
+            })
         case .themeSelection:
             headerCell.prepare(title: "나의 미라클모닝 목록")
         default:

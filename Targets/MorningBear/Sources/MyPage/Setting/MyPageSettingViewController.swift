@@ -31,6 +31,39 @@ class MyPageSettingViewController: UIViewController {
         let (_collectionView, _dataSource) = collectionViewBuilder.build()
         self.collectionView = _collectionView
         self.dataSource = _dataSource
+        
+        viewModel.logoutCellAction = { [weak self] in
+            guard let self else { return }
+            
+            let alert = UIAlertController(title: "로그아웃 하시겠습니까?", message: nil, preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { [weak self] _ in
+                guard let self else { return }
+                self.viewModel.logout()
+            }))
+            alert.addAction(UIAlertAction(title: "취소", style: .destructive))
+            
+            self.present(alert, animated: true)
+        }
+        
+        viewModel.withdrawalCellAction = { [weak self] in
+            guard let self else { return }
+            
+            let alert = UIAlertController(title: "탈퇴 하시겠습니까?", message: "탈퇴 후 모든 정보는 삭제됩니다", preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { [weak self] _ in
+                guard let self else { return }
+                self.viewModel.withdrawal()
+            }))
+            alert.addAction(UIAlertAction(title: "취소", style: .destructive))
+            
+            self.present(alert, animated: true)
+        }
+        
+        viewModel.supportCellAction = {
+            let supportLink = URL(string: "https://forms.gle/eoXn3AuqKrSqitJU8")!
+            UIApplication.shared.open(supportLink)
+        }
     }
 }
 
@@ -61,7 +94,14 @@ private extension MyPageSettingViewController {
                 
                 switch MyPageSettingSection(rawValue: indexPath.section) {
                 case .profile:
-                    let buttonProfile = self.environmentViewModel.profile.eraseToButtonContext(text: "정보 수정하기", action: { print("수정") })
+                    let buttonProfile = self.environmentViewModel.profile.eraseToButtonContext(text: "정보 수정하기", action: {
+                        let storyboard = UIStoryboard(name: "InitialInfo", bundle: nil)
+                        let vc = storyboard.instantiateViewController(withIdentifier: "SetProfile") as! SetProfileViewController
+
+                        vc.viewModel = InitialInfoViewModel()
+                        self.show(vc, sender: self)
+                    })
+                    
                     return ProfileCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: buttonProfile)
                 case .divider:
                     return DividerCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: ())

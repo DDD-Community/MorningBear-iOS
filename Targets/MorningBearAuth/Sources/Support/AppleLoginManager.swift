@@ -6,22 +6,36 @@
 //  Copyright © 2022 com.dache. All rights reserved.
 //
 
+import RxSwift
 import AuthenticationServices
 
-public final class AppleLoginManager: NSObject {
+public final class AppleLoginManager {
+    public var delegate: ASAuthorizationControllerDelegate!
+    
+    private let authManager: MorningBearAuthManager = .shared
     private let tokenManager: TokenManager
     
-    public func login(presentWindow presentationContextProvider: ASAuthorizationControllerPresentationContextProviding) {
+    public func login(contextProvider: ASAuthorizationControllerPresentationContextProviding) {
         let request = ASAuthorizationAppleIDProvider().createRequest()
         request.requestedScopes = [.email]
         
         let controller = ASAuthorizationController(authorizationRequests: [request])
-        controller.delegate = self
-        controller.presentationContextProvider = presentationContextProvider
+        controller.delegate = delegate
+        controller.presentationContextProvider = contextProvider
         controller.performRequests()
     }
     
-    public func checkCredentialState() {
+    func handleLoginResult(appleIDCredential: ASAuthorizationAppleIDCredential) -> Single<String?> {
+        let userIdentifier = appleIDCredential.user
+        guard let idToken = String(data: appleIDCredential.identityToken!, encoding: .utf8) else {
+            return .error(TokenError.invalidResponse)
+        }
+        
+        tokenManager.saveAppleUserIdentifierAtLocal(userIdentifier)
+        return tokenManager.progressApple(token: idToken)
+    }
+    
+    func checkCredentialState() {
         guard let userIdentifier = AuthUserDefaultsManager.shared.userIdentifier else { return }
         
         let appleIDProvider = ASAuthorizationAppleIDProvider()
@@ -41,25 +55,7 @@ public final class AppleLoginManager: NSObject {
         }
     }
     
-    public override init() {
+    public init() {
         self.tokenManager = TokenManager()
-    }
-}
-
-extension AppleLoginManager: ASAuthorizationControllerDelegate {
-    public func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
-            let userIdentifier = appleIDCredential.user
-            let email = appleIDCredential.email
-            guard let idToken = String(data: appleIDCredential.identityToken!, encoding: .utf8) else { return }
-            
-            print("User id is \(userIdentifier) \n Email is \(String(describing: email)) \n ID token is \(idToken)")
-            tokenManager.saveAppleUserIdentifierAtLocal(userIdentifier)
-            tokenManager.progressApple(token: idToken)
-        }
-    }
-    
-    public func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-        print("AppleLoginError!", error.localizedDescription)
     }
 }

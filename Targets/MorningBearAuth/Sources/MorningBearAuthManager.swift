@@ -21,7 +21,7 @@ public final class MorningBearAuthManager {
         self.storage = storage
         
         // FIXME: Debug -> 자동로그인 풀고싶을 떄 사용
-        storage.removeObject(forKey: storageTokenKey)
+//        storage.removeObject(forKey: storageTokenKey)
         
         if isTokenAvailable {
             isLoggedIn = true
