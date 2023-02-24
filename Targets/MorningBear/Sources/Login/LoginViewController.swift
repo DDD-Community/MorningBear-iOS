@@ -62,7 +62,8 @@ class LoginViewController: UIViewController {
     
     private let kakaoLoginManager: KakaoLoginManager = KakaoLoginManager()
     private let appleLoginManager: AppleLoginManager = AppleLoginManager()
-    private let appAuthManager: MorningBearAuthManager = .shared
+    
+    private let authManager: MorningBearAuthManager = .shared
     
     private let bag = DisposeBag()
     
@@ -129,10 +130,13 @@ class LoginViewController: UIViewController {
                     return
                 }
                 
-                if let token = token, self.appAuthManager.login(token: token) {
+                if let token, self.authManager.login(token: token) {
                     // 성공하면 다음 화면으로 push
-                    // TODO: (회원가입 여부 판단해서 온보딩으로 넘기기)
-                    // RootViewController에서 처리해도 됨
+//                    let storyboard = UIStoryboard(name: "InitialInfo", bundle: nil)
+//                    let vc = storyboard.instantiateViewController(withIdentifier: "InitialInfo") as! InitialInfoViewController
+//                    vc.loginHandler = self.authManager.logout
+//
+//                    self.show(vc, sender: self)
                 } else {
                     // 실패하면 경고
                     self.showAlert(LoginError.failToLogin)

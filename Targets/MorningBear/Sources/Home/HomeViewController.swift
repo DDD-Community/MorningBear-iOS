@@ -77,7 +77,7 @@ extension HomeViewController {
                     withReuseIdentifier: "StateCell", for: indexPath
                 ) as! StateCell
                 
-                let state = State(nickname: "만지몬", oneLiner: "갓생사는 하루 되기!")
+                let state = State(nickname: "", oneLiner: "갓생사는 하루 되기!")
                 let myInfo = self.viewModel.myInfo
                 
                 cell.prepare(state: state, myInfo: myInfo) {

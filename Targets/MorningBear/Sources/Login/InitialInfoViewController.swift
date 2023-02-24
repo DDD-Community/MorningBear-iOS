@@ -13,6 +13,7 @@ import RxSwift
 import RxCocoa
 
 class InitialInfoViewController: UIViewController {
+    var loginHandler: (() -> Void)!
     
     private let bag = DisposeBag()
     private let viewModel = InitialInfoViewModel()

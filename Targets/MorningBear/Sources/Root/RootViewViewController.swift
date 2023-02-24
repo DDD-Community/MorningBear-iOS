@@ -75,17 +75,30 @@ private extension RootViewViewController {
         loginNavigationController.didMove(toParent: self)
     }
     
-    /// Remove login view controller and show main view controller
-    func loginSuccessful(token: String) {
+    func logoutSuccessful() {
         for childVC in children {
-            if childVC is UINavigationController { // Find loginVC
+            if childVC is TabBarController { // Find Tab bar ctrl
                 childVC.willMove(toParent: nil)
                 childVC.view.removeFromSuperview()
                 childVC.removeFromParent()
             }
         }
         
-        Network.shared.registerToken(token: token)
+        showLoginVC()
+        Network.shared.removeToken()
+    }
+    
+    /// Remove login view controller and show main view controller
+    func loginSuccessful(token: String) {
+        for childVC in children {
+            if childVC is LoginViewController { // Find loginVC
+                childVC.willMove(toParent: nil)
+                childVC.view.removeFromSuperview()
+                childVC.removeFromParent()
+            }
+        }
+        
         showTabVC()
+        Network.shared.registerToken(token: token)
     }
 }
