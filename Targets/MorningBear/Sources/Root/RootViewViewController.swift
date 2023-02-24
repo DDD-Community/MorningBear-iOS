@@ -54,6 +54,16 @@ class RootViewViewController: UIViewController {
 }
 
 private extension RootViewViewController {
+    func showInitialInfoVC() {
+        let storyboard = UIStoryboard(name: "InitialInfo", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "InitialInfo") as! InitialInfoViewController
+        
+        addChild(vc)
+        view.addSubview(vc.view)
+        
+        vc.didMove(toParent: self)
+    }
+    
     func showTabVC() {
         let tabVC = TabBarController()
         addChild(tabVC)
@@ -62,7 +72,7 @@ private extension RootViewViewController {
         tabVC.didMove(toParent: self)
     }
     
-    func showLoginVC() {
+    func showLoginVC() -> UINavigationController {
         let loginVC = UIStoryboard(name: "Login", bundle: nil).instantiateViewController(withIdentifier: "Login")
         
         let loginNavigationController = UINavigationController(
@@ -86,6 +96,6 @@ private extension RootViewViewController {
         }
         
         Network.shared.registerToken(token: token)
-        showTabVC()
+        
     }
 }
