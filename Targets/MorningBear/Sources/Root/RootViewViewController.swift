@@ -18,21 +18,38 @@ class RootViewViewController: UIViewController {
     private let authManager: MorningBearAuthManager = .shared
     private let bag = DisposeBag()
     
+    private lazy var loginViewController: UIViewController? = {
+        let loginVC = UIStoryboard(name: "Login", bundle: nil).instantiateViewController(withIdentifier: "Login")
+        
+        let loginNavigationController = UINavigationController(
+            rootViewController: loginVC
+        )
+        
+        return loginNavigationController
+    }()
+    
+    private lazy var tabController: UIViewController? = {
+        let tabVC = TabBarController()
+        
+        return tabVC
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = .clear
         
-        self.view.backgroundColor = .blue
-
         if authManager.isLoggedIn == true {
-            showTabVC()
+            addTabVC()
         } else {
-            showLoginVC()
-            bindLoginObservable()
+            addLoginVC()
         }
+
+        bindLoginObservable()
     }
     
     private func bindLoginObservable() {
         authManager.$isLoggedIn
+            .observe(on: ConcurrentDispatchQueueScheduler(qos: .userInitiated))
             .asDriver(onErrorJustReturn: false)
             .drive { [weak self] isLoggedIn in
                 guard let self else {
@@ -46,7 +63,7 @@ class RootViewViewController: UIViewController {
                     
                     self.loginSuccessful(token: token)
                 } else {
-                    self.showLoginVC()
+                    self.logoutSuccessful()
                 }
             }
             .disposed(by: bag)
@@ -54,51 +71,52 @@ class RootViewViewController: UIViewController {
 }
 
 private extension RootViewViewController {
-    func showTabVC() {
-        let tabVC = TabBarController()
+    func addTabVC() {
+        guard let tabVC = tabController else {
+            return
+        }
+        
         addChild(tabVC)
         view.addSubview(tabVC.view)
-        
         tabVC.didMove(toParent: self)
     }
     
-    func showLoginVC() {
-        let loginVC = UIStoryboard(name: "Login", bundle: nil).instantiateViewController(withIdentifier: "Login")
+    func addLoginVC() {
+        guard let loginVC = loginViewController else {
+            return
+        }
         
-        let loginNavigationController = UINavigationController(
-            rootViewController: loginVC
-        )
-        
-        addChild(loginNavigationController)
-        view.addSubview(loginNavigationController.view)
-        
-        loginNavigationController.didMove(toParent: self)
+        addChild(loginVC)
+        view.addSubview(loginVC.view)
+        loginVC.didMove(toParent: self)
     }
     
     func logoutSuccessful() {
-        for childVC in children {
-            if childVC is TabBarController { // Find Tab bar ctrl
-                childVC.willMove(toParent: nil)
-                childVC.view.removeFromSuperview()
-                childVC.removeFromParent()
-            }
+        if let vc = children.first(where: { $0 === tabController }) {
+            vc.willMove(toParent: nil)
+            vc.view.removeFromSuperview()
+            vc.removeFromParent()
+            
         }
         
-        showLoginVC()
+        DispatchQueue.main.async {
+            self.addLoginVC()
+        }
+        
         Network.shared.removeToken()
     }
     
     /// Remove login view controller and show main view controller
     func loginSuccessful(token: String) {
-        for childVC in children {
-            if childVC is LoginViewController { // Find loginVC
-                childVC.willMove(toParent: nil)
-                childVC.view.removeFromSuperview()
-                childVC.removeFromParent()
-            }
+        if let vc = children.first(where: { $0 === loginViewController }) {
+            vc.willMove(toParent: nil)
+            vc.view.removeFromSuperview()
+            vc.removeFromParent()
         }
         
-        showTabVC()
+        DispatchQueue.main.async {
+            self.addTabVC()
+        }
         Network.shared.registerToken(token: token)
     }
 }

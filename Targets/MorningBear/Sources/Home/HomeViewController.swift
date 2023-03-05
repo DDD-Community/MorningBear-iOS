@@ -282,14 +282,14 @@ private extension HomeViewController {
         do {
             let startDate = try viewModel.stopRecording()
             
-            registerMorningViewController.prepare(startTime: startDate, image: nil, popAction: { [weak self] in
-                guard let self else { return }
-                
-                self.viewModel.fetchRemoteData()
-            })
-            
-            registerMorningViewController.hidesBottomBarWhenPushed = true
-            self.navigationController?.pushViewController(registerMorningViewController, animated: true)
+//            registerMorningViewController.prepare(startTime: startDate, image: nil, popAction: { [weak self] in
+//                guard let self else { return }
+//
+//                self.viewModel.fetchRemoteData()
+//            })
+//
+//            registerMorningViewController.hidesBottomBarWhenPushed = true
+            show(cameraViewController, sender: nil)
             
             // 버튼 전환
             showStartRecordingButton()
