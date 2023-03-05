@@ -36,9 +36,14 @@ class RegisterMorningViewController: UIViewController {
         didSet {
             morningImageView.layer.cornerRadius = 8
             
-            let overlayView = UIView(frame: morningImageView.frame)
-            overlayView.backgroundColor = .black.withAlphaComponent(0.5)
+            let frame = CGRect(x: 0,
+                               y: 0,
+                               width: morningImageView.frame.width + 10,
+                               height: morningImageView.frame.height + 10)
             
+            let overlayView = UIView(frame: frame)
+            overlayView.backgroundColor = .black.withAlphaComponent(0.5)
+
             morningImageView.addSubview(overlayView)
         }
     }

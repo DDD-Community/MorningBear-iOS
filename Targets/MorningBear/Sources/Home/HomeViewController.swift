@@ -46,6 +46,9 @@ class HomeViewController: UIViewController, DiffableDataSourcing {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Camera
+        setCameraPicker()
                 
         // Set data source
         diffableDataSource = makeDiffableDataSource(with: collectionView)
@@ -272,16 +275,14 @@ private extension HomeViewController {
     }
     
     func stopRecording() {
-        guard let registerMorningViewController = UIStoryboard(
-            name: "RegisterMorning", bundle: nil
-        ).instantiateViewController(withIdentifier: "RegisterMorning") as? RegisterMorningViewController
-        else {
-            fatalError("뷰 컨트롤러를 불러올 수 없음")
-        }
+//        guard let registerMorningViewController = UIStoryboard(
+//            name: "RegisterMorning", bundle: nil
+//        ).instantiateViewController(withIdentifier: "RegisterMorning") as? RegisterMorningViewController
+//        else {
+//            fatalError("뷰 컨트롤러를 불러올 수 없음")
+//        }
         
-        do {
-            let startDate = try viewModel.stopRecording()
-            
+//        do {
 //            registerMorningViewController.prepare(startTime: startDate, image: nil, popAction: { [weak self] in
 //                guard let self else { return }
 //
@@ -293,9 +294,9 @@ private extension HomeViewController {
             
             // 버튼 전환
             showStartRecordingButton()
-        } catch let error {
-            showAlert(error)
-        }
+//        } catch let error {
+//            showAlert(error)
+//        }
     }
     
     func showRecordingNowButton() {
@@ -391,9 +392,15 @@ extension HomeViewController: CollectionViewCompositionable {
 
 // MARK: - Set camera delegate
 extension HomeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func setCameraPicker() {
+        cameraViewController.sourceType = .camera
+        cameraViewController.allowsEditing = true
+        cameraViewController.delegate = self
+    }
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let takenPhoto = info[.editedImage] as? UIImage {
-            // imageViewPic.contentMode = .scaleToFill
+//             imageViewPic.contentMode = .scaleToFill
             guard let registerMorningViewController = UIStoryboard(name: "RegisterMorning", bundle: nil)
                 .instantiateViewController(withIdentifier: "RegisterMorning") as? RegisterMorningViewController else {
 
@@ -402,8 +409,11 @@ extension HomeViewController: UIImagePickerControllerDelegate, UINavigationContr
             
             if case .recording(startDate: let savedStartDate) = viewModel.isMyMorningRecording {
                 do {
+                    let startDate = try viewModel.stopRecording()
+
                     registerMorningViewController.prepare(startTime: savedStartDate, image: takenPhoto, popAction: {})
                     registerMorningViewController.hidesBottomBarWhenPushed = true
+                    
                     self.navigationController?.pushViewController(registerMorningViewController, animated: true)
                 } catch let error {
                     self.showAlert(error)
