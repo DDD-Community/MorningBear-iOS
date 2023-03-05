@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>960900583758-ifjjrtvq2vleucpafr7692ls49vldll9.apps.googleusercontent.com</string>
+	<string>960900583758-vinpkofob2mkh7gcndl6qip89fenrmcd.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.960900583758-ifjjrtvq2vleucpafr7692ls49vldll9</string>
+	<string>com.googleusercontent.apps.960900583758-vinpkofob2mkh7gcndl6qip89fenrmcd</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBE2PiLm7IeHTY-U7dD7-HvVJwoHfta-B4</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.dache.MorningBear</string>
+	<string>com.dache.morner</string>
 	<key>PROJECT_ID</key>
 	<string>morningbear-cb463</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:960900583758:ios:f36a1f90c8e8700d6ece1f</string>
+	<string>1:960900583758:ios:3aae40ca9815c6726ece1f</string>
 </dict>
 </plist>
