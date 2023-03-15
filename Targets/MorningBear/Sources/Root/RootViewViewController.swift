@@ -14,6 +14,8 @@ import RxCocoa
 import MorningBearNetwork
 import MorningBearAuth
 
+import MorningBearAPI
+
 class RootViewViewController: UIViewController {
     private let authManager: MorningBearAuthManager = .shared
     private let bag = DisposeBag()
@@ -113,10 +115,16 @@ private extension RootViewViewController {
             vc.view.removeFromSuperview()
             vc.removeFromParent()
         }
-        
-        DispatchQueue.main.async {
-            self.addTabVC()
-        }
         Network.shared.registerToken(token: token)
+        Network.shared.apollo.rx.perform(
+            mutation: SaveMyInfoMutation(input: UserInput())
+        )
+        .observe(on: MainScheduler.instance)
+        .subscribe(with: self, onSuccess: { weakSelf, _ in
+            DispatchQueue.main.async {
+                weakSelf.addTabVC()
+            }
+        })
+        .disposed(by: bag)
     }
 }

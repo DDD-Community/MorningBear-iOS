@@ -25,7 +25,7 @@ class HomeViewModel {
     ///     반드시 `startRecording`, `stopRecording`에 의해서만 수정될 수 있도록 유의할 것
     @Bound private(set) var isNetworking: Bool = false
     
-    @Bound private(set) var myInfo: MyInfo = MyInfo(estimatedTime: 0, totalCount: 0, badgeCount: -1)
+    @Bound private(set) var myInfo: MyInfo = MyInfo(estimatedTime: 0, totalCount: 0, badgeCount: 0)
     @Bound private(set) var recentMornings: [MyMorning] = []
     @Bound private(set) var badges: [Badge] = []
     @Bound private(set) var articles: [Article] = []
@@ -42,7 +42,7 @@ class HomeViewModel {
     
     // MARK: - 생성자
     init(_ dataProvider: HomeViewDataProvider = HomeViewDataProvider()) {
-        self.dataProvider = dataProvider as! HomeViewDataProvider
+        self.dataProvider = dataProvider
         
         self.elapsedTimeRelay = BehaviorRelay<String>(value: "00:00:00")
         self.recordingStateRelay = BehaviorRelay<MyMorningRecordingState>(value: .waiting)

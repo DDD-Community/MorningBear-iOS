@@ -10,9 +10,9 @@ public class User: MockObject {
   public typealias MockValueCollectionType = Array<Mock<User>>
 
   public struct MockFields {
-    @Field<String>("accountId") public var accountId
     @Field<[BadgeDetail?]>("badgeList") public var badgeList
     @Field<[Category?]>("categoryList") public var categoryList
+    @Field<String>("goal") public var goal
     @Field<String>("memo") public var memo
     @Field<String>("nickName") public var nickName
     @Field<[Photo?]>("photoInfo") public var photoInfo
@@ -26,9 +26,9 @@ public class User: MockObject {
 
 public extension Mock where O == User {
   convenience init(
-    accountId: String? = nil,
     badgeList: [Mock<BadgeDetail>?]? = nil,
     categoryList: [Mock<Category>?]? = nil,
+    goal: String? = nil,
     memo: String? = nil,
     nickName: String? = nil,
     photoInfo: [Mock<Photo>?]? = nil,
@@ -39,9 +39,9 @@ public extension Mock where O == User {
     wakeUpAt: String? = nil
   ) {
     self.init()
-    self.accountId = accountId
     self.badgeList = badgeList
     self.categoryList = categoryList
+    self.goal = goal
     self.memo = memo
     self.nickName = nickName
     self.photoInfo = photoInfo
