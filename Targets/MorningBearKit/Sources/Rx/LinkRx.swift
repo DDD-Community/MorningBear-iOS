@@ -35,12 +35,15 @@ public func linkRx<Value>(
         .disposed(by: bag)
 }
 
+
 public extension PrimitiveSequenceType where Trait == SingleTrait {
+    @inline(__always)
     func concurrentSubscribe(
         scheduler: SchedulerType = ConcurrentDispatchQueueScheduler(qos: .userInitiated),
         completionHandler: @escaping (Element) -> Void,
         errorHandler: ((Error) -> Void)? = nil,
-        disposeHandler: (() -> Void)? = nil
+        disposeHandler: (() -> Void)? = nil,
+        file: String = #file, function: String = #function, line: Int = #line
     ) -> Disposable {
         return self.primitiveSequence
             .subscribe(on: scheduler)
@@ -52,7 +55,7 @@ public extension PrimitiveSequenceType where Trait == SingleTrait {
                 },
                 onFailure: {
                     errorHandler?($0)
-                    MorningBearLogger.track($0)
+                    MorningBearLogger.track($0, file: file, function: function, line: line)
                 },
                 onDisposed: {
                     disposeHandler?()

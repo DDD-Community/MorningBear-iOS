@@ -8,20 +8,26 @@ public class SaveMyInfoMutation: GraphQLMutation {
   public static let document: ApolloAPI.DocumentType = .notPersisted(
     definition: .init(
       """
-      mutation SaveMyInfo {
-        saveMyInfo {
+      mutation SaveMyInfo($input: UserInput!) {
+        saveMyInfo(userInput: $input) {
           __typename
-          accountId
           nickName
           photoLink
           memo
           wakeUpAt
+          goal
         }
       }
       """
     ))
 
-  public init() {}
+  public var input: UserInput
+
+  public init(input: UserInput) {
+    self.input = input
+  }
+
+  public var __variables: Variables? { ["input": input] }
 
   public struct Data: MorningBearAPI.SelectionSet {
     public let __data: DataDict
@@ -29,7 +35,7 @@ public class SaveMyInfoMutation: GraphQLMutation {
 
     public static var __parentType: ParentType { MorningBearAPI.Objects.Mutation }
     public static var __selections: [Selection] { [
-      .field("saveMyInfo", SaveMyInfo?.self),
+      .field("saveMyInfo", SaveMyInfo?.self, arguments: ["userInput": .variable("input")]),
     ] }
 
     ///  내정보 저장 (회원가입, 정보수정) 
@@ -44,15 +50,13 @@ public class SaveMyInfoMutation: GraphQLMutation {
 
       public static var __parentType: ParentType { MorningBearAPI.Objects.User }
       public static var __selections: [Selection] { [
-        .field("accountId", String?.self),
         .field("nickName", String?.self),
         .field("photoLink", String?.self),
         .field("memo", String?.self),
         .field("wakeUpAt", String?.self),
+        .field("goal", String?.self),
       ] }
 
-      ///  사용자ID 
-      public var accountId: String? { __data["accountId"] }
       ///  닉네임 
       public var nickName: String? { __data["nickName"] }
       ///  프로필사진 링크 
@@ -61,6 +65,8 @@ public class SaveMyInfoMutation: GraphQLMutation {
       public var memo: String? { __data["memo"] }
       ///  기상시간(format: HHmm) 
       public var wakeUpAt: String? { __data["wakeUpAt"] }
+      ///  목표 
+      public var goal: String? { __data["goal"] }
     }
   }
 }

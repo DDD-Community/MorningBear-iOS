@@ -26,6 +26,10 @@ public extension Network {
         self.token = token
         self.apollo = setClient()
     }
+    
+    func removeToken() {
+        self.token = nil
+    }
 }
 
 private extension Network {

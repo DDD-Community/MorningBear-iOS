@@ -9,7 +9,7 @@
 import Foundation
 
 public struct MorningBearLogger {
-    public static func track(_ error: Error, file: String = #file, function: String = #function, line: Int = #line ) {
+    public static func track(_ error: Error, file: String = #file, function: String = #function, line: Int = #line) {
         print("[❌ Error]: '\(error)' occurred from \(function) \(file):\(line)")
     }
 }

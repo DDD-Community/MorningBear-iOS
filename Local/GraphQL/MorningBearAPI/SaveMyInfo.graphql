@@ -1,9 +1,9 @@
-mutation SaveMyInfo {
-  saveMyInfo {
-    accountId
+mutation SaveMyInfo($input: UserInput!) {
+  saveMyInfo(userInput: $input) {
     nickName
     photoLink
     memo
     wakeUpAt
+    goal
   }
 }

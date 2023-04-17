@@ -65,19 +65,19 @@ class MyPageViewController: UIViewController {
         
         return .init(
             base: self.collectionView,
-            sections: [.state, .category, .divider, .themeSelection, .myMorning],
+            sections: [.themeSelection, .myMorning],  //[.state, .category, .divider, .themeSelection, .myMorning],
             cellTypes: [ProfileCell.self, CategoryCell.self, DividerCell.self, CapsuleCell.self, RecentMorningCell.self],
             supplementarycellTypes: [.header(HomeSectionHeaderCell.self)],
             cellProvider: { [weak self] collectionView, indexPath, model in
                 guard let self else { return UICollectionViewCell() }
 
                 switch MyPageSection(rawValue: indexPath.section) {
-                case .state:
-                    return ProfileCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: self.viewModel.profile)
-                case .category:
-                    return CategoryCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: model as! MorningBearData.Category)
-                case .divider:
-                    return DividerCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: ())
+//                case .state:
+//                    return ProfileCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: self.viewModel.profile)
+//                case .category:
+//                    return CategoryCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: model as! MorningBearData.Category)
+//                case .divider:
+//                    return DividerCell.dequeueAndPrepare(from: collectionView, at: indexPath, prepare: ())
                 case .themeSelection:
                     return CapsuleCell.dequeueAndPrepare(from: collectionView, at: indexPath, sources: self.viewModel.categoryOptions)
                 case .myMorning:
@@ -98,12 +98,12 @@ class MyPageViewController: UIViewController {
                 guard let self else { return .replace(Observable.of([])) }
                 
                 switch section {
-                case .state:
-                    return .replace(self.viewModel.$profile.map{ [$0.eraseToAnyHasable] })
-                case .category:
-                    return .replace(self.viewModel.$categories.map{ $0.eraseToAnyHasable })
-                case .divider:
-                    return .replace(Observable.of([""]))
+//                case .state:
+//                    return .replace(self.viewModel.$profile.map{ [$0.eraseToAnyHasable] })
+//                case .category:
+//                    return .replace(self.viewModel.$categories.map{ $0.eraseToAnyHasable })
+//                case .divider:
+//                    return .replace(Observable.of([""]))
                 case .themeSelection:
                     return .replace(Observable.of(self.viewModel.categoryOptions))
                 case .myMorning:
@@ -114,22 +114,22 @@ class MyPageViewController: UIViewController {
                 let provider = CompositionalLayoutProvider()
                 
                 switch MyPageSection(rawValue: section) {
-                case .state:
-                    let layout = provider.plainLayoutSection(height: 100)
-                    layout.contentInsets = .init(top: 17, leading: 18, bottom: 0, trailing: 18)
-                    
-                    return layout
-                case .category:
-                    let option = CompositionalHorizontalLayoutOption(showCount: 6, height: 85)
-                    let subviewOption = CompositionalLayoutSubviewOption(backgroundColor: .white, headerHeight: 70)
-                    
-                    let layout = provider.horizontalLayoutSection(option: option, subviewOption: subviewOption)
-                    layout.contentInsets = .init(top: 0, leading: 18*2, bottom: 20, trailing: 18*2)
-                    layout.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
-                
-                    return layout
-                case .divider:
-                    return provider.divier(height: 6)
+//                case .state:
+//                    let layout = provider.plainLayoutSection(height: 100)
+//                    layout.contentInsets = .init(top: 17, leading: 18, bottom: 0, trailing: 18)
+//
+//                    return layout
+//                case .category:
+//                    let option = CompositionalHorizontalLayoutOption(showCount: 6, height: 85)
+//                    let subviewOption = CompositionalLayoutSubviewOption(backgroundColor: .white, headerHeight: 70)
+//
+//                    let layout = provider.horizontalLayoutSection(option: option, subviewOption: subviewOption)
+//                    layout.contentInsets = .init(top: 0, leading: 18*2, bottom: 20, trailing: 18*2)
+//                    layout.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
+//
+//                    return layout
+//                case .divider:
+//                    return provider.divier(height: 6)
                 case .themeSelection:
                     let layout = provider.horizontalScrollLayoutSectionWithHeader(showItemCount: 5, height: 33)
                     layout.contentInsets = .init(top: 0, leading: 18, bottom: 0, trailing: 18)
@@ -177,9 +177,9 @@ private extension MyPageViewController {
 
 private extension MyPageViewController {
     enum MyPageSection: Int, Hashable, CaseIterable {
-        case state
-        case category
-        case divider
+//        case state
+//        case category
+//        case divider
         case themeSelection
         case myMorning
     }
@@ -193,16 +193,16 @@ private extension MyPageViewController {
         
         
         switch MyPageSection(rawValue: indexPath.section) {
-        case .category:
-            headerCell.prepare(title: "카테고리", buttonText: "수정", buttonAction: { [weak self] in
-                guard let self else { return }
-                
-                let storyboard = UIStoryboard(name: "InitialInfo", bundle: nil)
-                let vc = storyboard.instantiateViewController(withIdentifier: "SetActivity") as! SetActivityViewController
-                
-                vc.viewModel = InitialInfoViewModel()
-                self.show(vc, sender: self)
-            })
+//        case .category:
+//            headerCell.prepare(title: "카테고리", buttonText: "수정", buttonAction: { [weak self] in
+//                guard let self else { return }
+//                
+//                let storyboard = UIStoryboard(name: "InitialInfo", bundle: nil)
+//                let vc = storyboard.instantiateViewController(withIdentifier: "SetActivity") as! SetActivityViewController
+//                
+//                vc.viewModel = InitialInfoViewModel()
+//                self.show(vc, sender: self)
+//            })
         case .themeSelection:
             headerCell.prepare(title: "나의 미라클모닝 목록")
         default:

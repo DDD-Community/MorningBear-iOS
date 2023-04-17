@@ -99,7 +99,7 @@ public class StateCell: UICollectionViewCell {
     public func prepare(state: State?, myInfo: MyInfo?, tapAction: Action?) {
         let titleLabelText: String?
         if let state {
-            titleLabelText = "안녕하세요, \(state.nickname)님"
+            titleLabelText = "안녕하세요, \(state.nickname)"
         } else {
             titleLabelText = "안녕하세요!"
         }
